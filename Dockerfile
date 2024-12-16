@@ -36,8 +36,10 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Copy the SSL certificates to the container
-COPY docker/nginx/ssl/pifon.crt /etc/ssl/certs/pifon.crt
-COPY docker/nginx/ssl/pifon.key /etc/ssl/private/pifon.key
+# COPY docker/nginx/ssl/pifon.crt /etc/ssl/certs/pifon.crt
+# COPY docker/nginx/ssl/pifon.key /etc/ssl/private/pifon.key
+COPY docker/nginx/ssl/live/pifon.co.uk/fullchain.pem /etc/ssl/certs/pifon.crt
+COPY docker/nginx/ssl/live/pifon.co.uk/privkey.pem /etc/ssl/private/pifon.key
 
 # Configure Nginx to use SSL
 COPY docker/nginx/ssl-redirect.conf /etc/nginx/conf.d/default.conf

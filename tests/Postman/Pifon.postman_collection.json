@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "0b504a07-4322-4974-8b56-48dc7ab06529",
+		"name": "Pifon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10927397"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register account",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "przemek.wolski@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://pifon.co.uk/api/register",
+							"protocol": "https",
+							"host": [
+								"pifon",
+								"co",
+								"uk"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						},
+						"description": "Register account request"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "przemek.wolski@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://pifon.co.uk/api/login",
+							"protocol": "https",
+							"host": [
+								"pifon",
+								"co",
+								"uk"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
