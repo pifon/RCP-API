@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Element;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,7 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        //$users = User::factory(10)->create();
+
+        Element::factory(10)
+         //   ->recycle($users)
+            ->create();
 
         User::factory()->create([
             'name' => 'Test User',
