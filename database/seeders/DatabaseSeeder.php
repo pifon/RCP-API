@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         //$users = User::factory(10)->create();
 
-        Element::factory(10)
+        //Element::factory(10)
          //   ->recycle($users)
-            ->create();
+        //    ->create();
 
         User::factory()->create([
             'name' => 'Test User',

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('elements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('type')->constrained('element_types');
-            $table->foreignId('sub_type')->constrained('element_sub_types');
+            $table->foreignId('type')->constrained('element_types', 'id');
+            $table->foreignId('sub_type')->nullable()->constrained('element_sub_types');
             $table->string('name');
             $table->string('aka')->nullable();
             $table->json('names')->nullable();
