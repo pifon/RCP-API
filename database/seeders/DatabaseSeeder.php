@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
 
         // RCP
         $this->call(ElementTypesSeeder::class);
+        $this->call(ElementSubTypesSeeder::class);
     }
 }
