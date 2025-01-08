@@ -29,5 +29,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ElementTypesSeeder::class);
         $this->call(ElementSubTypesSeeder::class);
         $this->call(ElementsSeeder::class);
+        $this->call(GroupsSeeder::class);
     }
 }

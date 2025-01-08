@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->timestamps();
+            $table->text('ref')->nullable();
+            $table->dateTime('created_at')->default(Carbon::now());
+            $table->dateTime('updated_at')->default(Carbon::now());
         });
     }
 
