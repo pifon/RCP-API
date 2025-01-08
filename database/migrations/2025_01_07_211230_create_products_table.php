@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->foreignId('group')->constrained('groups', 'id');
+            $table->text('description')->nullable();
+            $table->boolean('vegan')->default(false);
+            $table->boolean('vegetarian')->default(false);
+            $table->boolean('halal')->default(false);
+            $table->boolean('kosher')->default(false);
             $table->timestamps();
         });
     }
