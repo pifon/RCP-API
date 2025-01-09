@@ -21,6 +21,11 @@ class DatabaseSeeder extends Seeder
         //    ->create();
 
         User::factory()->create([
+            'name' => 'System',
+            'email' => 'system@pifon.com',
+        ]);
+
+        User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
@@ -30,5 +35,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ElementSubTypesSeeder::class);
         $this->call(ElementsSeeder::class);
         $this->call(GroupsSeeder::class);
+        $this->call(CuisineSeeder::class);
+        $this->call(DishTypesSeeder::class);
+        $this->call(RecipesSeeder::class);
     }
 }

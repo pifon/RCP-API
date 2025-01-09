@@ -12,11 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cuisines', function (Blueprint $table) {
+        Schema::create('recipes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('variant')->nullable();
+            $table->integer('variant')->nullable();
+            $table->foreignId('author')->constrained('users');
+            $table->string('title');
             $table->text('description')->nullable();
+            $table->foreignId('cuisine')->constrained('cuisines');
+            $table->foreignId('type')->constrained('dish_types');
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cuisines');
+        Schema::dropIfExists('recipes');
     }
 };
