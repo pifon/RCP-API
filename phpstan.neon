@@ -1,0 +1,24 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/tomasvotruba/type-coverage/config/extension.neon
+
+parameters:
+    level: 5
+    treatPhpDocTypesAsCertain: false
+    type_coverage:
+        constant_type: 0
+        return_type: 87
+        param_type: 94
+        property_type: 91
+    bootstrapFiles:
+        - tests/_bootstrap.php
+    dynamicConstantNames:
+        - ENVIRONMENT
+    ignoreErrors:
+        - '#is never read, only written#'
+        - '#is never written, only read#'
+        - '#is unused#'
+    paths:
+        - app/
+    excludePaths:
+            - '*/_PHPStan_*'

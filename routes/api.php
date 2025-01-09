@@ -22,3 +22,5 @@ Route::get('/elements', function (){
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::get('cuisines', App\Http\Controllers\Cuisine\Catalog::class)->name('cuisines');

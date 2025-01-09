@@ -1,5 +1,4 @@
 {
-    "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
@@ -7,20 +6,31 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "doctrine/dbal": "^4.2",
-        "doctrine/orm": "^3.3",
+        "ext-openssl":"*",
+        "crell/api-problem": "^3.6",
+        "diglactic/laravel-breadcrumbs": "^5.3",
+        "doctrine/annotations": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laravel-doctrine/migrations": "^3.0",
+        "laravel-doctrine/orm": "^2.0",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "laravel/ui": "^v4.5.0",
+        "lcobucci/jwt": "^4.3"
     },
     "require-dev": {
+        "amirami/localizator": "^0.13.0@alpha",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
+        "hotmeteor/spectator": "dev-master",
+        "larastan/larastan": "^2.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0.1"
+        "phpunit/phpunit": "^11.0.1",
+        "tomasvotruba/type-coverage": "^0.3.1"
     },
     "autoload": {
         "psr-4": {
