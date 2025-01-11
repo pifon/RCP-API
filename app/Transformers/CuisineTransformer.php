@@ -12,11 +12,15 @@ use App\Entities\Cuisine;
 class CuisineTransformer extends TransformerAbstract
 {
 
-    public function transform(Cuisine $cuisine): array
+    /**
+     * @param Cuisine $item
+     * @return array<string, mixed> Transferred cuisine item representation
+     */
+    public function transform(mixed $item): array
     {
         return [
-            'name' => $cuisine->getFullName(),
-            'description' => $cuisine->getDescription()
+            'name' => $item->getFullName(),
+            'description' => $item->getDescription()
         ];
     }
 }

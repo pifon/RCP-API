@@ -6,6 +6,9 @@ use App\DBAL\ServiceEntityRepository;
 use App\Entities\Cuisine;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @extends ServiceEntityRepository<Cuisine>
+ */
 class CuisineRepository extends ServiceEntityRepository
 {
 
@@ -15,7 +18,7 @@ class CuisineRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Cuisine[]
+     * @return array<Cuisine>
      */
     public function getCuisines(): array
     {

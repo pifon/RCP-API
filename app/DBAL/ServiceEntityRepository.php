@@ -14,6 +14,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class ServiceEntityRepository extends EntityRepository implements ServiceEntityRepositoryInterface
 {
+    /**
+     * @param EntityManager $em
+     * @param string $entityClass
+     */
     public function __construct(EntityManager $em, string $entityClass)
     {
         $classMetadata = $em->getClassMetadata($entityClass);
