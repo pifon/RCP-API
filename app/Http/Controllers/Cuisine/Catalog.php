@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cuisine;
 
-
 use App\Entities\Cuisine;
 use App\Http\Controllers\Controller;
 use App\Repositories\CuisineRepository;
@@ -14,7 +13,6 @@ use Illuminate\Http\Request;
 
 class Catalog extends Controller
 {
-
     public function __construct(
         private readonly CuisineRepository $repository,
         private readonly CuisineTransformer  $transformer
@@ -23,7 +21,7 @@ class Catalog extends Controller
 
     /**
      * @param Request $request
-     * @return array<Cuisine>
+     * @return array<string, mixed>
      */
     public function __invoke(Request $request): array
     {

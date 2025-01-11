@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories;
 
@@ -18,7 +19,7 @@ class CuisineRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<Cuisine>
+     * @return Cuisine[]
      */
     public function getCuisines(): array
     {
