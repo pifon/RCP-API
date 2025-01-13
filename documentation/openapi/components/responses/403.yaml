@@ -1,0 +1,10 @@
+description: Forbidden
+content:
+  application/json:
+    schema:
+      $ref: '../schemas/Error.yaml'
+    example:
+      type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+      title: Forbidden
+      detail: The server understood the request but refuses to authorize it.
+      status: 403

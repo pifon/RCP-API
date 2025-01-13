@@ -1,0 +1,13 @@
+{
+  "name": "rcp-api",
+  "version": "0.0.1",
+  "dependencies": {
+    "@redocly/cli": "latest"
+  },
+  "private": true,
+  "scripts": {
+    "start": "redocly preview-docs openapi/openapi.yaml",
+    "build": "redocly bundle openapi/openapi.yaml --output public/spec.json",
+    "test": "redocly lint openapi/openapi.yaml  --extends=recommended"
+  }
+}

@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: ReCiPes - API
+  description: |-
+    This is a specification of Recipes API..
+ 
+    Some useful links:
+    - [The RCP repository](https://github.com/pifon/pifon)
+    - [The source API definition for the RCP API](https://github.com/pifon/pifon/documentation/openapi.yaml)
+  contact:
+    email: przemek.wolski@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+servers:
+  - url: https://pifon.co.uk/api
+
+x-tagGroups:
+  - name: Search and Navigation
+    tags:
+      - recipe
+      - cuisine
+  - name: Recipe Management
+    tags:
+      - recipe
+  - name: User Management
+    tags:
+      - user
+tags:
+  - name: cuisine
+    description: Level of grouping recipes
+  - name: recipe
+    description: Access to CRUD of recipes.
+  - name: user
+    description: Operations about user
+paths:
+  /recipe/{slug}:
+    $ref: "./paths/recipes@{slug}.yaml"
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: './components/security/bearer_auth.yaml'
+
+

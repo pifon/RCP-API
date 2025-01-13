@@ -1,0 +1,10 @@
+description: Not Found
+content:
+  application/json:
+    schema:
+      $ref: '../schemas/Error.yaml'
+    example:
+      type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+      title: Not Found
+      detail: The requested resource could not be located.
+      status: 404

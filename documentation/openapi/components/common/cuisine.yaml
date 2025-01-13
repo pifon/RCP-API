@@ -1,0 +1,4 @@
+type: string
+description: Name of cuisine incl of subtype if available
+example: italian-neapolitan
+  

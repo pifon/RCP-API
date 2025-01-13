@@ -1,0 +1,10 @@
+description: Unauthorized
+content:
+  application/json:
+    schema:
+      $ref: '../schemas/Error.yaml'
+    example:
+      type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+      title: Unauthorized
+      detail: Authentication is required to access this resource.
+      status: 401
