@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->integer('variant')->nullable();
             $table->foreignId('author')->constrained('users');
             $table->string('title');

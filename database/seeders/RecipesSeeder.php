@@ -15,6 +15,7 @@ class RecipesSeeder extends Seeder
     {
         DB::table('recipes')->insert(values: [
             [
+                'slug' => 'pizza',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Pizza',
@@ -23,6 +24,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'pasta',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Pasta',
@@ -31,6 +33,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'spaghetti',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Spaghetti',
@@ -39,6 +42,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'risotto',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Risotto',
@@ -47,6 +51,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'gelato',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Gelato',
@@ -55,6 +60,7 @@ class RecipesSeeder extends Seeder
                 'type' => 6
             ],
             [
+                'slug' => 'tiramisu',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Tiramisu',
@@ -63,6 +69,7 @@ class RecipesSeeder extends Seeder
                 'type' => 6
             ],
             [
+                'slug' => 'dumplings',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Dumplings',
@@ -71,6 +78,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'sweet-and-sour-pork',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Sweet and Sour Pork',
@@ -79,6 +87,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'fried-rice',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Fried Rice',
@@ -87,6 +96,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'peking-duck',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Peking Duck',
@@ -95,6 +105,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'kung-pao-chicken',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Kung Pao Chicken',
@@ -103,6 +114,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'butter-chicken',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Butter Chicken',
@@ -111,6 +123,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'biryani',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Biryani',
@@ -119,6 +132,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'samosas',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Samosas',
@@ -127,6 +141,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'naan',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Naan',
@@ -135,6 +150,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'tikka-masala',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Tikka Masala',
@@ -143,6 +159,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'taco',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Taco',
@@ -151,6 +168,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'buritto',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Burrito',
@@ -159,6 +177,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'enchilada',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Enchilada',
@@ -167,6 +186,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'guacamole',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Guacamole',
@@ -175,14 +195,16 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'mexican-churros',
                 'variant' => null,
                 'author' => 1,
-                'title' => 'Churros',
+                'title' => 'Mexican Churros',
                 'description' => null,
                 'cuisine' => 41,
                 'type' => 1
             ],
             [
+                'slug' => 'sushi',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Sushi',
@@ -191,6 +213,7 @@ class RecipesSeeder extends Seeder
                 'type' => 17
             ],
             [
+                'slug' => 'sashimi',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Sashimi',
@@ -199,6 +222,7 @@ class RecipesSeeder extends Seeder
                 'type' => 17
             ],
             [
+                'slug' => 'ramen',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Ramen',
@@ -207,6 +231,7 @@ class RecipesSeeder extends Seeder
                 'type' => 15
             ],
             [
+                'slug' => 'tempura',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Tempura',
@@ -215,6 +240,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'miso',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Miso',
@@ -223,6 +249,7 @@ class RecipesSeeder extends Seeder
                 'type' => 15
             ],
             [
+                'slug' => 'burger',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Burger',
@@ -231,6 +258,7 @@ class RecipesSeeder extends Seeder
                 'type' => 18
             ],
             [
+                'slug' => 'bbq-ribs',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'BBQ Ribs',
@@ -239,6 +267,7 @@ class RecipesSeeder extends Seeder
                 'type' => 1
             ],
             [
+                'slug' => 'apple-pie',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Apple Pie',
@@ -247,6 +276,7 @@ class RecipesSeeder extends Seeder
                 'type' => 6
             ],
             [
+                'slug' => 'coq-au-vin',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Coq Au Vin',
@@ -255,6 +285,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'creme-brulee',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Creme Brulee',
@@ -263,6 +294,7 @@ class RecipesSeeder extends Seeder
                 'type' => 6
             ],
             [
+                'slug' => 'pad-thai',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Pad Thai',
@@ -271,6 +303,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'green-curry',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Green Curry',
@@ -279,6 +312,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'tom-yum',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Tom Yum',
@@ -287,6 +321,7 @@ class RecipesSeeder extends Seeder
                 'type' => 15
             ],
             [
+                'slug' => 'mango-sticky-rice',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Mango Sticky Rice',
@@ -295,6 +330,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'paella',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Paella',
@@ -303,6 +339,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'churros',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Churros',
@@ -311,6 +348,7 @@ class RecipesSeeder extends Seeder
                 'type' => 2
             ],
             [
+                'slug' => 'gazpacho',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Gazpacho',
@@ -319,6 +357,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'jamon-iberico',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Jamon Iberico',
@@ -327,6 +366,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'hummus',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Hummus',
@@ -335,6 +375,7 @@ class RecipesSeeder extends Seeder
                 'type' => 16
             ],
             [
+                'slug' => 'falafel',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Falafel',
@@ -343,6 +384,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'tabouleh',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Tabbouleh',
@@ -351,6 +393,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'kimchi',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Kimchi',
@@ -359,6 +402,7 @@ class RecipesSeeder extends Seeder
                 'type' => 22
             ],
             [
+                'slug' => 'bulgogi',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Bulgogi',
@@ -367,6 +411,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'bibimbap',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Bibimbap',
@@ -375,6 +420,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'tteokbokki',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Tteokbokki',
@@ -383,6 +429,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'moussaka',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Moussaka',
@@ -391,6 +438,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'souvlaki',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Souvlaki',
@@ -399,6 +447,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'tzatziki',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Tzatziki',
@@ -407,6 +456,7 @@ class RecipesSeeder extends Seeder
                 'type' => 12
             ],
             [
+                'slug' => 'baklava',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Baklava',
@@ -415,6 +465,7 @@ class RecipesSeeder extends Seeder
                 'type' => 23
             ],
             [
+                'slug' => 'greek-salad',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Greek Salad',
@@ -423,6 +474,7 @@ class RecipesSeeder extends Seeder
                 'type' => 10
             ],
             [
+                'slug' => 'shawarma',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Shawarma',
@@ -431,6 +483,7 @@ class RecipesSeeder extends Seeder
                 'type' => 18
             ],
             [
+                'slug' => 'kebab',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Kebab',
@@ -439,6 +492,7 @@ class RecipesSeeder extends Seeder
                 'type' => 18
             ],
             [
+                'slug' => 'pho',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Pho',
@@ -447,6 +501,7 @@ class RecipesSeeder extends Seeder
                 'type' => 15
             ],
             [
+                'slug' => 'banh-mi',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Banh Mi',
@@ -455,6 +510,7 @@ class RecipesSeeder extends Seeder
                 'type' => 18
             ],
             [
+                'slug' => 'spring-rolls',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Spring Rolls',
@@ -463,6 +519,7 @@ class RecipesSeeder extends Seeder
                 'type' => 11
             ],
             [
+                'slug' => 'bun-cha',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Bun Cha',
@@ -471,6 +528,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'baba-ganoush',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Baba Ganoush',
@@ -479,6 +537,7 @@ class RecipesSeeder extends Seeder
                 'type' => 13
             ],
             [
+                'slug' => 'fattoush',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Fattoush',
@@ -487,6 +546,7 @@ class RecipesSeeder extends Seeder
                 'type' => 10
             ],
             [
+                'slug' => 'risotto-lombardy',
                 'variant' => 4,
                 'author' => 1,
                 'title' => 'Risotto',
@@ -495,6 +555,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'ossobuco',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Ossobuco',
@@ -503,6 +564,7 @@ class RecipesSeeder extends Seeder
                 'type' => 24
             ],
             [
+                'slug' => 'polenta',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Polenta',
@@ -511,6 +573,7 @@ class RecipesSeeder extends Seeder
                 'type' => 11
             ],
             [
+                'slug' => 'panna-cotta',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Panna Cotta',
@@ -519,6 +582,7 @@ class RecipesSeeder extends Seeder
                 'type' => 6
             ],
             [
+                'slug' => 'agnolotti',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Agnolotti',
@@ -527,6 +591,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'margherita',
                 'variant' => 1,
                 'author' => 1,
                 'title' => 'Pizza Margherita',
@@ -535,6 +600,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'pasta-alla-norma',
                 'variant' => 2,
                 'author' => 1,
                 'title' => 'Pasta alla Norma',
@@ -543,6 +609,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'caponata',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Caponata',
@@ -551,6 +618,7 @@ class RecipesSeeder extends Seeder
                 'type' => 11
             ],
             [
+                'slug' => 'parmigiana-di-melanzane',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Parmigiana di Melanzane',
@@ -559,6 +627,7 @@ class RecipesSeeder extends Seeder
                 'type' => 14
             ],
             [
+                'slug' => 'focaccia',
                 'variant' => null,
                 'author' => 1,
                 'title' => 'Focaccia',
