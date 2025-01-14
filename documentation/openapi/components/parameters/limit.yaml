@@ -1,6 +1,0 @@
-- in: query
-  name: limit
-  schema:
-    type: integer
-    description: Maximum number of results [1,100]
-  example: 10

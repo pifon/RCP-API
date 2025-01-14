@@ -20,15 +20,11 @@ properties:
   author:
     $ref: './thin/Author.yaml'
   createdAt:
-    example: 2025-01-13 13:10:00
-    type: string
-    description: The date and time of creation of the recipe
+    $ref: '../common/crdate.yaml'
   updatedAt:
-    example: 2025-01-13 13:10:00
-    type: string
-    description: The date and time of the last update of the recipe.
+    $ref: '../common/update.yaml'
   _links:
-    $ref: "../links/Recipe.yaml"
+    $ref: "../links/RecipeDetails.yaml"
 required:
   - title
   - cuisine

@@ -10,9 +10,7 @@ properties:
     description: Username - handle for the author
     example: world-chef
   createdAt:
-    example: 2025-01-13 13:10:00
-    type: string
-    description: The date and time of creation of the account
+    $ref: '../common/crdate.yaml'
   _links:
     $ref: "../links/Author.yaml"
 required:

@@ -3,10 +3,6 @@ readOnly: true
 properties:
   self:
     type: string
-    description: This resource
-    example: https://pifon.co.uk/api/recipes/margherita
-  details:
-    type: string
     description: More info about this recipe
     example: https://pifon.co.uk/api/recipes/margherita/details
   ingredients:
