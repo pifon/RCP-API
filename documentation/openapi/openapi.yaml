@@ -17,26 +17,41 @@ servers:
   - url: https://pifon.co.uk/api
 
 x-tagGroups:
-  - name: Search and Navigation
+  - name: Components
     tags:
-      - recipe
-      - cuisine
-  - name: Recipe Management
+      - Cuisines
+  - name: Recipes and Management
     tags:
-      - recipe
+      - Recipes
   - name: User Management
     tags:
-      - user
+      - Users
 tags:
-  - name: cuisine
-    description: Level of grouping recipes
-  - name: recipe
-    description: Access to CRUD of recipes.
-  - name: user
+  - name: Cuisines
+    description: Operations about cuisines
+  - name: Recipes
+    description: Operations related to recipes and components.
+  - name: Users
     description: Operations about user
 paths:
   /recipes/{slug}:
     $ref: "./paths/recipes@{slug}.yaml"
+  /recipes/{slug}/details:
+    $ref: "./paths/recipes@{slug}@details.yaml"
+  /recipes/{slug}/ingredients:
+    $ref: "./paths/recipes@{slug}@ingredients.yaml"
+  /recipes/{slug}/directions:
+    $ref: "./paths/recipes@{slug}@directions.yaml"
+  /cuisines:
+    $ref: "./paths/cuisines.yaml"
+  /cuisines/{slug}:
+    $ref: "./paths/cuisines@{slug}.yaml"
+  /cuisines/{slug}/details:
+    $ref: "./paths/cuisines@{slug}@details.yaml"
+  /dish-types/{slug}:
+    $ref: "./paths/dish-types@{slug}.yaml"
+  /author/{username}:
+    $ref: "./paths/authors@{username}.yaml"
 
 security:
   - bearerAuth: []

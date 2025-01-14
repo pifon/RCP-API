@@ -6,6 +6,8 @@ namespace App\Repositories;
 use App\DBAL\ServiceEntityRepository;
 use App\Entities\Cuisine;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 /**
  * @extends ServiceEntityRepository<Cuisine>
@@ -30,6 +32,25 @@ class CuisineRepository extends ServiceEntityRepository
             ->addOrderBy('c.id', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function getCuisine($slug): Cuisine
+    {
+        list($name,$variant) = explode('-',$slug);
+        if (empty($variant)) {
+            $variant = '%';
+        }
+        $qb = $this->createQueryBuilder('c')
+            ->select('c')
+            ->where('c.name = :name AND c.variant = :variant')
+            ->setParameter('name', ucfirst($name))
+            ->setParameter('variant', ucfirst($variant));
+
+        return $qb->getQuery()->getSingleResult();
     }
 
 }

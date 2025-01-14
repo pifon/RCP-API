@@ -1,0 +1,14 @@
+type: object
+readOnly: true
+properties:
+  self:
+    type: string
+    description: This resource
+    example: https://pifon.co.uk/api/cuisine/italian-neapolitan
+  details:
+    type: string
+    description: More info about this cuisine
+    example: https://pifon.co.uk/api/cuisines/italian-neapolitan/details
+required:
+  - self
+  - details

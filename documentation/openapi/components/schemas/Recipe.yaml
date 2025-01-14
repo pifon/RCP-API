@@ -5,37 +5,14 @@ properties:
     type: string
     description: Title of the recipe
     example: Pizza Margherita
-  description:
-    type: string
-    description: Description of the recipe
-    example: Pizza Margherita, also known as Margherita pizza, is a typical Neapolitan pizza, |
-             roundish in shape with a raised edge (the cornicione) and garnished with hand-crushed peeled tomatoes, |
-             mozzarella (buffalo mozzarella or fior di latte), fresh basil leaves, and extra virgin olive oil.
-  variant:
-    type: string
-    description: "Slug of core recipe. ie: Margerita would be variant of 'pizza'"
-    example: pizza
   cuisine:
-    $ref: "../common/cuisine.yaml"
+    $ref: './Cuisine.yaml'
   type:
-    $ref: "../common/dish-type.yaml"
-  author:
-    $ref: "../common/author.yaml"
-  createdAt:
-    example: 2025-01-13 13:10:00
-    type: string
-    description: The date and time of creation of the recipe
-  updatedAt:
-    example: 2025-01-13 13:10:00
-    type: string
-    description: The date and time of the last update of the recipe.
+    $ref: './thin/DishType.yaml'
   _links:
     $ref: "../links/Recipe.yaml"
 required:
   - title
   - cuisine
   - type
-  - author
-  - createdAt
-  - updatedAt
   - _links

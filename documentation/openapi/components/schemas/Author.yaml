@@ -1,0 +1,22 @@
+type: object
+additionalProperties: false
+properties:
+  name:
+    type: string
+    description: Full name
+    example: Master Bread
+  username:
+    type: string
+    description: Username - handle for the author
+    example: world-chef
+  createdAt:
+    example: 2025-01-13 13:10:00
+    type: string
+    description: The date and time of creation of the account
+  _links:
+    $ref: "../links/Author.yaml"
+required:
+  - name
+  - username
+  - createdAt
+  - _links

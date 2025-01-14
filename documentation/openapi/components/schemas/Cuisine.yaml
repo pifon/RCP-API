@@ -1,0 +1,17 @@
+type: object
+additionalProperties: false
+properties:
+  name:
+    type: string
+    description: Main and region (if specified)
+    example: Italian - Neapolitan
+  slug:
+    type: string
+    description: Identifier
+    example: italian-neapolitan
+  _links:
+    $ref: "../links/Cuisine.yaml"
+required:
+  - name
+  - slug
+  - _links

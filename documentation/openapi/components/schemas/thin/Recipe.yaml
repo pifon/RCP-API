@@ -1,0 +1,18 @@
+type: object
+additionalProperties: false
+properties:
+  slug:
+    type: string
+    description: Slug of the master recipe
+    example: pizza
+  _links:
+    type: object
+    readOnly: true
+    properties:
+      self:
+        type: string
+        description: This resource
+        example: https://pifon.co.uk/api/recipes/pizza
+required:
+  - slug
+  - _links

@@ -7,7 +7,7 @@ get:
   parameters:
     - name: slug
       in: path
-      description: "Recipe IDentifier"
+      description: Recipe IDentifier
       required: true
       schema:
         type: string

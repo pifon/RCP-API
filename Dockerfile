@@ -29,7 +29,7 @@ COPY . /var/www/html
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Run Composer
-RUN composer install
+# RUN composer install
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \

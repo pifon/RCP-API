@@ -7,7 +7,7 @@ get:
   parameters:
     - name: slug
       in: path
-      description: "Recipe IDentifier"
+      description: Recipe IDentifier
       required: true
       schema:
         type: string
@@ -18,7 +18,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Recipe.yaml
+            $ref: "../components/schemas/RecipeDetails.yaml"
     '401':
       $ref: ../components/responses/401.yaml
     '403':

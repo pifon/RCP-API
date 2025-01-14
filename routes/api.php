@@ -15,12 +15,9 @@ Route::get('/', function (){
 Route::post('/login',[AuthController::class, 'login']);
 Route::post('/register',[AuthController::class, 'register']);
 
-Route::get('/elements', function (){
-    return \App\Models\Element::all();
-});
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 Route::get('cuisines', App\Http\Controllers\Cuisine\Catalog::class)->name('cuisines');
+Route::get('cuisines/{slug}', App\Http\Controllers\Cuisine\Show::class)->name('cuisines.show');

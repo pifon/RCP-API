@@ -1,24 +1,24 @@
 get:
   tags:
-    - Recipes
-  summary: Get recipe details
-  description: Fetch main recipe details
-  operationId: getRecipe
+    - Users
+  summary: Get author details
+  description: Fetch details of user, author of recipe(s)
+  operationId: getAuthor
   parameters:
-    - name: slug
+    - name: username
       in: path
-      description: "Recipe IDentifier"
+      description: User, author username
       required: true
       schema:
         type: string
-        example: margherita
+        example: world-chef
   responses:
     '200':
       description: Success
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Recipe.yaml
+            $ref: ../components/schemas/Author.yaml
     '401':
       $ref: ../components/responses/401.yaml
     '403':

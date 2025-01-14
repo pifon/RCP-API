@@ -1,13 +1,13 @@
 get:
   tags:
-    - Recipes
+    - recipe
   summary: Get recipe details
   description: Fetch main recipe details
   operationId: getRecipe
   parameters:
     - name: slug
       in: path
-      description: "Recipe IDentifier"
+      description: Recipe IDentifier
       required: true
       schema:
         type: string

@@ -4,33 +4,16 @@ properties:
   self:
     type: string
     description: This resource
-    example: https://pifon.co.uk/api/recipe/margherita
+    example: https://pifon.co.uk/api/recipes/margherita
   details:
     type: string
     description: More info about this recipe
-    example: https://pifon.co.uk/api/recipe/margherita/details
-  ingredients:
-    type: string
-    description: List of ingredients
-    example: https://pifon.co.uk/api/recipe/margherita/ingredients
-  directions:
-    type: string
-    description: Preparation directions
-    example: https://pifon.co.uk/api/recipe/margherita/directions
+    example: https://pifon.co.uk/api/recipes/margherita/details
   cuisine:
     type: string
     description: Description of cuisine
-    example: https://pifon.co.uk/api/cuisine/italian-neapolitan
-  type:
-    type: string
-    description: Description of type of the dish
-    example: https://pifon.co.uk/api/dish-type/main
-  author:
-    type: string
-    description: About author
-    example: https://pifon.co.uk/api/author/world-chef
+    example: https://pifon.co.uk/api/cuisines/italian-neapolitan
 required:
   - self
+  - details
   - cuisine
-  - type
-  - author

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Repositories\CuisineRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'cuisines')]
@@ -28,6 +29,12 @@ class Cuisine
     #[ORM\Column(name: 'description', type: 'string', nullable: true)]
     private ?string $description;
 
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
+    private DateTime $createdAt;
+
+    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
+    private DateTime $updatedAt;
+
     public function getId(): int
     {
         return $this->id;
@@ -40,8 +47,26 @@ class Cuisine
         return $this->name . ' - ' . $this->variant;
     }
 
+    public function getSlug(): string
+    {
+        if(!$this->variant) {
+            return strtolower($this->name);
+        }
+        return strtolower($this->name . '-' . $this->variant);
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
     }
 }

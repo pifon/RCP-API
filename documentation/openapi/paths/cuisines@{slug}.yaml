@@ -1,24 +1,24 @@
 get:
   tags:
-    - Recipes
-  summary: Get recipe details
-  description: Fetch main recipe details
-  operationId: getRecipe
+    - Cuisines
+  summary: Display cuisine
+  description: Fetch cuisine handle.
+  operationId: getCuisine
   parameters:
     - name: slug
       in: path
-      description: "Recipe IDentifier"
+      description: "Cuisine IDentifier. Format: main[-region]"
       required: true
       schema:
         type: string
-        example: margherita
+        example: italian-neapolitan
   responses:
     '200':
       description: Success
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Recipe.yaml
+            $ref: ../components/schemas/Cuisine.yaml
     '401':
       $ref: ../components/responses/401.yaml
     '403':

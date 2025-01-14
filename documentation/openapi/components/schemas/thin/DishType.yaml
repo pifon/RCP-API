@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Type of the dish
+    example: main
+  _links:
+    type: object
+    readOnly: true
+    properties:
+      self:
+        type: string
+        description: This resource
+        example: https://pifon.co.uk/api/dish-types/main
+required:
+  - name
+  - _links
