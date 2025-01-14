@@ -21,3 +21,4 @@ Route::get('/user', function (Request $request) {
 
 Route::get('cuisines', App\Http\Controllers\Cuisine\Catalog::class)->name('cuisines');
 Route::get('cuisines/{slug}', App\Http\Controllers\Cuisine\Show::class)->name('cuisines.show');
+Route::get('cuisines/{slug}/details', App\Http\Controllers\Cuisine\Details::class)->name('cuisines.details');

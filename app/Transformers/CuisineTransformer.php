@@ -21,9 +21,7 @@ class CuisineTransformer extends TransformerAbstract
     {
         return [
             'name' => $item->getFullName(),
-            'description' => $item->getDescription(),
-            'createdAt' => $item->getCreatedAt()->format(DateTimeInterface::ATOM),
-            'updatedAt' => $item->getUpdatedAt()->format(DateTimeInterface::ATOM),
+            'slug' => $item->getSlug(),
             '_links' => $this->getLinks($item),
         ];
     }
@@ -32,6 +30,31 @@ class CuisineTransformer extends TransformerAbstract
     {
         return [
             'self' => route('cuisines.show', ['slug' => $item->getSlug()]),
+            'details' => route('cuisines.details', ['slug' => $item->getSlug()]),
+        ];
+    }
+
+    public function transformDetailed(mixed $item): array
+    {
+        return [
+            'name' => $item->getFullName(),
+            'slug' => $item->getSlug(),
+            'description' => $item->getDescription(),
+            'created_at' => $item->getCreatedAt()->format(DateTimeInterface::ATOM),
+            'updated_at' => $item->getUpdatedAt()->format(DateTimeInterface::ATOM),
+            '_links' => $this->getDetailedLinks($item),
+        ];
+    }
+
+    private function getDetailedLinks(mixed $item): array
+    {
+        return [
+            'self' => route('cuisines.details', ['slug' => $item->getSlug()]),
+            'handle' => route('cuisines.show', ['slug' => $item->getSlug()]),
+            'recipes' => route('cuisines.show', ['slug' => $item->getSlug()]),
+            'authors' => route('cuisines.show', ['slug' => $item->getSlug()]),
+            'ingredients' => route('cuisines.show', ['slug' => $item->getSlug()]),
+            'related' => route('cuisines.show', ['slug' => $item->getSlug()]),
         ];
     }
 }
