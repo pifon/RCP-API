@@ -1,0 +1,10 @@
+description: Unprocessable Entity
+content:
+  application/json:
+    schema:
+      $ref: '../schemas/Error.yaml'
+    example:
+      type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+      title: Unprocessable Entity
+      detail: The provided data is invalid.
+      status: 422

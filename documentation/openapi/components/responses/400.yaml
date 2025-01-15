@@ -1,0 +1,10 @@
+description: Bad Request
+content:
+  application/json:
+    schema:
+      $ref: '../schemas/Error.yaml'
+    example:
+      type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+      title: Bad Request
+      detail: Invalid request parameters.
+      status: 400

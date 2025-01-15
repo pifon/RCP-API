@@ -23,13 +23,16 @@ class CuisineRepository extends ServiceEntityRepository
     /**
      * @return Cuisine[]
      */
-    public function getCuisines(): array
+    public function getCuisines(?string $name, ?int $limit): array
     {
-        $limit = 100;
         $qb = $this->createQueryBuilder('c')
             ->select('c')
-            ->setMaxResults($limit)
-            ->addOrderBy('c.id', 'ASC');
+            ->setMaxResults($limit ?? 25);
+
+        if ($name) {
+            $qb->where('c.name = :name')
+                ->setParameter('name', ucfirst($name));
+        }
 
         return $qb->getQuery()->getResult();
     }
@@ -40,17 +43,30 @@ class CuisineRepository extends ServiceEntityRepository
      */
     public function getCuisine($slug): Cuisine
     {
-        list($name,$variant) = explode('-',$slug);
-        if (empty($variant)) {
-            $variant = '%';
+        $name = ucfirst($slug);
+        $variant = false;
+        if (preg_match('/^[a-z]+-[a-z]+$/', $slug)) {
+            list($name, $variant) = explode('-', $slug);
         }
+
         $qb = $this->createQueryBuilder('c')
             ->select('c')
-            ->where('c.name = :name AND c.variant = :variant')
-            ->setParameter('name', ucfirst($name))
-            ->setParameter('variant', ucfirst($variant));
+            ->where('c.name = :name')
+            ->setParameter('name', ucfirst($name));
 
-        return $qb->getQuery()->getSingleResult();
+        if ($variant) {
+            $qb->andWhere('c.variant = :variant')
+                ->setParameter('variant', ucfirst($variant));
+        }
+        $qb->setMaxResults(1);
+
+
+        $found = $qb->getQuery()->getSingleResult();
+        if (!$found) {
+            throw new NoResultException();
+        }
+
+        return $found;
     }
 
 }
