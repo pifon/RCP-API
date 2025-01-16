@@ -15,13 +15,15 @@ class UsersSeeder extends Seeder
     {
         DB::table('users')->insert(values: [
             [
-                'name' => 'system',
+                'username' => 'system',
+                'name' => 'System Account',
                 'email' => 'przemek.wolski@gmail.com',
                 'email_verified_at' => '2025-01-01 00:00:00',
                 'password' => '***',
             ],
             [
-                'name' => 'test',
+                'username' => 'test',
+                'name' => 'Test Account',
                 'email' => 'przemek.wolski@protonmail.com',
                 'email_verified_at' => '2025-01-01 00:00:01',
                 'password' => '***',

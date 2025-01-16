@@ -1,10 +1,10 @@
 type: object
 additionalProperties: false
 properties:
-  username:
+  name:
     type: string
-    description: Username - handle for the author
-    example: world-chef
+    description: Name of the author
+    example: Master Bread
   _links:
     type: object
     readOnly: true
@@ -13,6 +13,14 @@ properties:
         type: string
         description: This resource
         example: https://pifon.co.uk/api/author/world-chef
+      details:
+        type: string
+        description: Author details
+        example: https://pifon.co.uk/api/author/world-chef/details
+      recipes:
+        type: string
+        description: List of authored recipes
+        example: https://pifon.co.uk/api/author/world-chef/recipes
 required:
   - username
   - _links

@@ -7,6 +7,7 @@ namespace App\Entities;
 use App\Repositories\CuisineRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Illuminate\Support\Collection;
 
 #[ORM\Table(name: 'cuisines')]
 #[ORM\Entity(repositoryClass: CuisineRepository::class)]
@@ -34,6 +35,9 @@ class Cuisine
 
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
+
+    #[ORM\OneToMany(mappedBy: 'cuisine', targetEntity: DishType::class)]
+    private Collection $recipes;
 
     public function getId(): int
     {
@@ -68,5 +72,15 @@ class Cuisine
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getVariant(): ?string
+    {
+        return $this->variant;
     }
 }

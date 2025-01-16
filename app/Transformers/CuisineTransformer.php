@@ -21,7 +21,6 @@ class CuisineTransformer extends TransformerAbstract
     {
         return [
             'name' => $item->getFullName(),
-            'slug' => $item->getSlug(),
             '_links' => $this->getLinks($item),
         ];
     }
@@ -38,7 +37,6 @@ class CuisineTransformer extends TransformerAbstract
     {
         return [
             'name' => $item->getFullName(),
-            'slug' => $item->getSlug(),
             'description' => $item->getDescription(),
             'created_at' => $item->getCreatedAt()->format(DateTimeInterface::ATOM),
             'updated_at' => $item->getUpdatedAt()->format(DateTimeInterface::ATOM),

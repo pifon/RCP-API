@@ -1,10 +1,10 @@
 type: object
 additionalProperties: false
 properties:
-  slug:
+  name:
     type: string
     description: Slug of the master recipe
-    example: pizza
+    example: Pizza
   _links:
     type: object
     readOnly: true

@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\DBAL\ServiceEntityRepository;
+use App\Entities\DishType;
 use App\Entities\Cuisine;
+use App\Entities\Recipe;
+use App\Http\Controllers\Cuisine\Authors;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -67,6 +70,25 @@ class CuisineRepository extends ServiceEntityRepository
         }
 
         return $found;
+    }
+
+    /**
+     * @param Cuisine $cuisine
+     * @param int|null $limit
+     * @return Authors[]
+     */
+    public function getCuisineAuthors(Cuisine $cuisine, ?int $limit = null): array
+    {
+        // fetch authors from recipes in this cuisine
+        $qb = $this->createQueryBuilder('c')
+            ->select('DISTINCT author')
+            ->from(Recipe::class, 'recipe')
+            ->innerJoin('recipe.author', 'author') // Join with the Author entity
+            ->where('recipe.cuisine = :cuisine') // Match the cuisine
+            ->setParameter('cuisine', $cuisine)
+            ->getQuery()
+            ->getResult();
+        return $qb->getQuery()->getResult();
     }
 
 }

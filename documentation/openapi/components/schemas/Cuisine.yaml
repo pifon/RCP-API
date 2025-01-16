@@ -5,10 +5,6 @@ properties:
     type: string
     description: Main and region (if specified)
     example: Italian - Neapolitan
-  slug:
-    type: string
-    description: Identifier
-    example: italian-neapolitan
   _links:
     $ref: "../links/Cuisine.yaml"
 required:

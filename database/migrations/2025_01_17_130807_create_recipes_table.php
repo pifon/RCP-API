@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique();
             $table->integer('variant')->nullable();
-            $table->foreignId('author')->constrained('users');
+            $table->foreignId('author')->constrained('authors');
             $table->string('title');
             $table->text('description')->nullable();
             $table->foreignId('cuisine')->constrained('cuisines');
