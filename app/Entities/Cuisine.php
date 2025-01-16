@@ -7,7 +7,8 @@ namespace App\Entities;
 use App\Repositories\CuisineRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Illuminate\Support\Collection;
+use Doctrine\ORM\PersistentCollection as Collection;
+
 
 #[ORM\Table(name: 'cuisines')]
 #[ORM\Entity(repositoryClass: CuisineRepository::class)]

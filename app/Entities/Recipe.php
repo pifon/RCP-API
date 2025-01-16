@@ -24,7 +24,7 @@ class Recipe
     private string $slug;
 
     #[ORM\OneToMany(mappedBy: 'variant', targetEntity: Recipe::class)]
-    private DishType $variant;
+    private Recipe $variant;
 
     #[ORM\ManyToOne(targetEntity: Author::class, inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]

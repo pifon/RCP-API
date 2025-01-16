@@ -7,7 +7,7 @@ namespace App\Entities;
 use App\Repositories\AuthorRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Illuminate\Support\Collection;
+use Doctrine\ORM\PersistentCollection as Collection;
 
 #[ORM\Table(name: 'authors')]
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
