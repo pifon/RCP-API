@@ -5,15 +5,15 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "ext-openssl":"*",
+        "php": "^8.3",
+        "ext-openssl": "*",
         "crell/api-problem": "^3.6",
         "diglactic/laravel-breadcrumbs": "^5.3",
         "doctrine/annotations": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel-doctrine/migrations": "^3.0",
         "laravel-doctrine/orm": "^2.0",
-        "laravel/framework": "^11.31",
+        "laravel/framework": "^11.10.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^v4.5.0",
@@ -29,9 +29,12 @@
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
+        "nunomaduro/larastan": "^2.9",
         "phpmd/phpmd": "^2.15",
+        "phpstan/phpstan-doctrine": "^1.5",
         "phpunit/phpunit": "^11.0.1",
         "psalm/phar": "^5.26",
+        "spatie/laravel-ignition": "^2.0",
         "squizlabs/php_codesniffer": "^3.11",
         "tomasvotruba/type-coverage": "^0.3.1"
     },
@@ -52,20 +55,11 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
-        "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
-        ],
         "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "@php artisan -V"
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi",
-            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"
-        ],
-        "dev": [
-            "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+            "@php artisan key:generate --ansi"
         ]
     },
     "extra": {
@@ -78,6 +72,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "composer/package-versions-deprecated": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }

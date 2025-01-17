@@ -23,25 +23,28 @@ class Recipe
     #[ORM\Column(name: 'slug', type: 'string', length: 255, nullable: false)]
     private string $slug;
 
-    #[ORM\OneToMany(mappedBy: 'variant', targetEntity: Recipe::class)]
-    private Recipe $variant;
-
-    #[ORM\ManyToOne(targetEntity: Author::class, inversedBy: 'recipes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private Author $author;
-
     #[ORM\Column(name: 'title', type: 'string', length: 255, nullable: false)]
     private string $title;
 
     #[ORM\Column(name: 'description', type: 'string', nullable: true)]
     private ?string $description;
 
-    #[ORM\ManyToOne(targetEntity: Cuisine::class, inversedBy: 'recipes')]
-    #[ORM\JoinColumn(nullable: false)]
+    // Relations
+
+    #[ORM\JoinColumn(name: 'variant_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Recipe::class)]
+    private ?Recipe $variant;
+
+    #[ORM\ManyToOne(targetEntity: Author::class)]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false)]
+    private Author $author;
+
+    #[ORM\ManyToOne(targetEntity: Cuisine::class)]
+    #[ORM\JoinColumn(name: 'cuisine_id', referencedColumnName: 'id', nullable: false)]
     private Cuisine $cuisine;
 
-    #[ORM\ManyToOne(targetEntity: DishType::class, inversedBy: 'recipes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: DishType::class)]
+    #[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id', nullable: false)]
     private DishType $type;
 
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
@@ -50,4 +53,52 @@ class Recipe
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getAuthor(): Author
+    {
+        return $this->author;
+    }
+
+    public function getCuisine(): Cuisine
+    {
+        return $this->cuisine;
+    }
+    public function getType(): DishType
+    {
+        return $this->type;
+    }
+
+    public function getVariant(): Recipe
+    {
+        return $this->variant;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
 }

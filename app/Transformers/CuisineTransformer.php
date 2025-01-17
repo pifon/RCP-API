@@ -50,7 +50,7 @@ class CuisineTransformer extends TransformerAbstract
             'self' => route('cuisines.details', ['slug' => $item->getSlug()]),
             'handle' => route('cuisines.show', ['slug' => $item->getSlug()]),
             'recipes' => route('cuisines.show', ['slug' => $item->getSlug()]),
-            'authors' => route('cuisines.show', ['slug' => $item->getSlug()]),
+            'authors' => route('cuisines.authors', ['slug' => $item->getSlug()]),
             'ingredients' => route('cuisines.show', ['slug' => $item->getSlug()]),
             'related' => route('cuisines.show', ['slug' => $item->getSlug()]),
         ];

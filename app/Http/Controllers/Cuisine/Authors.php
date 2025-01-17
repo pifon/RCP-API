@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Cuisine;
 
 use App\Exceptions\ValidationErrorException;
 use App\Http\Controllers\Controller;
+use App\Repositories\AuthorRepository;
 use App\Repositories\CuisineRepository;
 use App\Transformers\AuthorTransformer;
 use Doctrine\ORM\NonUniqueResultException;
@@ -16,7 +17,8 @@ class Authors extends Controller
 {
     public function __construct(
         private readonly CuisineRepository $repository,
-        private readonly AuthorTransformer $transformer
+        private readonly AuthorRepository $authorRepository,
+        private readonly AuthorTransformer $AuthorTransformer
     ) {}
 
     /**
@@ -30,8 +32,8 @@ class Authors extends Controller
         } catch (NoResultException|NonUniqueResultException $e) {
             throw new ValidationErrorException(trans('cuisine.not_found.message'));
         }
-        $authors = $this->repository->getCuisineAuthors($cuisine);
+        $authors = $this->authorRepository->getCuisineAuthors($cuisine);
 
-        return $this->transformer->transform($authors);
+        return $this->AuthorTransformer->transformSet($authors);
     }
 }

@@ -18,6 +18,9 @@ use Doctrine\ORM\NoResultException;
 class CuisineRepository extends ServiceEntityRepository
 {
 
+    /**
+     * @param EntityManager $em
+     */
     public function __construct(EntityManager $em)
     {
         parent::__construct($em, Cuisine::class);
@@ -79,15 +82,14 @@ class CuisineRepository extends ServiceEntityRepository
      */
     public function getCuisineAuthors(Cuisine $cuisine, ?int $limit = null): array
     {
+
         // fetch authors from recipes in this cuisine
-        $qb = $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('r')
             ->select('DISTINCT author')
-            ->from(Recipe::class, 'recipe')
-            ->innerJoin('recipe.author', 'author') // Join with the Author entity
-            ->where('recipe.cuisine = :cuisine') // Match the cuisine
-            ->setParameter('cuisine', $cuisine)
-            ->getQuery()
-            ->getResult();
+            ->innerJoin('r.author', 'author') // Join with the Author entity
+            ->where('r.cuisine = :cuisine') // Match the cuisine
+            ->setParameter('cuisine', $cuisine);
+
         return $qb->getQuery()->getResult();
     }
 

@@ -4,24 +4,26 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\DBAL\ServiceEntityRepository;
-use App\Entities\DishType;
+use App\Entities\Author;
+use App\Entities\Cuisine;
+use App\Entities\Recipe;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * @extends ServiceEntityRepository<DishType>
+ * @extends ServiceEntityRepository<Recipe>
  */
 class RecipeRepository extends ServiceEntityRepository
 {
 
     public function __construct(EntityManager $em)
     {
-        parent::__construct($em, DishType::class);
+        parent::__construct($em, Recipe::class);
     }
 
     /**
-     * @return DishType[]
+     * @return Recipe[]
      */
     public function getRecipes(?string $slug, ?int $limit): array
     {
@@ -41,11 +43,11 @@ class RecipeRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getRecipe($slug): DishType
+    public function getRecipe($slug): Recipe
     {
-        $qb = $this->createQueryBuilder('a')
-            ->select('a')
-            ->where('a.name = :slug')
+        $qb = $this->createQueryBuilder('r')
+            ->select('r')
+            ->where('r.name = :slug')
             ->setParameter('slug', $slug);
 
         $qb->setMaxResults(1);

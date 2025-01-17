@@ -29,4 +29,8 @@ class DishType
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

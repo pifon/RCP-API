@@ -17,7 +17,13 @@ class AuthorsSeeder extends Seeder
             [
                 'name' => 'RCP System Author',
                 'username' => 'rcp',
-                'user' => 1,
+                'user_id' => 1,
+                'email' => 'przemek.wolski@gmail.com',
+            ],
+            [
+                'name' => 'Test Author',
+                'username' => 'other-author',
+                'user_id' => 3,
                 'email' => 'przemek.wolski@gmail.com',
             ],
         ]);

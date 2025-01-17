@@ -28,6 +28,13 @@ class UsersSeeder extends Seeder
                 'email_verified_at' => '2025-01-01 00:00:01',
                 'password' => '***',
             ],
+            [
+                'username' => 'author',
+                'name' => 'Test Account Author',
+                'email' => 'przemek.wolski@mail.com',
+                'email_verified_at' => '2025-01-01 00:00:02',
+                'password' => '***',
+            ],
         ]);
     }
 }

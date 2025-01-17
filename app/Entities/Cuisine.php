@@ -7,7 +7,8 @@ namespace App\Entities;
 use App\Repositories\CuisineRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection as Collection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 #[ORM\Table(name: 'cuisines')]
@@ -37,9 +38,19 @@ class Cuisine
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'cuisine', targetEntity: DishType::class)]
+    #[ORM\ManyToMany(targetEntity: Recipe::class)]
     private Collection $recipes;
 
+
+    public function __construct()
+    {
+        $this->recipes = new ArrayCollection();
+    }
+
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
     public function getId(): int
     {
         return $this->id;

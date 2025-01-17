@@ -15,12 +15,12 @@ return new class extends Migration
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
-            $table->integer('variant')->nullable();
-            $table->foreignId('author')->constrained('authors');
+            $table->integer('variant_id')->nullable();
+            $table->foreignId('author_id')->constrained('authors');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('cuisine')->constrained('cuisines');
-            $table->foreignId('type')->constrained('dish_types');
+            $table->foreignId('cuisine_id')->constrained('cuisines');
+            $table->foreignId('type_id')->constrained('dish_types');
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });
