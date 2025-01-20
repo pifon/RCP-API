@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Author;
+namespace App\Http\Controllers\Recipe;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
-use App\Repositories\AuthorRepository;
-use App\Transformers\AuthorTransformer;
+use App\Repositories\RecipeRepository;
+use App\Transformers\RecipeTransformer;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Illuminate\Http\Request;
@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 class Details extends Controller
 {
     public function __construct(
-        private readonly AuthorRepository $repository,
-        private readonly AuthorTransformer $transformer
+        private readonly RecipeRepository $repository,
+        private readonly RecipeTransformer $transformer
     ) {}
 
     /**
@@ -25,19 +25,19 @@ class Details extends Controller
      * @throws NonUniqueResultException
      * @throws NotFoundException
      */
-    public function __invoke(Request $request, string $username): array
+    public function __invoke(Request $request, string $slug): array
     {
         try {
-            $author = $this->repository->getAuthor($username);
+            $recipe = $this->repository->getRecipe($slug);
         } catch (NoResultException $exception) {
             throw new NotFoundException(
-                trans('author.details.not_found.message'),
+                trans('recipe.details.not_found.message'),
                 array(
-                    trans('author.details.not_found.error'),
+                    trans('recipe.details.not_found.error'),
                 )
             );
         }
 
-        return $this->transformer->transformDetailed($author);
+        return $this->transformer->transformDetailed($recipe);
     }
 }

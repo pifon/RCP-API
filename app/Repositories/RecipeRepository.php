@@ -47,7 +47,7 @@ class RecipeRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r')
             ->select('r')
-            ->where('r.name = :slug')
+            ->where('r.slug = :slug')
             ->setParameter('slug', $slug);
 
         $qb->setMaxResults(1);
@@ -61,4 +61,19 @@ class RecipeRepository extends ServiceEntityRepository
         return $found;
     }
 
+    /**
+     * @param Cuisine $cuisine
+     * @param int|null $limit
+     * @return Recipe[]
+     */
+    public function getCuisineRecipes(Cuisine $cuisine, ?int $limit): array
+    {
+        $qb = $this->createQueryBuilder('r')  // Alias for the Author entity
+        ->select('DISTINCT r')  // Select distinct Author entities
+        ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
+        ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
+        ->setMaxResults($limit ?? 25);
+
+        return $qb->getQuery()->getResult();  // Execute the query and return the results
+    }
 }

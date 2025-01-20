@@ -67,7 +67,7 @@ class Recipe
     {
         return $this->cuisine;
     }
-    public function getType(): DishType
+    public function getDishType(): DishType
     {
         return $this->type;
     }

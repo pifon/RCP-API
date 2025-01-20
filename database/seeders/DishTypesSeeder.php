@@ -15,82 +15,82 @@ class DishTypesSeeder extends Seeder
     {
         DB::table('dish_types')->insert([
             [
-                'type' => 'dish',
+                'name' => 'dish',
             ],
             [
-                'type' => 'snack',
+                'name' => 'snack',
             ],
             [
-                'type' => 'breakfast',
+                'name' => 'breakfast',
             ],
             [
-                'type' => 'lunch',
+                'name' => 'lunch',
             ],
             [
-                'type' => 'dinner',
+                'name' => 'dinner',
             ],
             [
-                'type' => 'dessert',
+                'name' => 'dessert',
             ],
             [
-                'type' => 'street-food',
+                'name' => 'street-food',
             ],
             [
-                'type' => 'beverage',
+                'name' => 'beverage',
             ],
             [
-                'type' => 'cocktail',
+                'name' => 'cocktail',
             ],
             [
-                'type' => 'salad',
+                'name' => 'salad',
             ],
             [
-                'type' => 'side',
+                'name' => 'side',
             ],
             [
-                'type' => 'sauce',
+                'name' => 'sauce',
             ],
             [
-                'type' => 'dip',
+                'name' => 'dip',
             ],
             [
-                'type' => 'main',
+                'name' => 'main',
             ],
             [
-                'type' => 'soup',
+                'name' => 'soup',
             ],
             [
-                'type' => 'spread',
+                'name' => 'spread',
             ],
             [
-                'type' => 'nibble',
+                'name' => 'nibble',
             ],
             [
-                'type' => 'sandwich',
+                'name' => 'sandwich',
             ],
             [
-                'type' => 'meze',
+                'name' => 'meze',
             ],
             [
-                'type' => 'tapas',
+                'name' => 'tapas',
             ],
             [
-                'type' => 'cured meat',
+                'name' => 'cured meat',
             ],
             [
-                'type' => 'pickles',
+                'name' => 'pickles',
             ],
             [
-                'type' => 'sweets',
+                'name' => 'sweets',
             ],
             [
-                'type' => 'meat',
+                'name' => 'meat',
             ],
             [
-                'type' => 'condiment',
+                'name' => 'condiment',
             ],
             [
-                'type' => 'bread',
+                'name' => 'bread',
             ]
         ]);
     }

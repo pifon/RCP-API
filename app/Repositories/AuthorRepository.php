@@ -66,15 +66,17 @@ class AuthorRepository extends ServiceEntityRepository
 
     /**
      * @param Cuisine $cuisine
-     * @return array
+     * @param int|null $limit
+     * @return Author[]
      */
-    public function getCuisineAuthors(Cuisine $cuisine): array
+    public function getCuisineAuthors(Cuisine $cuisine, ?int $limit): array
     {
         $qb = $this->createQueryBuilder('a')  // Alias for the Author entity
         ->select('DISTINCT a')  // Select distinct Author entities
         ->innerJoin('a.recipes', 'r')  // Join the related recipes (Assuming 'recipes' is the property in the Author entity)
         ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
-        ->setParameter('cuisine', $cuisine);  // Set the parameter for the cuisine
+        ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
+        ->setMaxResults($limit ?? 25);
 
         return $qb->getQuery()->getResult();  // Execute the query and return the results
     }

@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('dish_types', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
+            $table->string('name');
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });

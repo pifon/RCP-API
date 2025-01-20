@@ -7,7 +7,7 @@ use App\DBAL\ServiceEntityRepository;
 use App\Entities\DishType;
 use App\Entities\Cuisine;
 use App\Entities\Recipe;
-use App\Http\Controllers\Cuisine\Authors;
+use App\Entities\Author;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -44,10 +44,11 @@ class CuisineRepository extends ServiceEntityRepository
     }
 
     /**
+     * @params string $slug
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getCuisine($slug): Cuisine
+    public function getCuisine(string $slug): Cuisine
     {
         $name = ucfirst($slug);
         $variant = false;
@@ -78,7 +79,7 @@ class CuisineRepository extends ServiceEntityRepository
     /**
      * @param Cuisine $cuisine
      * @param int|null $limit
-     * @return Authors[]
+     * @return Author[]
      */
     public function getCuisineAuthors(Cuisine $cuisine, ?int $limit = null): array
     {
@@ -87,6 +88,22 @@ class CuisineRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r')
             ->select('DISTINCT author')
             ->innerJoin('r.author', 'author') // Join with the Author entity
+            ->where('r.cuisine = :cuisine') // Match the cuisine
+            ->setParameter('cuisine', $cuisine);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param Cuisine $cuisine
+     * @param int|null $limit
+     * @return Recipe[]
+     */
+    public function getCuisineRecipes(Cuisine $cuisine, ?int $limit = null): array
+    {
+        // fetch authors from recipes in this cuisine
+        $qb = $this->createQueryBuilder('r')
+            ->select('recipes')
             ->where('r.cuisine = :cuisine') // Match the cuisine
             ->setParameter('cuisine', $cuisine);
 

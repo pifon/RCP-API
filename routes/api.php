@@ -23,13 +23,18 @@ Route::prefix('cuisines')->name('cuisines.')->group(function () {
     Route::get('/', App\Http\Controllers\Cuisine\Catalog::class)->name('list');
     Route::get('/{slug}', App\Http\Controllers\Cuisine\Show::class)->name('show');
     Route::get('/{slug}/details', App\Http\Controllers\Cuisine\Details::class)->name('details');
-    //Route::get('cuisines/{slug}/recipes', App\Http\Controllers\Cuisine\Recipes::class)->name('recipes');
+    Route::get('/{slug}/recipes', App\Http\Controllers\Cuisine\Recipes::class)->name('recipes');
     Route::get('/{slug}/authors', App\Http\Controllers\Cuisine\Authors::class)->name('authors');
-    //Route::get('cuisines/{slug}/ingredients', App\Http\Controllers\Cuisine\Ingredients::class)->name('ingredients');
-    //Route::get('cuisines/{slug}/related', App\Http\Controllers\Cuisine\Related::class)->name('related');
+    //Route::get('/{slug}/ingredients', App\Http\Controllers\Cuisine\Ingredients::class)->name('ingredients');
+    //Route::get('/{slug}/related', App\Http\Controllers\Cuisine\Related::class)->name('related');
 });
 
-ROUTE::prefix('authors')->name('authors.')->group(function () {
+Route::prefix('authors')->name('authors.')->group(function () {
     Route::get('/{username}', App\Http\Controllers\Author\Show::class)->name('show');
-    Route::get('/{username}/details', App\Http\Controllers\Author\Show::class)->name('details');
+    Route::get('/{username}/details', App\Http\Controllers\Author\Details::class)->name('details');
+});
+
+Route::prefix('recipes')->name('recipes.')->group(function () {
+    Route::get('/{slug}', App\Http\Controllers\Recipe\Show::class)->name('show');
+    Route::get('/{slug}/details', App\Http\Controllers\Recipe\Details::class)->name('details');
 });

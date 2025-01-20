@@ -20,8 +20,8 @@ class DishType
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    #[ORM\Column(name: 'type', type: 'string', length: 255, nullable: false)]
-    private string $type;
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    private string $name;
 
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private DateTime $createdAt;
@@ -29,8 +29,21 @@ class DishType
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
+    /**
+     * @param string $name
+     */
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
     public function getId(): int
     {
         return $this->id;
     }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
 }

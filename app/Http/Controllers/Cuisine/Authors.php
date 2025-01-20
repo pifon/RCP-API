@@ -18,7 +18,7 @@ class Authors extends Controller
     public function __construct(
         private readonly CuisineRepository $repository,
         private readonly AuthorRepository $authorRepository,
-        private readonly AuthorTransformer $AuthorTransformer
+        private readonly AuthorTransformer $authorTransformer
     ) {}
 
     /**
@@ -32,8 +32,9 @@ class Authors extends Controller
         } catch (NoResultException|NonUniqueResultException $e) {
             throw new ValidationErrorException(trans('cuisine.not_found.message'));
         }
-        $authors = $this->authorRepository->getCuisineAuthors($cuisine);
 
-        return $this->AuthorTransformer->transformSet($authors);
+        $authors = $this->authorRepository->getCuisineAuthors($cuisine, $request->get('limit', 25));
+
+        return $this->authorTransformer->transformSet($authors);
     }
 }
