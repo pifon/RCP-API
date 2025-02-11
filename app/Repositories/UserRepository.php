@@ -43,4 +43,30 @@ class UserRepository extends ServiceEntityRepository
         return $found;
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getAuthedUser(string $username): ?User
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.username = :username')
+            ->setParameter('username', $username);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getUserByToken(string $username, string $token): ?User
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.username = :username AND u.token = :token')
+            ->setParameter('username', $username)
+            ->setParameter('token', $token);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }
