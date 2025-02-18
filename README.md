@@ -1,7 +1,3 @@
-Here’s the updated `README.md` with the new future feature for planning weekly/monthly menus:
-
----
-
 # Pifon API
 
 Pifon API (pifon.co.uk/api) is a RESTful backend-for-frontend (BFF) designed to power the applications running on pifon.com and foodbook.uk. It provides a robust backend to manage user-generated recipes, ingredients, and cuisines.
