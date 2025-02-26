@@ -1,6 +1,6 @@
-# Pifon API
+# RCP API
 
-Pifon API (pifon.co.uk/api) is a RESTful backend-for-frontend (BFF) designed to power the applications running on pifon.com and foodbook.uk. It provides a robust backend to manage user-generated recipes, ingredients, and cuisines.
+RCP API (pifon.co.uk/api) is a RESTful backend-for-frontend (BFF) designed to power the applications running on pifon.com and foodbook.uk. It provides a robust backend to manage user-generated recipes, ingredients, and cuisines.
 
 ## Features
 
