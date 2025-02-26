@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Auth;
 
 use App\Entities\User;
+use DateMalformedStringException;
 use DateTimeImmutable;
 use Illuminate\Config\Repository;
 use InvalidArgumentException;
@@ -40,7 +41,7 @@ class JwtProvider
     }
 
     /**
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function createAccessToken(User $user): string
     {
@@ -49,7 +50,7 @@ class JwtProvider
         $signingKey = InMemory::base64Encoded($this->jwtSecret);
 
         $now = new DateTimeImmutable();
-        $expiration = $now->modify("+{$this->jwtTtl} second");
+        $expiration = $now->modify("+$this->jwtTtl second");
 
         if ($expiration === false) {
             throw new RuntimeException('Cannot compute token expiry time.');

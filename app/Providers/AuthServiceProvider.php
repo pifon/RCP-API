@@ -17,13 +17,13 @@ class AuthServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->resolving('auth', function (AuthManager $auth) {
+        $this->app->resolving('auth', callback: function (AuthManager $auth) {
             $auth->provider('app_user_provider', function ($app, array $config) {
                 $entity = $config['model'];
                 $em = $app['registry']->getManagerForClass($entity);
 
                 if (!$em) {
-                    throw new InvalidArgumentException("No EntityManager is set-up for {$entity}");
+                    throw new InvalidArgumentException("No EntityManager is set-up for $entity");
                 }
 
                 return new AppUserProvider(
@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
                 $userProvider = $auth->createUserProvider($config['provider']);
 
                 if ($userProvider === null) {
-                    throw new InvalidArgumentException("Cannot create user provider: {$config['provider']}");
+                    throw new InvalidArgumentException("Cannot create user provider: " . $config['provider']);
                 }
                 $jwtProvider = $app->get(JwtProvider::class);
                 $dispatcher = $app->get(Dispatcher::class);

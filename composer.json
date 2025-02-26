@@ -16,7 +16,8 @@
         "laravel/framework": "^11.10.0",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^v4.5.0",
-        "lcobucci/jwt": "^4.3"
+        "lcobucci/jwt": "^4.3",
+        "php-open-source-saver/jwt-auth": "^2.3"
     },
     "require-dev": {
         "amirami/localizator": "^0.13.0@alpha",
