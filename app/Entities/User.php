@@ -71,7 +71,7 @@ class User implements Authenticatable
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      */
     public function setRememberToken($value): void
     {

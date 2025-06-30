@@ -10,8 +10,8 @@ use App\Services\Auth\AppUserProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Container\Container;
-# use Illuminate\Contracts\Hashing\Hasher;
-# use Illuminate\Events\Dispatcher;
+// use Illuminate\Contracts\Hashing\Hasher;
+// use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 
@@ -29,9 +29,9 @@ class AuthServiceProvider extends ServiceProvider
                 }
 
                 return new AppUserProvider(
-                    //$app->get(Hasher::class),
-                    //$em,
-                    //$entity,
+                    // $app->get(Hasher::class),
+                    // $em,
+                    // $entity,
                     $app['some_dependency'],
                     $app->make(EntityManagerInterface::class),
                     $entity

@@ -16,7 +16,7 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $config = ORMSetup::createAttributeMetadataConfiguration(
             $paths = [base_path('app/Entities')], // your entities folder
-            $isDevMode = true //env('APP_DEBUG', false)
+            $isDevMode = true // env('APP_DEBUG', false)
         );
 
         $connectionParams = config('doctrine.connection');

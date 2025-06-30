@@ -21,9 +21,9 @@ class Authenticate extends Middleware
     }
 
     /**
-     * @param Request $request
-     * @param array<int, string> $guards
-     * @return never
+     * @param  Request  $request
+     * @param  array<int, string>  $guards
+     *
      * @throws UnauthorizedException
      * @throws AuthenticationException
      */
