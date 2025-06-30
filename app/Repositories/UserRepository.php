@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repositories;
@@ -14,7 +15,6 @@ use Doctrine\ORM\NoResultException;
  */
 class UserRepository extends ServiceEntityRepository
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em, User::class);
@@ -22,6 +22,7 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * @params int $id
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -34,10 +35,9 @@ class UserRepository extends ServiceEntityRepository
 
         $qb->setMaxResults(1);
 
-
         $found = $qb->getQuery()->getSingleResult();
-        if (!$found) {
-            throw new NoResultException();
+        if (! $found) {
+            throw new NoResultException;
         }
 
         return $found;

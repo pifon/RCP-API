@@ -25,13 +25,10 @@ class AppUserProvider extends DoctrineUserProvider
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
      *
-     * @param mixed $identifier
-     * @param mixed $token
      *
-     * @return Authenticatable|null
      * @throws Exception
      */
-    public function retrieveByToken(mixed $identifier, mixed $token):?Authenticatable
+    public function retrieveByToken(mixed $identifier, mixed $token): ?Authenticatable
     {
         /** @var UserRepository $repository */
         $repository = $this->getRepository();
@@ -45,26 +42,21 @@ class AppUserProvider extends DoctrineUserProvider
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param Authenticatable $user
-     * @param string $token
+     * @param  string  $token
      *
-     * @return void
      * @throws Exception
      */
-    public function updateRememberToken(Authenticatable $user, mixed $token):void
+    public function updateRememberToken(Authenticatable $user, mixed $token): void
     {
         throw new Exception('Not implemented.');
     }
 
     /**
      * Retrieve a user by the given credentials.
-     *
-     * @param array $credentials
-     * @return Authenticatable|null
      */
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
-        if (empty($credentials['username']) || !is_string($credentials['username'])) {
+        if (empty($credentials['username']) || ! is_string($credentials['username'])) {
             return null;
         }
 
@@ -78,14 +70,10 @@ class AppUserProvider extends DoctrineUserProvider
 
     /**
      * Validate a user against the given credentials.
-     *
-     * @param Authenticatable $user
-     * @param array $credentials
-     * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials):bool
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return false;
         }
 
@@ -95,5 +83,4 @@ class AppUserProvider extends DoctrineUserProvider
             $user->getAuthPassword(),
         );
     }
-
 }

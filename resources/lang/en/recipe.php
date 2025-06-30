@@ -1,4 +1,5 @@
 <?php
+
 return [
     'unexpected_fields' => [
         'message' => 'Bad Request',
@@ -13,10 +14,10 @@ return [
         'min' => 'The limit value must be greater than 0.',
         'max' => 'The limit value must be less than 50.',
     ],
-    'details'  => [
+    'details' => [
         'not_found' => [
             'message' => 'Recipe not found.',
             'error' => 'The requested resource does not exist.',
-        ]
-    ]
+        ],
+    ],
 ];

@@ -23,6 +23,6 @@ class Related extends Controller
     {
         $cuisine = $this->repository->getCuisineRelates($slug);
 
-        return $this->transformer->transform($cuisine);
+        return $this->transformer->transformSet($cuisine);
     }
 }

@@ -21,8 +21,8 @@ class Ingredients extends Controller
      */
     public function __invoke(Request $request, string $slug): array
     {
-        $cuisine = $this->repository->getCuisineIngrdients($slug);
+        $cuisine = $this->repository->getCuisineIngredients($slug);
 
-        return $this->transformer->transform($cuisine);
+        return $this->transformer->transformSet($cuisine);
     }
 }

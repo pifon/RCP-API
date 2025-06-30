@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -18,12 +18,12 @@ class AuthController extends Controller
     /**
      * Log in a user and return a response.
      *
-     * @param ApiLoginRequest $request The validated login request.
+     * @param  ApiLoginRequest  $request  The validated login request.
      * @return JsonResponse The login response.
      */
     public function login(ApiLoginRequest $request): JsonResponse
     {
-        return $this->ok("Hello, " . $request->get('email'));
+        return $this->ok('Hello, '.$request->get('email'));
     }
 
     /**
@@ -33,6 +33,6 @@ class AuthController extends Controller
      */
     public function register(): JsonResponse
     {
-        return $this->ok("Register");
+        return $this->ok('Register');
     }
 }

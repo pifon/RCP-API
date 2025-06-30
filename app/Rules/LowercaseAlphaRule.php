@@ -6,21 +6,19 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class LowercaseAlphaRule implements ValidationRule
 {
     /**
      * Validate the attribute.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  Closure(string): void  $fail
-     * @return void
+     * @param  Closure(string, string|null=): PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (empty($value) || $value !== strtolower($value) || !preg_match('/^[a-z]+$/', $value)) {
-            $fail(trans('cuisine.filter.lowercase'));
+        if (empty($value) || $value !== strtolower($value) || ! preg_match('/^[a-z]+$/', $value)) {
+            $fail('The :attribute must contain only lowercase letters.');
         }
     }
 }

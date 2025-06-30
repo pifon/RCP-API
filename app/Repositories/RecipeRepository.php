@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repositories;
@@ -16,7 +17,6 @@ use Doctrine\ORM\NoResultException;
  */
 class RecipeRepository extends ServiceEntityRepository
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em, Recipe::class);
@@ -52,27 +52,24 @@ class RecipeRepository extends ServiceEntityRepository
 
         $qb->setMaxResults(1);
 
-
         $found = $qb->getQuery()->getSingleResult();
-        if (!$found) {
-            throw new NoResultException();
+        if (! $found) {
+            throw new NoResultException;
         }
 
         return $found;
     }
 
     /**
-     * @param Cuisine $cuisine
-     * @param int|null $limit
      * @return Recipe[]
      */
     public function getCuisineRecipes(Cuisine $cuisine, ?int $limit): array
     {
         $qb = $this->createQueryBuilder('r')  // Alias for the Author entity
-        ->select('DISTINCT r')  // Select distinct Author entities
-        ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
-        ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
-        ->setMaxResults($limit ?? 25);
+            ->select('DISTINCT r')  // Select distinct Author entities
+            ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
+            ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
+            ->setMaxResults($limit ?? 25);
 
         return $qb->getQuery()->getResult();  // Execute the query and return the results
     }

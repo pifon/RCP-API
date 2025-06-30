@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product')->constrained('products','id');
-            $table->foreignId('measure')->constrained('measures','id');
+            $table->foreignId('product')->constrained('products', 'id');
+            $table->foreignId('measure')->constrained('measures', 'id');
             $table->float('amount');
             $table->string('name');
             $table->text('description');

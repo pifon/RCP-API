@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Repositories\AuthorRepository;
 use App\Repositories\UserRepository;
 use DateTime;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -18,9 +15,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements Authenticatable
 {
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -81,8 +75,8 @@ class User implements Authenticatable
      */
     public function setRememberToken($value): void
     {
-        //throw new Exception('Not implemented.');
-        return;
+        // throw new Exception('Not implemented.');
+
     }
 
     /**
@@ -102,5 +96,4 @@ class User implements Authenticatable
     {
         return $this->passwordChangedAt;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repositories;
@@ -14,7 +15,6 @@ use Doctrine\ORM\NoResultException;
  */
 class DishTypeRepository extends ServiceEntityRepository
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em, DishType::class);
@@ -50,13 +50,11 @@ class DishTypeRepository extends ServiceEntityRepository
 
         $qb->setMaxResults(1);
 
-
         $found = $qb->getQuery()->getSingleResult();
-        if (!$found) {
-            throw new NoResultException();
+        if (! $found) {
+            throw new NoResultException;
         }
 
         return $found;
     }
-
 }

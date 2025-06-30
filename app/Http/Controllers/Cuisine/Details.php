@@ -12,7 +12,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Illuminate\Http\Request;
 
-
 class Details extends Controller
 {
     public function __construct(
@@ -22,6 +21,7 @@ class Details extends Controller
 
     /**
      * @return array<string, mixed>
+     *
      * @throws NonUniqueResultException
      */
     public function __invoke(Request $request, string $slug): array
@@ -31,9 +31,9 @@ class Details extends Controller
         } catch (NoResultException $exception) {
             throw new NotFoundException(
                 trans('cuisine.details.not_found.message'),
-                array(
+                [
                     trans('cuisine.details.not_found.error'),
-                )
+                ]
             );
         }
 

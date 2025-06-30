@@ -23,8 +23,6 @@ class Catalog extends Controller
     ) {}
 
     /**
-     * @param Request $request
-     * @return jsonResponse
      * @throws BadRequestException
      * @throws ValidationErrorException
      * @throws ValidationException
@@ -32,21 +30,21 @@ class Catalog extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-                'filter' => ['sometimes', 'string', new LowercaseAlphaRule()],
-                'limit' => 'sometimes|integer|min:1|max:50',
-            ],[
-                'filter.string' => trans('cuisine.filter.string'),
-                'limit.integer' => trans('cuisine.limit.integer'),
-                'limit.min' => trans('cuisine.limit.min'),
-                'limit.max' => trans('cuisine.limit.max'),
-            ]);
+            'filter' => ['sometimes', 'string', new LowercaseAlphaRule],
+            'limit' => 'sometimes|integer|min:1|max:50',
+        ], [
+            'filter.string' => trans('cuisine.filter.string'),
+            'limit.integer' => trans('cuisine.limit.integer'),
+            'limit.min' => trans('cuisine.limit.min'),
+            'limit.max' => trans('cuisine.limit.max'),
+        ]);
 
-        if (!empty(array_diff(array_keys($request->all()), ['filter', 'limit']))) {
+        if (! empty(array_diff(array_keys($request->all()), ['filter', 'limit']))) {
             throw new BadRequestException(
                 trans('cuisine.unexpected_fields.message'),
-                array(
+                [
                     trans('cuisine.unexpected_fields.error'),
-                )
+                ]
             );
         }
 
@@ -59,13 +57,14 @@ class Catalog extends Controller
 
         $params = collect($validator->validated());
 
-        $params->transform(function ($value, $key) {
+        $params->transform(function (mixed $value, string $key): mixed {
             if ($key === 'filter' && is_string($value)) {
                 return ucfirst(strtolower($value));
             }
             if ($key === 'limit' && is_numeric($value)) {
                 return intval($value);
             }
+
             return $value;
         });
 

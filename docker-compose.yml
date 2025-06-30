@@ -1,0 +1,47 @@
+
+services:
+  app:
+    image: api
+    container_name: api
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /home/przemek/Code/api:/var/www/html
+      - /home/przemek/Code/api/docker/nginx/ssl:/etc/letsencrypt
+      - /home/przemek/Code/api/docker/nginx/ssl/www:/var/www/html/certbot
+    networks:
+      - laravel-network
+    depends_on:
+      - database # Ensure the database container starts first
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  database:
+    image: mariadb:latest  # Use the official MariaDB image
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: '${MARIADB_ROOT_PASSWORD}'
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql  # Use named volume for persistent database storage
+    networks:
+      - laravel-network
+
+networks:
+  laravel-network:
+    driver: bridge
+
+volumes:
+  mariadb_data:  # This creates a named volume for MariaDB data persistence

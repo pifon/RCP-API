@@ -12,7 +12,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Illuminate\Http\Request;
 
-
 class Details extends Controller
 {
     public function __construct(
@@ -22,6 +21,7 @@ class Details extends Controller
 
     /**
      * @return array<string, mixed>
+     *
      * @throws NonUniqueResultException
      * @throws NotFoundException
      */
@@ -32,9 +32,9 @@ class Details extends Controller
         } catch (NoResultException $exception) {
             throw new NotFoundException(
                 trans('recipe.details.not_found.message'),
-                array(
+                [
                     trans('recipe.details.not_found.error'),
-                )
+                ]
             );
         }
 

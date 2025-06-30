@@ -12,9 +12,8 @@ use DateTimeInterface;
  */
 class CuisineTransformer extends TransformerAbstract
 {
-
     /**
-     * @param Cuisine $item
+     * @param  Cuisine  $item
      * @return array<string, mixed> Transferred cuisine item representation
      */
     public function transform(mixed $item): array

@@ -21,6 +21,7 @@ class Show extends Controller
 
     /**
      * @return array<string, mixed>
+     *
      * @throws NotFoundException
      */
     public function __invoke(Request $request, string $username): array

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repositories;
@@ -15,10 +16,6 @@ use Doctrine\ORM\NoResultException;
  */
 class AuthorRepository extends ServiceEntityRepository
 {
-
-    /**
-     * @param EntityManager $em
-     */
     public function __construct(EntityManager $em)
     {
         parent::__construct($em, Author::class);
@@ -26,6 +23,7 @@ class AuthorRepository extends ServiceEntityRepository
 
     /**
      * @params string|null $username
+     *
      * @return Author[]
      */
     public function getAuthors(?string $username, ?int $limit): array
@@ -55,28 +53,25 @@ class AuthorRepository extends ServiceEntityRepository
 
         $qb->setMaxResults(1);
 
-
         $found = $qb->getQuery()->getSingleResult();
-        if (!$found) {
-            throw new NoResultException();
+        if (! $found) {
+            throw new NoResultException;
         }
 
         return $found;
     }
 
     /**
-     * @param Cuisine $cuisine
-     * @param int|null $limit
      * @return Author[]
      */
     public function getCuisineAuthors(Cuisine $cuisine, ?int $limit): array
     {
         $qb = $this->createQueryBuilder('a')  // Alias for the Author entity
-        ->select('DISTINCT a')  // Select distinct Author entities
-        ->innerJoin('a.recipes', 'r')  // Join the related recipes (Assuming 'recipes' is the property in the Author entity)
-        ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
-        ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
-        ->setMaxResults($limit ?? 25);
+            ->select('DISTINCT a')  // Select distinct Author entities
+            ->innerJoin('a.recipes', 'r')  // Join the related recipes (Assuming 'recipes' is the property in the Author entity)
+            ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
+            ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
+            ->setMaxResults($limit ?? 25);
 
         return $qb->getQuery()->getResult();  // Execute the query and return the results
     }

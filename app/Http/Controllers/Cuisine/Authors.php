@@ -23,6 +23,7 @@ class Authors extends Controller
 
     /**
      * @return array<string, mixed>
+     *
      * @throws ValidationErrorException
      */
     public function __invoke(Request $request, string $slug): array

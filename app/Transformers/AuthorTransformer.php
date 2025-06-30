@@ -2,16 +2,15 @@
 
 namespace App\Transformers;
 
-# use App\Entities\Author;
-# use App\Transformers\TransformerAbstract;
+// use App\Entities\Author;
+// use App\Transformers\TransformerAbstract;
 
 use DateTimeInterface;
 
 class AuthorTransformer extends TransformerAbstract
 {
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function transform(mixed $item): array
     {
@@ -20,9 +19,10 @@ class AuthorTransformer extends TransformerAbstract
             '_links' => [
                 'self' => route('authors.show', ['username' => $item->getUsername()]),
                 'details' => route('authors.details', ['username' => $item->getUsername()]),
-            ]
+            ],
         ];
     }
+
     public function transformDetailed(mixed $item): array
     {
         return [
@@ -40,9 +40,9 @@ class AuthorTransformer extends TransformerAbstract
         return [
             'self' => route('author.details', ['username' => $item->getUsername()]),
             'handle' => route('author.show', ['username' => $item->getUsername()]),
-            //'recipes' => route('author.recipes', ['username' => $item->getUsername()]),
-            //'cuisines' => route('author.cuisines', ['username' => $item->getUsername()]),
-            //'related' => route('author.related', ['username' => $item->getUsername()]),
+            // 'recipes' => route('author.recipes', ['username' => $item->getUsername()]),
+            // 'cuisines' => route('author.cuisines', ['username' => $item->getUsername()]),
+            // 'related' => route('author.related', ['username' => $item->getUsername()]),
         ];
     }
 }

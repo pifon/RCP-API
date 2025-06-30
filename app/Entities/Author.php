@@ -6,17 +6,14 @@ namespace App\Entities;
 
 use App\Repositories\AuthorRepository;
 use DateTime;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'authors')]
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
 class Author
 {
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -49,7 +46,7 @@ class Author
 
     public function __construct()
     {
-        $this->recipes = new ArrayCollection();
+        $this->recipes = new ArrayCollection;
     }
 
     public function getId(): int

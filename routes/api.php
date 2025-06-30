@@ -5,15 +5,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Welcome, ping route
-Route::get('/', function (){
+Route::get('/', function () {
     return response()->json([
-        "message" => sprintf("Welcome to %s API.", ucfirst(config('app.name'))),
-        200
+        'message' => sprintf('Welcome to %s API.', ucfirst(config('app.name'))),
+        200,
     ]);
 });
 
-Route::post('/login',[AuthController::class, 'login']);
-Route::post('/register',[AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,8 +25,8 @@ Route::prefix('cuisines')->name('cuisines.')->group(function () {
     Route::get('/{slug}/details', App\Http\Controllers\Cuisine\Details::class)->name('details');
     Route::get('/{slug}/recipes', App\Http\Controllers\Cuisine\Recipes::class)->name('recipes');
     Route::get('/{slug}/authors', App\Http\Controllers\Cuisine\Authors::class)->name('authors');
-    //Route::get('/{slug}/ingredients', App\Http\Controllers\Cuisine\Ingredients::class)->name('ingredients');
-    //Route::get('/{slug}/related', App\Http\Controllers\Cuisine\Related::class)->name('related');
+    // Route::get('/{slug}/ingredients', App\Http\Controllers\Cuisine\Ingredients::class)->name('ingredients');
+    // Route::get('/{slug}/related', App\Http\Controllers\Cuisine\Related::class)->name('related');
 });
 
 Route::prefix('authors')->name('authors.')->group(function () {

@@ -10,8 +10,11 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 abstract class ApiException extends Exception implements HttpExceptionInterface
 {
     private string $description;
+
     private string $instance;
+
     private array $additionalData;
+
     private string $type;
 
     public function __construct(string $message, int $statusCode, ?string $type = null, ?string $description = null, ?string $instance = null, array $additionalData = [])
@@ -30,6 +33,7 @@ abstract class ApiException extends Exception implements HttpExceptionInterface
     {
         return $this->description;
     }
+
     public function getStatusCode(): int
     {
         return $this->code;
@@ -39,6 +43,7 @@ abstract class ApiException extends Exception implements HttpExceptionInterface
     {
         return $this->description;
     }
+
     public function getType(): ?string
     {
         return $this->type;

@@ -15,9 +15,6 @@ parameters:
     dynamicConstantNames:
         - ENVIRONMENT
     ignoreErrors:
-        - '#is never read, only written#'
-        - '#is never written, only read#'
-        - '#is unused#'
     paths:
         - app/
     excludePaths:

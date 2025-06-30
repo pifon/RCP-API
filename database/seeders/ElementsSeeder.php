@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -172,7 +171,7 @@ class ElementsSeeder extends Seeder
                 'sub_type' => 7,
                 'name' => 'omega3',
                 'aka' => null,
-                'names' => json_encode(['EPA','DHA','ALA']),
+                'names' => json_encode(['EPA', 'DHA', 'ALA']),
                 'description' => 'When it comes to fat, there\'s one type you don’t want to cut back on: omega-3 fatty acids. Two crucial ones -- EPA and DHA -- are primarily found in certain fish. ALA (alpha-linolenic acid), another omega-3 fatty acid, is found in plant sources such as nuts and seeds. Not only does your body need these fatty acids to function, but also they deliver some big health benefits.',
                 'ref' => 'https://www.webmd.com/healthy-aging/omega-3-fatty-acids-fact-sheet#1',
             ],
@@ -253,7 +252,7 @@ class ElementsSeeder extends Seeder
                 'sub_type' => 12,
                 'name' => 'b3',
                 'aka' => 'niacin',
-                'names' => json_encode(['Nicotinamide','Nicotinic Acid']),
+                'names' => json_encode(['Nicotinamide', 'Nicotinic Acid']),
                 'description' => 'Niacin, or vitamin B3, is involved in energy production, normal enzyme function, digestion, promoting normal appetite, healthy skin, and nerves.\n\nFood Sources for Niacin. Sources include liver, fish, poultry, meat, peanuts, whole and enriched grain products.\n\nHow much Niacin. The Recommended Dietary Allowance (RDA) for niacin is 16 mg/day for adult males and 14 mg/day for adult females (Table 1). These values are closely tied to energy expenditure.\n\nNiacin Deficiency. Niacin deficiency is not a problem in the United States. However, it is known to occur with alcoholism, protein malnourishment, low calorie diets, and diets high in refined carbohydrates. Pellagra is the disease state that occurs as a result of severe niacin deficiency. Symptoms include cramps, nausea, mental confusion, and skin problems.\n\nToo much Niacin. Consuming large doses of niacin supplements may cause flushed skin, rashes, or liver damage (Table 2). Over consumption of niacin is not a problem if it is obtained through food.',
                 'ref' => 'http://extension.colostate.edu/topic-areas/nutrition-food-safety-health/water-soluble-vitamins-b-complex-and-vitamin-c-9-312/',
             ],
@@ -262,7 +261,7 @@ class ElementsSeeder extends Seeder
                 'sub_type' => 12,
                 'name' => 'b6',
                 'aka' => null,
-                'names' => json_encode(['Pyridoxine','Pyridoxal','Pyridoxamine']),
+                'names' => json_encode(['Pyridoxine', 'Pyridoxal', 'Pyridoxamine']),
                 'description' => 'Vitamin B6, otherwise known as pyridoxine, pyridoxal or pyridoxamine, aids in protein metabolism and red blood cell formation. It is also involved in the body’s production of chemicals such as insulin and hemoglobin.\n\nFood Sources for Vitamin B6. Sources include pork, meats, whole grains and cereals, legumes, and green, leafy vegetables.\n\nHow much Vitamin B6. The Recommended Dietary Allowance (RDA) for vitamin B6 is 1.3 mg/day for adult males and females through age fifty (Table 1). For infants, breast milk and most infant formulas contain enough vitamin B6.\n\nVitamin B6 Deficiency. Deficiency symptoms include skin disorders, dermatitis, cracks at corners of mouth, anemia, kidney stones, and nausea. A vitamin B6 deficiency in infants can cause mental confusion.\n\nToo much Vitamin B6. Over consumption is rare, but excess doses of vitamin B6 over time have been known to result in nerve damage',
                 'ref' => 'http://extension.colostate.edu/topic-areas/nutrition-food-safety-health/water-soluble-vitamins-b-complex-and-vitamin-c-9-312/',
             ],
@@ -271,7 +270,7 @@ class ElementsSeeder extends Seeder
                 'sub_type' => 12,
                 'name' => 'b9',
                 'aka' => 'folic acid',
-                'names' => json_encode(['Folate','Folacin']),
+                'names' => json_encode(['Folate', 'Folacin']),
                 'description' => 'Folate, also known as folic acid or folacin, aids in protein metabolism, promoting red blood cell formation, and lowering the risk for neural tube birth defects. Folate may also play a role in controlling homocysteine levels, thus reducing the risk for coronary heart disease.\n\nFood Sources for Folate. Sources of folate include liver, kidney, dark green leafy vegetables, meats, fish, whole grains, fortified grains and cereals, legumes, and citrus fruits. Not all whole grain products are fortified with folate. Check the nutrition label to see if folic acid has been added.\n\nHow much Folate. The Recommended Dietary Allowance (RDA) for folate is 400 mcg/day for adult males and females. Pregnancy will increase the RDA for folate to 600 mcg/day (Table 1).\n\nFolate Deficiency. Folate deficiency affects cell growth and protein production, which can lead to overall impaired growth. Deficiency symptoms also include anemia and diarrhea. A folate deficiency in women who are pregnant or of child bearing age may result in the delivery of a baby with neural tube defects such as spina bifida.\n\nToo much Folate. Over consumption of folate offers no known benefits, and may mask B12 deficiency as well as interfere with some medications.',
                 'ref' => 'http://extension.colostate.edu/topic-areas/nutrition-food-safety-health/water-soluble-vitamins-b-complex-and-vitamin-c-9-312/',
             ],
@@ -514,7 +513,7 @@ class ElementsSeeder extends Seeder
                 'sub_type' => 18,
                 'name' => 'methionine',
                 'aka' => 'met',
-                'names' =>json_encode(['M']),
+                'names' => json_encode(['M']),
                 'description' => 'Methionine (symbol Met or M)[3] (/mɪˈθaɪəniːn/)[4] is an essential amino acid in humans. As the substrate for other amino acids such as cysteine and taurine, versatile compounds such as SAM-e, and the important antioxidant glutathione, methionine plays a critical role in the metabolism and health of many species, including humans. It is encoded by the codon AUG.\n\nMethionine is also an important part of angiogenesis, the growth of new blood vessels. Supplementation may benefit those suffering from copper poisoning.[5] Overconsumption of methionine, the methyl group donor in DNA methylation, is related to cancer growth in a number of studies.[6][7] Methionine was first isolated in 1921 by John Howard Mueller.[8]',
                 'ref' => 'https://en.wikipedia.org/wiki/Methionine',
             ],

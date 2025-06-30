@@ -1,13 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repositories;
 
 use App\DBAL\ServiceEntityRepository;
-use App\Entities\DishType;
+use App\Entities\Author;
 use App\Entities\Cuisine;
 use App\Entities\Recipe;
-use App\Entities\Author;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -17,10 +17,6 @@ use Doctrine\ORM\NoResultException;
  */
 class CuisineRepository extends ServiceEntityRepository
 {
-
-    /**
-     * @param EntityManager $em
-     */
     public function __construct(EntityManager $em)
     {
         parent::__construct($em, Cuisine::class);
@@ -45,6 +41,7 @@ class CuisineRepository extends ServiceEntityRepository
 
     /**
      * @params string $slug
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -53,7 +50,7 @@ class CuisineRepository extends ServiceEntityRepository
         $name = ucfirst($slug);
         $variant = false;
         if (preg_match('/^[a-z]+-[a-z]+$/', $slug)) {
-            list($name, $variant) = explode('-', $slug);
+            [$name, $variant] = explode('-', $slug);
         }
 
         $qb = $this->createQueryBuilder('c')
@@ -67,18 +64,15 @@ class CuisineRepository extends ServiceEntityRepository
         }
         $qb->setMaxResults(1);
 
-
         $found = $qb->getQuery()->getSingleResult();
-        if (!$found) {
-            throw new NoResultException();
+        if (! $found) {
+            throw new NoResultException;
         }
 
         return $found;
     }
 
     /**
-     * @param Cuisine $cuisine
-     * @param int|null $limit
      * @return Author[]
      */
     public function getCuisineAuthors(Cuisine $cuisine, ?int $limit = null): array
@@ -95,8 +89,6 @@ class CuisineRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Cuisine $cuisine
-     * @param int|null $limit
      * @return Recipe[]
      */
     public function getCuisineRecipes(Cuisine $cuisine, ?int $limit = null): array
@@ -110,4 +102,25 @@ class CuisineRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getCuisineIngredients(string $slug): array
+    {
+        // Correct to fetch ingredients
+        $qb = $this->createQueryBuilder('r')
+            ->select('recipes')
+            ->where('r.slug = :cuisine') // Match the cuisine
+            ->setParameter('cuisine', $slug);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getCuisineRelates(string $slug): array
+    {
+        // fetch related cuisines
+        $qb = $this->createQueryBuilder('r')
+            ->select('recipes')
+            ->where('r.slug = :cuisine') // Match the cuisine
+            ->setParameter('cuisine', $slug);
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -6,18 +6,14 @@ namespace App\Entities;
 
 use App\Repositories\CuisineRepository;
 use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'cuisines')]
 #[ORM\Entity(repositoryClass: CuisineRepository::class)]
 class Cuisine
 {
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -41,34 +37,37 @@ class Cuisine
     #[ORM\ManyToMany(targetEntity: Recipe::class)]
     private Collection $recipes;
 
-
     public function __construct()
     {
-        $this->recipes = new ArrayCollection();
+        $this->recipes = new ArrayCollection;
     }
 
     public function getRecipes(): Collection
     {
         return $this->recipes;
     }
+
     public function getId(): int
     {
         return $this->id;
     }
+
     public function getFullName(): string
     {
-        if(!$this->variant) {
+        if (! $this->variant) {
             return $this->name;
         }
-        return $this->name . ' - ' . $this->variant;
+
+        return $this->name.' - '.$this->variant;
     }
 
     public function getSlug(): string
     {
-        if(!$this->variant) {
+        if (! $this->variant) {
             return strtolower($this->name);
         }
-        return strtolower($this->name . '-' . $this->variant);
+
+        return strtolower($this->name.'-'.$this->variant);
     }
 
     public function getDescription(): ?string
