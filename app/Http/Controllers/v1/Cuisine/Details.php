@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Recipe;
+namespace App\Http\Controllers\v1\Cuisine;
 
-use App\Exceptions\NotFoundException;
+use App\Exceptions\v1\NotFoundException;
 use App\Http\Controllers\Controller;
-use App\Repositories\RecipeRepository;
-use App\Transformers\RecipeTransformer;
+use App\Repositories\v1\CuisineRepository;
+use App\Transformers\v1\CuisineTransformer;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Illuminate\Http\Request;
@@ -15,29 +15,28 @@ use Illuminate\Http\Request;
 class Details extends Controller
 {
     public function __construct(
-        private readonly RecipeRepository $repository,
-        private readonly RecipeTransformer $transformer
+        private readonly CuisineRepository $repository,
+        private readonly CuisineTransformer $transformer
     ) {}
 
     /**
      * @return array<string, mixed>
      *
      * @throws NonUniqueResultException
-     * @throws NotFoundException
      */
     public function __invoke(Request $request, string $slug): array
     {
         try {
-            $recipe = $this->repository->getRecipe($slug);
+            $cuisine = $this->repository->getCuisine($slug);
         } catch (NoResultException $exception) {
             throw new NotFoundException(
-                trans('recipe.details.not_found.message'),
+                trans('cuisine.details.not_found.message'),
                 [
-                    trans('recipe.details.not_found.error'),
+                    trans('cuisine.details.not_found.error'),
                 ]
             );
         }
 
-        return $this->transformer->transformDetailed($recipe);
+        return $this->transformer->transformDetailed($cuisine);
     }
 }

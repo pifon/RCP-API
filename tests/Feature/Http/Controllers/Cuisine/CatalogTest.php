@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers\Cuisine;
 
-use App\Repositories\CuisineRepository;
-use App\Transformers\CuisineTransformer;
+use App\Repositories\v1\CuisineRepository;
+use App\Transformers\v1\CuisineTransformer;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;

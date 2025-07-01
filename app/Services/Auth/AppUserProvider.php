@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Auth;
 
 use App\Entities\User;
-use App\Repositories\UserRepository;
+use App\Repositories\v1\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Transformers;
+namespace App\Transformers\v1;
 
 use App\Entities\Cuisine;
 use DateTimeInterface;

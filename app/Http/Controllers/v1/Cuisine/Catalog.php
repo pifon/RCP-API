@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Cuisine;
+namespace App\Http\Controllers\v1\Cuisine;
 
-use App\Exceptions\BadRequestException;
-use App\Exceptions\ValidationErrorException;
+use App\Exceptions\v1\BadRequestException;
+use App\Exceptions\v1\ValidationErrorException;
 use App\Http\Controllers\Controller;
-use App\Repositories\CuisineRepository;
+use App\Repositories\v1\CuisineRepository;
 use App\Rules\LowercaseAlphaRule;
-use App\Transformers\CuisineTransformer;
+use App\Transformers\v1\CuisineTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Repositories;
+namespace App\Repositories\v1;
 
 use App\DBAL\ServiceEntityRepository;
-use App\Entities\Author;
 use App\Entities\Cuisine;
 use App\Entities\Recipe;
 use Doctrine\ORM\EntityManager;

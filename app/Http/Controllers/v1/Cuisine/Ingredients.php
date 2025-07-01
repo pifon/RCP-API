@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Cuisine;
+namespace App\Http\Controllers\v1\Cuisine;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\CuisineRepository;
-use App\Transformers\CuisineTransformer;
+use App\Repositories\v1\CuisineRepository;
+use App\Transformers\v1\CuisineTransformer;
 use Illuminate\Http\Request;
 
 class Ingredients extends Controller

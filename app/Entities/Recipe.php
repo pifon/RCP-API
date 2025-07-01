@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Repositories\RecipeRepository;
+use App\Repositories\v1\RecipeRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 

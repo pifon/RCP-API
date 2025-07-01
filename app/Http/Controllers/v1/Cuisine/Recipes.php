@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Cuisine;
+namespace App\Http\Controllers\v1\Cuisine;
 
-use App\Exceptions\ValidationErrorException;
+use App\Exceptions\v1\ValidationErrorException;
 use App\Http\Controllers\Controller;
-use App\Repositories\CuisineRepository;
-use App\Repositories\RecipeRepository;
-use App\Transformers\RecipeTransformer;
+use App\Repositories\v1\CuisineRepository;
+use App\Repositories\v1\RecipeRepository;
+use App\Transformers\v1\RecipeTransformer;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Illuminate\Http\Request;

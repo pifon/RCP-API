@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Repositories\DishTypeRepository;
+use App\Repositories\v1\DishTypeRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 

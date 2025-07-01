@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Exceptions;
+namespace App\Exceptions\v1;
 
 use Exception;
 
-class NotFoundException extends Exception
+class BadRequestException extends Exception
 {
     protected array $errors;
 
-    public function __construct(string $message, array $errors = [], int $status = 404)
+    public function __construct(string $message, array $errors = [], int $status = 400)
     {
         parent::__construct($message, $status);
         $this->errors = $errors;

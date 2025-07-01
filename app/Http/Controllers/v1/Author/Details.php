@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Author;
+namespace App\Http\Controllers\v1\Author;
 
-use App\Exceptions\NotFoundException;
+use App\Exceptions\v1\NotFoundException;
 use App\Http\Controllers\Controller;
-use App\Repositories\AuthorRepository;
-use App\Transformers\AuthorTransformer;
+use App\Repositories\v1\AuthorRepository;
+use App\Transformers\v1\AuthorTransformer;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Illuminate\Http\Request;
 
-class Show extends Controller
+class Details extends Controller
 {
     public function __construct(
         private readonly AuthorRepository $repository,
@@ -22,16 +22,22 @@ class Show extends Controller
     /**
      * @return array<string, mixed>
      *
+     * @throws NonUniqueResultException
      * @throws NotFoundException
      */
     public function __invoke(Request $request, string $username): array
     {
         try {
             $author = $this->repository->getAuthor($username);
-        } catch (NoResultException|NonUniqueResultException $e) {
-            throw new NotFoundException($e->getMessage());
+        } catch (NoResultException $exception) {
+            throw new NotFoundException(
+                trans('author.details.not_found.message'),
+                [
+                    trans('author.details.not_found.error'),
+                ]
+            );
         }
 
-        return $this->transformer->transform($author);
+        return $this->transformer->transformDetailed($author);
     }
 }
