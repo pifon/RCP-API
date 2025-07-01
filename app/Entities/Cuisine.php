@@ -52,6 +52,11 @@ class Cuisine
         return $this->id;
     }
 
+    private function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getFullName(): string
     {
         if (! $this->variant) {
@@ -59,6 +64,16 @@ class Cuisine
         }
 
         return $this->name.' - '.$this->variant;
+    }
+
+    protected function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    protected function setVariant(?string $variant): void
+    {
+        $this->variant = $variant;
     }
 
     public function getSlug(): string
@@ -70,16 +85,28 @@ class Cuisine
         return strtolower($this->name.'-'.$this->variant);
     }
 
+    protected function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    private function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
+    protected function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;

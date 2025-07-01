@@ -50,9 +50,54 @@ class Recipe
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
+    private function setId(int $id): void
+    {
+        $this->id = $id;
+    }
     public function getId(): int
     {
         return $this->id;
+    }
+
+    private function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
+    private function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    private function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+    private function setVariant(Recipe $variant): void
+    {
+        $this->variant = $variant;
+    }
+    private function setAuthor(Author $author): void
+    {
+        $this->author = $author;
+    }
+    private function setCuisine(Cuisine $cuisine): void
+    {
+        $this->cuisine = $cuisine;
+    }
+    private function setType(DishType $type): void
+    {
+        $this->type = $type;
+    }
+
+    private function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    private function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 
     public function getAuthor(): Author

@@ -78,4 +78,49 @@ class Author
     {
         return $this->description;
     }
+
+    private function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+    private function setUsername(string $username): void
+    {
+        $this->username = $username;
+    }
+    private function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+    private function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+    private function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+    private function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    private function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
 }

@@ -31,6 +31,14 @@ class DishType
         $this->name = $name;
     }
 
+    private function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+    private function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
     public function getId(): int
     {
         return $this->id;
@@ -39,5 +47,18 @@ class DishType
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+    private function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

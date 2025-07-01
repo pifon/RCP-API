@@ -15,6 +15,14 @@ parameters:
     dynamicConstantNames:
         - ENVIRONMENT
     ignoreErrors:
+        -
+            message: '#Method .+::set.+\(\) is unused#'
+            paths:
+                - 'app/Entities/User.php'
+                - 'app/Entities/Author.php'
+                - 'app/Entities/Cuisine.php'
+                - 'app/Entities/Recipe.php'
+                - 'app/Entities/DishType.php'
     paths:
         - app/
     excludePaths:

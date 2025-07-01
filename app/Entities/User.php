@@ -91,9 +91,96 @@ class User implements Authenticatable
     {
         return $this->id;
     }
+    private function setId(int $id): void
+    {
+        $this->id = $id;
+    }
 
     public function getPasswordChangedAt(): ?DateTime
     {
         return $this->passwordChangedAt;
+    }
+
+    private function setUpdatedAt(?DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+    public function getCreatedAt(): ?DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    private function setCreatedAt(?DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+    private function setUsername(string $username): void
+    {
+        $this->username = $username;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    private function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    private function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    private function setPassword(string $plainPassword): void
+    {
+        $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
+
+        if (!$hashedPassword) {
+            throw new \RuntimeException('Password hashing failed.');
+        }
+
+        $this->password = $hashedPassword;
+        $this->setPasswordChangedAt(new DateTime());
+    }
+
+    public function isPasswordValid(string $plainPassword): bool
+    {
+        if ($this->password === null) {
+            return false;
+        }
+
+        return password_verify($plainPassword, $this->password);
+    }
+
+    protected function passwordChangedAt(): ?DateTime
+    {
+        return $this->passwordChangedAt;
+    }
+
+    protected function setPasswordChangedAt(?DateTime $passwordChangedAt): void
+    {
+        $this->passwordChangedAt = $passwordChangedAt;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 }
