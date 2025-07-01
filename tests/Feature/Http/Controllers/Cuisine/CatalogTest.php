@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers\Cuisine;
 use App\Repositories\CuisineRepository;
 use App\Transformers\CuisineTransformer;
 use Exception;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\TestResponse;
@@ -13,7 +14,7 @@ use Tests\TestCase;
 
 class CatalogTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use DatabaseTransactions, WithFaker;
 
     private CuisineRepository $repository;
 
