@@ -6,7 +6,6 @@ use App\Repositories\CuisineRepository;
 use App\Transformers\CuisineTransformer;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
