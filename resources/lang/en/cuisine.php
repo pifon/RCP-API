@@ -7,7 +7,7 @@ return [
     ],
     'filter' => [
         'string' => 'The filter must be a valid string.',
-        'lowercase' => 'The filter must only contain lowercase letters.',
+        'lowercase' => 'The filter must contain only lowercase letters.',
     ],
     'limit' => [
         'integer' => 'The limit value must be a number.',

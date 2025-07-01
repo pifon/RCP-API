@@ -17,7 +17,7 @@ class LowercaseAlphaRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (empty($value) || $value !== strtolower($value) || ! preg_match('/^[a-z]+$/', $value)) {
+        if (! is_string($value) || empty($value) || $value !== strtolower($value) || ! preg_match('/^[a-z]+$/', $value)) {
             $fail('The :attribute must contain only lowercase letters.');
         }
     }
