@@ -89,6 +89,7 @@ class Cuisine
     {
         $this->description = $description;
     }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -98,6 +99,7 @@ class Cuisine
     {
         $this->createdAt = $createdAt;
     }
+
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -107,6 +109,7 @@ class Cuisine
     {
         $this->updatedAt = $updatedAt;
     }
+
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;

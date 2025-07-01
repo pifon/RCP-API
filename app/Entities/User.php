@@ -91,6 +91,7 @@ class User implements Authenticatable
     {
         return $this->id;
     }
+
     private function setId(int $id): void
     {
         $this->id = $id;
@@ -105,14 +106,17 @@ class User implements Authenticatable
     {
         $this->updatedAt = $updatedAt;
     }
+
     public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
+
     public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
+
     private function setCreatedAt(?DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
@@ -122,22 +126,27 @@ class User implements Authenticatable
     {
         return $this->username;
     }
+
     private function setUsername(string $username): void
     {
         $this->username = $username;
     }
+
     public function getName(): string
     {
         return $this->name;
     }
+
     private function setName(string $name): void
     {
         $this->name = $name;
     }
+
     public function getEmail(): string
     {
         return $this->email;
     }
+
     private function setEmail(string $email): void
     {
         $this->email = $email;
@@ -147,12 +156,12 @@ class User implements Authenticatable
     {
         $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
 
-        if (!$hashedPassword) {
+        if (! $hashedPassword) {
             throw new \RuntimeException('Password hashing failed.');
         }
 
         $this->password = $hashedPassword;
-        $this->setPasswordChangedAt(new DateTime());
+        $this->setPasswordChangedAt(new DateTime);
     }
 
     public function isPasswordValid(string $plainPassword): bool

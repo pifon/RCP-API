@@ -35,10 +35,12 @@ class DishType
     {
         $this->id = $id;
     }
+
     private function setCreatedAt(DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
+
     public function getId(): int
     {
         return $this->id;
@@ -53,10 +55,12 @@ class DishType
     {
         return $this->createdAt;
     }
+
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
     }
+
     private function setUpdatedAt(DateTime $updatedAt): void
     {
         $this->updatedAt = $updatedAt;

@@ -54,6 +54,7 @@ class Recipe
     {
         $this->id = $id;
     }
+
     public function getId(): int
     {
         return $this->id;
@@ -73,18 +74,22 @@ class Recipe
     {
         $this->description = $description;
     }
+
     private function setVariant(Recipe $variant): void
     {
         $this->variant = $variant;
     }
+
     private function setAuthor(Author $author): void
     {
         $this->author = $author;
     }
+
     private function setCuisine(Cuisine $cuisine): void
     {
         $this->cuisine = $cuisine;
     }
+
     private function setType(DishType $type): void
     {
         $this->type = $type;
