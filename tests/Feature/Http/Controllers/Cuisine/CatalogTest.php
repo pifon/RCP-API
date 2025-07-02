@@ -6,19 +6,18 @@ use App\Entities\User;
 use App\Exceptions\v1\ValidationErrorException;
 use App\Repositories\v1\CuisineRepository;
 use App\Transformers\v1\CuisineTransformer;
-use DateTime;
-use DateTimeImmutable;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Helpers\CreatesTestUser;
 use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CatalogTest extends TestCase
 {
-    use DatabaseTransactions, WithFaker;
+    use CreatesTestUser, DatabaseTransactions, WithFaker;
 
     private CuisineRepository $repository;
 
@@ -46,22 +45,7 @@ class CatalogTest extends TestCase
         $this->app->bind(CuisineRepository::class, fn () => $this->repository);
         $this->app->bind(CuisineTransformer::class, fn () => $this->transformer);
 
-        $em = app('em');
-        $userRepo = $em->getRepository(User::class);
-        $user = $userRepo->findOneBy(['username' => 'test-user']);
-        if (! $user) {
-            $user = new User;
-            $user->setUsername('test-user');
-            $user->setEmail($this->faker->unique()->safeEmail());
-            $user->setPassword(password_hash('password', PASSWORD_BCRYPT)); // or however you hash
-            $user->setName($this->faker->name());
-            $user->setPasswordChangedAt(new DateTime);
-
-            $em = app('em'); // Doctrine's EntityManager (assuming registered as service)
-            $em->persist($user);
-            $em->flush();
-        }
-        $this->user = $user;
+        $this->user = $this->createOrGetTestUser();
     }
 
     protected function assertJsonHasOnlyKeys(array $expectedKeys, TestResponse $response): void

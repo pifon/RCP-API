@@ -69,4 +69,12 @@ class UserRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    public function storeUser(User $user): User
+    {
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        return $user;
+    }
 }
