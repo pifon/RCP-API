@@ -1,38 +1,29 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ApiLoginRequest;
-use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\JWTGuard;
 
-/**
- * Handles authentication-related operations.
- */
 class AuthController extends Controller
 {
-    use ApiResponses;
-
-    /**
-     * Log in a user and return a response.
-     *
-     * @param  ApiLoginRequest  $request  The validated login request.
-     * @return JsonResponse The login response.
-     */
-    public function login(ApiLoginRequest $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
-        return $this->ok('Hello, '.$request->get('email'));
-    }
+        $credentials = $request->only('username', 'password');
 
-    /**
-     * Handle user registration.
-     *
-     * @return JsonResponse The registration response.
-     */
-    public function register(): JsonResponse
-    {
-        return $this->ok('Register');
+        /** @var JWTGuard $jwtGuard */
+        $jwtGuard = Auth::guard('api');
+
+        if (! $token = $jwtGuard->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $jwtGuard->factory()->getTTL() * 60,
+        ]);
     }
 }

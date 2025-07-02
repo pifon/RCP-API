@@ -2,14 +2,19 @@
 
 namespace Tests\Feature\Http\Controllers\Cuisine;
 
+use App\Entities\User;
+use App\Exceptions\v1\ValidationErrorException;
 use App\Repositories\v1\CuisineRepository;
 use App\Transformers\v1\CuisineTransformer;
+use DateTime;
+use DateTimeImmutable;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CatalogTest extends TestCase
 {
@@ -19,12 +24,18 @@ class CatalogTest extends TestCase
 
     private CuisineTransformer $transformer;
 
-    private const API_ENDPOINT = '/api/cuisines';
+    private User $user;
 
-    private const ERROR_KEYS = ['status', 'message', 'errors'];
+    private const string API_ENDPOINT = '/api/v1/cuisines';
 
-    private const DATA_KEYS = ['data'];
+    private const array ERROR_KEYS = ['status', 'message', 'errors'];
 
+    private const array DATA_KEYS = ['data'];
+
+    /**
+     * @throws ValidationErrorException
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -34,6 +45,23 @@ class CatalogTest extends TestCase
 
         $this->app->bind(CuisineRepository::class, fn () => $this->repository);
         $this->app->bind(CuisineTransformer::class, fn () => $this->transformer);
+
+        $em = app('em');
+        $userRepo = $em->getRepository(User::class);
+        $user = $userRepo->findOneBy(['username' => 'test-user']);
+        if (! $user) {
+            $user = new User;
+            $user->setUsername('test-user');
+            $user->setEmail($this->faker->unique()->safeEmail());
+            $user->setPassword(password_hash('password', PASSWORD_BCRYPT)); // or however you hash
+            $user->setName($this->faker->name());
+            $user->setPasswordChangedAt(new DateTime);
+
+            $em = app('em'); // Doctrine's EntityManager (assuming registered as service)
+            $em->persist($user);
+            $em->flush();
+        }
+        $this->user = $user;
     }
 
     protected function assertJsonHasOnlyKeys(array $expectedKeys, TestResponse $response): void
@@ -69,9 +97,18 @@ class CatalogTest extends TestCase
             ->willReturn($output);
     }
 
+    protected function getAuthenticated(string $uri, array $params = [], string $method = 'GET', array $headers = []): TestResponse
+    {
+        $token = JWTAuth::fromUser($this->user);
+
+        return $this->withHeaders(array_merge([
+            'Authorization' => 'Bearer '.$token,
+        ], $headers))->json($method, $uri, $params);
+    }
+
     public function test_index_without_parameters_returns_success(): void
     {
-        $this->get(self::API_ENDPOINT)->assertOk();
+        $this->getAuthenticated(self::API_ENDPOINT)->assertOk();
     }
 
     public function test_index_no_params_returns_default_limit(): void
@@ -79,7 +116,7 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines(null, null, ['cuisine1', 'cuisine2']);
         $this->mockTransformerTransformSet(['cuisine1', 'cuisine2'], ['data' => ['cuisine1', 'cuisine2']]);
 
-        $response = $this->getJson(self::API_ENDPOINT);
+        $response = $this->getAuthenticated(self::API_ENDPOINT);
 
         $response->assertOk()
             ->assertExactJson([
@@ -94,7 +131,7 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines(null, $limit, ['cuisine1', 'cuisine2']);
         $this->mockTransformerTransformSet(['cuisine1', 'cuisine2'], ['data' => ['cuisine1', 'cuisine2']]);
 
-        $response = $this->getJson(self::API_ENDPOINT.'?limit='.$limit);
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?limit='.$limit);
 
         $response->assertOk()
             ->assertExactJson([
@@ -105,13 +142,13 @@ class CatalogTest extends TestCase
     #[DataProvider('invalidLimitProvider')]
     public function test_invalid_limits_return_validation_error(string $limit, string $expectedMessageKey): void
     {
-        $response = $this->getJson(self::API_ENDPOINT."?limit=$limit");
+        $response = $this->getAuthenticated(self::API_ENDPOINT."?limit=$limit");
 
         $this->assertValidationErrorResponse($response, 'limit', $expectedMessageKey);
     }
 
     /**
-     * @return array<int, array<mixed>>
+     * @return array<int, array>
      */
     public static function invalidLimitProvider(): array
     {
@@ -129,10 +166,10 @@ class CatalogTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('getCuisines')
-            ->with('Vegan', null) // expecting ucfirst(lowercase) transform of 'vegan'
+            ->with('Vegan', null)
             ->willReturn([]);
 
-        $response = $this->getJson(self::API_ENDPOINT.'?filter=vegan');
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?filter=vegan');
 
         $response->assertStatus(200);
     }
@@ -140,7 +177,7 @@ class CatalogTest extends TestCase
     #[DataProvider('invalidFilterProvider')]
     public function test_invalid_filters_return_validation_error(mixed $filter, string $expectedMessageKey): void
     {
-        $response = $this->json('GET', self::API_ENDPOINT, ['filter' => $filter]);
+        $response = $this->getAuthenticated(self::API_ENDPOINT, ['filter' => $filter]);
 
         $this->assertValidationErrorResponse($response, 'filter', $expectedMessageKey);
     }
@@ -162,7 +199,7 @@ class CatalogTest extends TestCase
 
     public function test_index_with_unexpected_field_throws_bad_request(): void
     {
-        $response = $this->getJson(self::API_ENDPOINT.'?something=unexpected');
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?something=unexpected');
 
         $response->assertStatus(400)
             ->assertJsonStructure(['message', 'errors']);
@@ -175,7 +212,7 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines('Vegan', 10, ['c1', 'c2']);
         $this->mockTransformerTransformSet(['c1', 'c2'], ['data' => ['c1', 'c2']]);
 
-        $response = $this->getJson(self::API_ENDPOINT.'?filter=vegan&limit=10');
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?filter=vegan&limit=10');
 
         $response->assertOk()
             ->assertJsonStructure(['data'])
@@ -193,7 +230,7 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines(null, null, $cuisines);
         $this->mockTransformerTransformSet($cuisines, $transformed);
 
-        $response = $this->getJson(self::API_ENDPOINT);
+        $response = $this->getAuthenticated(self::API_ENDPOINT);
 
         $response->assertStatus(200)
             ->assertExactJson($transformed);
@@ -203,7 +240,7 @@ class CatalogTest extends TestCase
 
     public function test_index_with_empty_filter_and_limit(): void
     {
-        $response = $this->getJson(self::API_ENDPOINT.'?filter=&limit=');
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?filter=&limit=');
         $response->assertStatus(422);
     }
 
@@ -212,7 +249,7 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines(null, 1, []);
         $this->mockTransformerTransformSet([], ['data' => []]);
 
-        $response = $this->getJson(self::API_ENDPOINT.'?limit=1');
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?limit=1');
 
         $response->assertOk();
     }
@@ -222,14 +259,14 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines(null, 50, []);
         $this->mockTransformerTransformSet([], ['data' => []]);
 
-        $response = $this->getJson(self::API_ENDPOINT.'?limit=50');
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?limit=50');
 
         $response->assertOk();
     }
 
     public function test_index_with_filter_as_array_rejects_with_validation_error(): void
     {
-        $response = $this->json('GET', self::API_ENDPOINT, ['filter' => ['vegan', 'vegetarian']]);
+        $response = $this->getAuthenticated(self::API_ENDPOINT, ['filter' => ['vegan', 'vegetarian']]);
 
         $response->assertJsonStructure(['status', 'message', 'errors']);
         $response->assertStatus(422)
@@ -238,8 +275,7 @@ class CatalogTest extends TestCase
 
     public function test_index_with_filter_as_object_rejects_with_validation_error(): void
     {
-        // Send JSON body with filter as object (simulate invalid input)
-        $response = $this->json('GET', self::API_ENDPOINT, ['filter' => (object) ['value' => 'vegan']]);
+        $response = $this->getAuthenticated(self::API_ENDPOINT, ['filter' => (object) ['value' => 'vegan']]);
 
         $response->assertJsonStructure(['status', 'message', 'errors']);
         $response->assertStatus(422)
@@ -254,14 +290,13 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines(null, null, $cuisines);
         $this->mockTransformerTransformSet($cuisines, $transformed);
 
-        $response = $this->getJson(self::API_ENDPOINT);
+        $response = $this->getAuthenticated(self::API_ENDPOINT);
 
         $response->assertStatus(200)
             ->assertJsonStructure(['data'])
             ->assertJsonCount(count($cuisines), 'data')
             ->assertExactJson($transformed);
 
-        // Assert no unexpected keys, e.g. no 'extra'
         $json = $response->json();
         $this->assertEquals(['data'], array_keys($json));
     }
@@ -272,7 +307,7 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines(null, null, []);
         $this->mockTransformerTransformSet([], ['data' => []]);
 
-        $response = $this->getJson(self::API_ENDPOINT);
+        $response = $this->getAuthenticated(self::API_ENDPOINT);
 
         $response->assertStatus(200)
             ->assertExactJson(['data' => []]);
@@ -289,13 +324,13 @@ class CatalogTest extends TestCase
             ->with($expectedFilter, null)
             ->willReturn([]);
 
-        $response = $this->getJson(self::API_ENDPOINT.'?filter='.$inputFilter);
+        $response = $this->getAuthenticated(self::API_ENDPOINT.'?filter='.$inputFilter);
 
         $response->assertStatus(200);
     }
 
     /**
-     * @return array<int, array<mixed>>
+     * @return array<int, array>
      */
     public static function filterCapitalizationProvider(): array
     {
@@ -315,7 +350,7 @@ class CatalogTest extends TestCase
         $this->transformer->expects($this->never())
             ->method('transformSet');
 
-        $response = $this->getJson(self::API_ENDPOINT);
+        $response = $this->getAuthenticated(self::API_ENDPOINT);
 
         $response->assertStatus(500)
             ->assertJsonStructure(['message'])
@@ -332,7 +367,7 @@ class CatalogTest extends TestCase
             ->method('transformSet')
             ->willThrowException(new Exception('Transformer failure'));
 
-        $response = $this->getJson(self::API_ENDPOINT);
+        $response = $this->getAuthenticated(self::API_ENDPOINT);
 
         $response->assertStatus(500)
             ->assertJsonStructure(['message'])
@@ -342,12 +377,12 @@ class CatalogTest extends TestCase
     #[DataProvider('disallowedHttpMethodsProvider')]
     public function test_disallowed_http_methods_return_405(string $method): void
     {
-        $response = $this->json($method, self::API_ENDPOINT);
+        $response = $this->getAuthenticated(self::API_ENDPOINT, [], $method);
         $response->assertMethodNotAllowed();
     }
 
     /**
-     * @return array<int, array<mixed>>
+     * @return array<int, array>
      */
     public static function disallowedHttpMethodsProvider(): array
     {
@@ -374,7 +409,7 @@ class CatalogTest extends TestCase
         $this->mockRepositoryGetCuisines('Vegan', $limit, ['c1', 'c2']);
         $this->mockTransformerTransformSet(['c1', 'c2'], ['data' => ['c1', 'c2']]);
 
-        $response = $this->getJson(self::API_ENDPOINT."?filter=$encodedFilter&limit=$encodedLimit");
+        $response = $this->getAuthenticated(self::API_ENDPOINT."?filter=$encodedFilter&limit=$encodedLimit");
 
         $response->assertOk()
             ->assertExactJson(['data' => ['c1', 'c2']]);

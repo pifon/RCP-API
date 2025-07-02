@@ -38,10 +38,6 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -67,7 +63,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'app_user_provider',
+            'driver' => 'doctrine',
             'model' => App\Entities\User::class,
         ],
 

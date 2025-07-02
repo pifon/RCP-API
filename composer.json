@@ -7,12 +7,16 @@
     "require": {
         "php": "^8.3",
         "ext-openssl": "*",
+        "doctrine/annotations": "^2.0",
+        "doctrine/dbal": "^3.9",
+        "doctrine/orm": "^3.5",
+        "doctrine/persistence": "^4.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "laravel-doctrine/migrations": "^3.0",
+        "laravel-doctrine/orm": "^3.1",
         "laravel/framework": "^11.44.2",
         "laravel/tinker": "^2.9",
-        "doctrine/annotations": "^2.0",
-        "laravel-doctrine/migrations": "^3.0",
-        "laravel-doctrine/orm": "^3.1"
+        "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -9,7 +9,7 @@ Route::get('/', function () {
         'message' => sprintf('Welcome to %s API.', ucfirst(config('app.name'))),
         200,
     ]);
-});
+})->name('welcome');
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login'])->name('login');
+// Route::post('/register', [AuthController::class, 'register'])->name('register');

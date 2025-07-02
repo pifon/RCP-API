@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
+use App\Exceptions\v1\ValidationErrorException;
 use App\Repositories\v1\UserRepository;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 #[ORM\Table(name: 'users')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements Authenticatable
+class User implements Authenticatable, JWTSubject
 {
     #[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    #[ORM\Column(name: 'username', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'username', type: 'string', length: 255, unique: true, nullable: false)]
     private string $username;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
@@ -28,9 +29,6 @@ class User implements Authenticatable
 
     #[ORM\Column(name: 'email', type: 'string', length: 255, nullable: false)]
     private string $email;
-
-    #[ORM\Column(name: 'description', type: 'string', nullable: true)]
-    private ?string $description;
 
     #[ORM\Column(name: 'password', type: 'string', nullable: true)]
     private ?string $password;
@@ -42,7 +40,7 @@ class User implements Authenticatable
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
-    private DateTime $updatedAt;
+    private DateTimeImmutable $updatedAt;
 
     public function getAuthIdentifierName(): string
     {
@@ -54,37 +52,21 @@ class User implements Authenticatable
         return $this->id;
     }
 
-    public function getAuthPassword(): ?string
+    public function getAuthPassword(): string
     {
         return $this->password;
     }
 
-    public function getAuthPasswordName(): string
+    public function getRememberToken(): ?string
     {
-        return 'password';
+        return null;
     }
 
-    public function getRememberToken(): string
-    {
-        // 'Not implemented.'
-        return '';
-    }
+    public function setRememberToken(mixed $value): void {}
 
-    /**
-     * @param  string  $value
-     */
-    public function setRememberToken($value): void
+    public function getRememberTokenName(): string
     {
-        // throw new Exception('Not implemented.');
-
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function getRememberTokenName()
-    {
-        throw new Exception('Not implemented.');
+        return 'token';
     }
 
     public function getId(): int
@@ -102,12 +84,7 @@ class User implements Authenticatable
         return $this->passwordChangedAt;
     }
 
-    private function setUpdatedAt(?DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -117,9 +94,9 @@ class User implements Authenticatable
         return $this->createdAt;
     }
 
-    private function setCreatedAt(?DateTimeImmutable $createdAt): void
+    private function setCreatedAt(): void
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new DateTimeImmutable('now');
     }
 
     public function getUsername(): string
@@ -127,7 +104,7 @@ class User implements Authenticatable
         return $this->username;
     }
 
-    private function setUsername(string $username): void
+    public function setUsername(string $username): void
     {
         $this->username = $username;
     }
@@ -137,7 +114,7 @@ class User implements Authenticatable
         return $this->name;
     }
 
-    private function setName(string $name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -147,21 +124,20 @@ class User implements Authenticatable
         return $this->email;
     }
 
-    private function setEmail(string $email): void
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
 
-    private function setPassword(string $plainPassword): void
+    public function setPassword(string $plainPassword): void
     {
         $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
 
         if (! $hashedPassword) {
-            throw new \RuntimeException('Password hashing failed.');
+            throw new ValidationErrorException('Password hashing failed.');
         }
 
         $this->password = $hashedPassword;
-        $this->setPasswordChangedAt(new DateTime);
     }
 
     public function isPasswordValid(string $plainPassword): bool
@@ -173,23 +149,31 @@ class User implements Authenticatable
         return password_verify($plainPassword, $this->password);
     }
 
-    protected function passwordChangedAt(): ?DateTime
+    public function setPasswordChangedAt(?DateTime $date): void
     {
-        return $this->passwordChangedAt;
+        $this->passwordChangedAt = $date;
     }
 
-    protected function setPasswordChangedAt(?DateTime $passwordChangedAt): void
+    public function getAuthPasswordName(): string
     {
-        $this->passwordChangedAt = $passwordChangedAt;
+        return 'password';
     }
 
-    public function setDescription(string $description): void
+    public function getJWTIdentifier(): int
     {
-        $this->description = $description;
+        return $this->getId();
     }
 
-    public function getDescription(): string
+    public function getJWTCustomClaims(): array
     {
-        return $this->description;
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+        ];
+    }
+
+    protected function setUpdatedAt(): void
+    {
+        $this->updatedAt = new DateTimeImmutable('now');
     }
 }
