@@ -20,6 +20,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
+        //TODO: Store token on user in token field
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
