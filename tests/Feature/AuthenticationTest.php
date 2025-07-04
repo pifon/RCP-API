@@ -18,6 +18,7 @@ class AuthenticationTest extends TestCase
     private const string API_LOGIN_ENDPOINT = '/api/login';
 
     private const string USERNAME = 'test-user';
+
     private const string PASSWORD = 'Pa$swo[d_1234';
 
     protected UserRepository $userRepository;
@@ -61,6 +62,7 @@ class AuthenticationTest extends TestCase
             'message' => 'Invalid credentials.',
         ]);
     }
+
     public function test_user_cannot_login_without_password_field(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
@@ -88,7 +90,7 @@ class AuthenticationTest extends TestCase
     public function test_user_cannot_login_with_non_string_username_field(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => (object)[0=>'%',1=>'*'],
+            'username' => (object) [0 => '%', 1 => '*'],
             'password' => self::PASSWORD,
         ]);
 
@@ -128,7 +130,7 @@ class AuthenticationTest extends TestCase
     public function test_user_cannot_login_with_too_long_username_field(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => str_repeat('a',257),
+            'username' => str_repeat('a', 257),
             'password' => self::PASSWORD,
         ]);
 
@@ -142,7 +144,7 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
-            'password' => (object)[0=>'%',1=>'*'],
+            'password' => (object) [0 => '%', 1 => '*'],
         ]);
 
         $response->assertJsonStructure(['message', 'errors']);
@@ -181,7 +183,7 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
-            'password' => str_repeat('0123456789',50),
+            'password' => str_repeat('0123456789', 50),
         ]);
 
         $response->assertJsonStructure(['message', 'errors']);
@@ -202,7 +204,7 @@ class AuthenticationTest extends TestCase
 
     public function test_block_fake_bearer_access_to_protected_route(): void
     {
-        $response = $this->withHeader('Authorization', "Bearer not-real")
+        $response = $this->withHeader('Authorization', 'Bearer not-real')
             ->getJson(self::API_PROTECTED_ENDPOINT);
 
         $response->assertStatus(401);

@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\JWTGuard;
-use function Laravel\Prompts\password;
 
 class AuthController extends Controller
 {
@@ -16,7 +15,7 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'password' => 'required|string|max:72',
-        ],[
+        ], [
             'username.max' => trans('auth.username.max'),
             'password.max' => trans('auth.password.max'),
         ]);
