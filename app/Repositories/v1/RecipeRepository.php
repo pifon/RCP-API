@@ -66,7 +66,7 @@ class RecipeRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r')  // Alias for the Author entity
             ->select('DISTINCT r')  // Select distinct Author entities
-            ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
+            ->where('r.cuisine_id = :cuisine')  // Filter by the given Cuisine
             ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
             ->setMaxResults($limit ?? 25);
 

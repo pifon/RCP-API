@@ -41,7 +41,7 @@ class Recipe
     private Cuisine $cuisine;
 
     #[ORM\ManyToOne(targetEntity: DishType::class)]
-    #[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'dish_type_id', referencedColumnName: 'id', nullable: false)]
     private DishType $type;
 
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]

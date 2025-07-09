@@ -81,7 +81,7 @@ class CuisineRepository extends ServiceEntityRepository
         // fetch authors from recipes in this cuisine
         $qb = $this->createQueryBuilder('r')
             ->select('DISTINCT author')
-            ->innerJoin('r.author', 'author') // Join with the Author entity
+            ->innerJoin('r.author_id', 'author') // Join with the Author entity
             ->where('r.cuisine = :cuisine') // Match the cuisine
             ->setParameter('cuisine', $cuisine);
 

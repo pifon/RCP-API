@@ -23,9 +23,6 @@ class Author
     #[ORM\ManyToOne(targetEntity: User::class)]
     private User $user;
 
-    #[ORM\Column(name: 'username', type: 'string', length: 255, nullable: false)]
-    private string $username;
-
     #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
     private string $name;
 
@@ -64,6 +61,10 @@ class Author
         return $this->user;
     }
 
+    public function getUserId(){
+        return $this->user->getId();
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -71,22 +72,12 @@ class Author
 
     public function getUsername(): string
     {
-        return $this->username;
+        return $this->user->getUsername();
     }
 
     public function getDescription(): string
     {
         return $this->description;
-    }
-
-    private function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    private function setUsername(string $username): void
-    {
-        $this->username = $username;
     }
 
     private function setName(string $name): void
