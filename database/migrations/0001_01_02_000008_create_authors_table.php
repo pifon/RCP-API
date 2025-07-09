@@ -12,12 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('element_sub_types', function (Blueprint $table) {
+        Schema::create('authors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
             $table->string('name')->unique('name');
-            $table->foreignId('type')->constrained('element_types');
+            $table->string('email');
             $table->text('description')->nullable();
-            $table->string('ref')->nullable();
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('element_sub_types');
+        Schema::dropIfExists('authors');
     }
 };

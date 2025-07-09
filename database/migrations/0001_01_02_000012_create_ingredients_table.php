@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,12 +14,10 @@ return new class extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product')->constrained('products', 'id');
-            $table->foreignId('measure')->constrained('measures', 'id');
-            $table->float('amount');
-            $table->string('name');
-            $table->text('description');
-            $table->timestamps();
+            $table->foreignId('recipe_id')->constrained('recipes', 'id');
+            $table->foreignId('serving_id')->constrained('servings', 'id');
+            $table->dateTime('created_at')->default(Carbon::now());
+            $table->dateTime('updated_at')->default(Carbon::now());
         });
     }
 

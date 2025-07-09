@@ -1,8 +1,8 @@
 <?php
 
-use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,15 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('recipes', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('slug')->unique();
-            $table->integer('variant_id')->nullable();
-            $table->foreignId('author_id')->constrained('authors');
-            $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('cuisine_id')->constrained('cuisines');
-            $table->foreignId('type_id')->constrained('dish_types');
+            $table->boolean('vegan')->default(false);
+            $table->boolean('vegetarian')->default(false);
+            $table->boolean('halal')->default(false);
+            $table->boolean('kosher')->default(false);
+            $table->boolean('allergen')->default(false);
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('recipes');
+        Schema::dropIfExists('products');
     }
 };

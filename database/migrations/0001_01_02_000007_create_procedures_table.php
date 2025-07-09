@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,7 +14,11 @@ return new class extends Migration
     {
         Schema::create('procedures', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('serving_id')->constrained('servings', 'id');
+            $table->foreignId('operation_id')->constrained('operations', 'id');
+            $table->foreignId('duration_id')->constrained('measures', 'id');
+            $table->dateTime('created_at')->default(Carbon::now());
+            $table->dateTime('updated_at')->default(Carbon::now());
         });
     }
 

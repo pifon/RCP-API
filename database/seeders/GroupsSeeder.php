@@ -12,7 +12,7 @@ class GroupsSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('groups')->insert([
+        DB::table('product_groups')->insert([
             [
                 'name' => 'vegan',
                 'description' => 'Vegan product rules are guidelines that ensure a product is free from animal-derived ingredients and is not tested on animals.',

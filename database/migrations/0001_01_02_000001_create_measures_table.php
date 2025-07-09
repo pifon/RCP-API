@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +14,13 @@ return new class extends Migration
     {
         Schema::create('measures', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('abr', 15)->unique();
-            $table->boolean('si')->default(true);
-            $table->integer('parent')->references('id')->on('measures')->onDelete('cascade')->nullable()->default(null);
-            $table->float('factor')->nullable(false)->default(1);
-            $table->timestamps();
+            $table->string('name');
+            $table->string('abbr')->unique();
+            $table->enum('measure_type', ['M', 'V', 'L', 'T', 'C', 'O'])->default('M');
+            $table->foreignId('base_id')->constrained('measures', 'id');
+            $table->float('factor');
+            $table->dateTime('created_at')->default(Carbon::now());
+            $table->dateTime('updated_at')->default(Carbon::now());
         });
     }
 

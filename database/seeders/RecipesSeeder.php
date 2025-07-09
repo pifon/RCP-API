@@ -20,7 +20,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Pizza',
                 'description' => null,
                 'cuisine_id' => 1,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'pasta',
@@ -29,7 +29,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Pasta',
                 'description' => null,
                 'cuisine_id' => 1,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'spaghetti',
@@ -38,7 +38,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Spaghetti',
                 'description' => null,
                 'cuisine_id' => 1,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'risotto',
@@ -47,7 +47,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Risotto',
                 'description' => null,
                 'cuisine_id' => 1,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'gelato',
@@ -56,7 +56,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Gelato',
                 'description' => null,
                 'cuisine_id' => 1,
-                'type_id' => 6,
+                'dish_type_id' => 6,
             ],
             [
                 'slug' => 'tiramisu',
@@ -65,7 +65,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Tiramisu',
                 'description' => null,
                 'cuisine_id' => 1,
-                'type_id' => 6,
+                'dish_type_id' => 6,
             ],
             [
                 'slug' => 'dumplings',
@@ -74,7 +74,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Dumplings',
                 'description' => null,
                 'cuisine_id' => 14,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'sweet-and-sour-pork',
@@ -83,7 +83,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Sweet and Sour Pork',
                 'description' => null,
                 'cuisine_id' => 14,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'fried-rice',
@@ -92,7 +92,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Fried Rice',
                 'description' => null,
                 'cuisine_id' => 14,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'peking-duck',
@@ -101,7 +101,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Peking Duck',
                 'description' => null,
                 'cuisine_id' => 14,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'kung-pao-chicken',
@@ -110,7 +110,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Kung Pao Chicken',
                 'description' => null,
                 'cuisine_id' => 14,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'butter-chicken',
@@ -119,7 +119,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Butter Chicken',
                 'description' => null,
                 'cuisine_id' => 27,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'biryani',
@@ -128,7 +128,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Biryani',
                 'description' => null,
                 'cuisine_id' => 27,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'samosas',
@@ -137,7 +137,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Samosas',
                 'description' => null,
                 'cuisine_id' => 27,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'naan',
@@ -146,7 +146,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Naan',
                 'description' => null,
                 'cuisine_id' => 27,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'tikka-masala',
@@ -155,7 +155,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Tikka Masala',
                 'description' => null,
                 'cuisine_id' => 27,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'taco',
@@ -164,7 +164,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Taco',
                 'description' => null,
                 'cuisine_id' => 41,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'buritto',
@@ -173,7 +173,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Burrito',
                 'description' => null,
                 'cuisine_id' => 41,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'enchilada',
@@ -182,7 +182,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Enchilada',
                 'description' => null,
                 'cuisine_id' => 41,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'guacamole',
@@ -191,7 +191,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Guacamole',
                 'description' => null,
                 'cuisine_id' => 41,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'mexican-churros',
@@ -200,7 +200,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Mexican Churros',
                 'description' => null,
                 'cuisine_id' => 41,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'sushi',
@@ -209,7 +209,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Sushi',
                 'description' => null,
                 'cuisine_id' => 53,
-                'type_id' => 17,
+                'dish_type_id' => 17,
             ],
             [
                 'slug' => 'sashimi',
@@ -218,7 +218,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Sashimi',
                 'description' => null,
                 'cuisine_id' => 53,
-                'type_id' => 17,
+                'dish_type_id' => 17,
             ],
             [
                 'slug' => 'ramen',
@@ -227,7 +227,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Ramen',
                 'description' => null,
                 'cuisine_id' => 53,
-                'type_id' => 15,
+                'dish_type_id' => 15,
             ],
             [
                 'slug' => 'tempura',
@@ -236,7 +236,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Tempura',
                 'description' => null,
                 'cuisine_id' => 53,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'miso',
@@ -245,7 +245,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Miso',
                 'description' => null,
                 'cuisine_id' => 53,
-                'type_id' => 15,
+                'dish_type_id' => 15,
             ],
             [
                 'slug' => 'burger',
@@ -254,7 +254,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Burger',
                 'description' => null,
                 'cuisine_id' => 54,
-                'type_id' => 18,
+                'dish_type_id' => 18,
             ],
             [
                 'slug' => 'bbq-ribs',
@@ -263,7 +263,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'BBQ Ribs',
                 'description' => null,
                 'cuisine_id' => 54,
-                'type_id' => 1,
+                'dish_type_id' => 1,
             ],
             [
                 'slug' => 'apple-pie',
@@ -272,7 +272,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Apple Pie',
                 'description' => null,
                 'cuisine_id' => 54,
-                'type_id' => 6,
+                'dish_type_id' => 6,
             ],
             [
                 'slug' => 'coq-au-vin',
@@ -281,7 +281,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Coq Au Vin',
                 'description' => null,
                 'cuisine_id' => 55,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'creme-brulee',
@@ -290,7 +290,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Creme Brulee',
                 'description' => null,
                 'cuisine_id' => 55,
-                'type_id' => 6,
+                'dish_type_id' => 6,
             ],
             [
                 'slug' => 'pad-thai',
@@ -299,7 +299,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Pad Thai',
                 'description' => null,
                 'cuisine_id' => 64,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'green-curry',
@@ -308,7 +308,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Green Curry',
                 'description' => null,
                 'cuisine_id' => 64,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'tom-yum',
@@ -317,7 +317,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Tom Yum',
                 'description' => null,
                 'cuisine_id' => 64,
-                'type_id' => 15,
+                'dish_type_id' => 15,
             ],
             [
                 'slug' => 'mango-sticky-rice',
@@ -326,7 +326,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Mango Sticky Rice',
                 'description' => null,
                 'cuisine_id' => 64,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'paella',
@@ -335,7 +335,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Paella',
                 'description' => null,
                 'cuisine_id' => 69,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'churros',
@@ -344,7 +344,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Churros',
                 'description' => null,
                 'cuisine_id' => 69,
-                'type_id' => 2,
+                'dish_type_id' => 2,
             ],
             [
                 'slug' => 'gazpacho',
@@ -353,7 +353,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Gazpacho',
                 'description' => null,
                 'cuisine_id' => 69,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'jamon-iberico',
@@ -362,7 +362,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Jamon Iberico',
                 'description' => null,
                 'cuisine_id' => 69,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'hummus',
@@ -371,7 +371,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Hummus',
                 'description' => null,
                 'cuisine_id' => 76,
-                'type_id' => 16,
+                'dish_type_id' => 16,
             ],
             [
                 'slug' => 'falafel',
@@ -380,7 +380,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Falafel',
                 'description' => null,
                 'cuisine_id' => 76,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'tabouleh',
@@ -389,7 +389,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Tabbouleh',
                 'description' => null,
                 'cuisine_id' => 76,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'kimchi',
@@ -398,7 +398,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Kimchi',
                 'description' => null,
                 'cuisine_id' => 83,
-                'type_id' => 22,
+                'dish_type_id' => 22,
             ],
             [
                 'slug' => 'bulgogi',
@@ -407,7 +407,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Bulgogi',
                 'description' => null,
                 'cuisine_id' => 83,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'bibimbap',
@@ -416,7 +416,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Bibimbap',
                 'description' => null,
                 'cuisine_id' => 83,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'tteokbokki',
@@ -425,7 +425,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Tteokbokki',
                 'description' => null,
                 'cuisine_id' => 83,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'moussaka',
@@ -434,7 +434,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Moussaka',
                 'description' => null,
                 'cuisine_id' => 88,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'souvlaki',
@@ -443,7 +443,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Souvlaki',
                 'description' => null,
                 'cuisine_id' => 88,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'tzatziki',
@@ -452,7 +452,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Tzatziki',
                 'description' => null,
                 'cuisine_id' => 88,
-                'type_id' => 12,
+                'dish_type_id' => 12,
             ],
             [
                 'slug' => 'baklava',
@@ -461,7 +461,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Baklava',
                 'description' => null,
                 'cuisine_id' => 88,
-                'type_id' => 23,
+                'dish_type_id' => 23,
             ],
             [
                 'slug' => 'greek-salad',
@@ -470,7 +470,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Greek Salad',
                 'description' => null,
                 'cuisine_id' => 88,
-                'type_id' => 10,
+                'dish_type_id' => 10,
             ],
             [
                 'slug' => 'shawarma',
@@ -479,7 +479,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Shawarma',
                 'description' => null,
                 'cuisine_id' => 94,
-                'type_id' => 18,
+                'dish_type_id' => 18,
             ],
             [
                 'slug' => 'kebab',
@@ -488,7 +488,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Kebab',
                 'description' => null,
                 'cuisine_id' => 94,
-                'type_id' => 18,
+                'dish_type_id' => 18,
             ],
             [
                 'slug' => 'pho',
@@ -497,7 +497,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Pho',
                 'description' => null,
                 'cuisine_id' => 100,
-                'type_id' => 15,
+                'dish_type_id' => 15,
             ],
             [
                 'slug' => 'banh-mi',
@@ -506,7 +506,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Banh Mi',
                 'description' => null,
                 'cuisine_id' => 100,
-                'type_id' => 18,
+                'dish_type_id' => 18,
             ],
             [
                 'slug' => 'spring-rolls',
@@ -515,7 +515,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Spring Rolls',
                 'description' => null,
                 'cuisine_id' => 100,
-                'type_id' => 11,
+                'dish_type_id' => 11,
             ],
             [
                 'slug' => 'bun-cha',
@@ -524,7 +524,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Bun Cha',
                 'description' => null,
                 'cuisine_id' => 100,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'baba-ganoush',
@@ -533,7 +533,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Baba Ganoush',
                 'description' => null,
                 'cuisine_id' => 104,
-                'type_id' => 13,
+                'dish_type_id' => 13,
             ],
             [
                 'slug' => 'fattoush',
@@ -542,7 +542,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Fattoush',
                 'description' => null,
                 'cuisine_id' => 104,
-                'type_id' => 10,
+                'dish_type_id' => 10,
             ],
             [
                 'slug' => 'risotto-lombardy',
@@ -551,7 +551,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Risotto',
                 'description' => 'From Lombardy',
                 'cuisine_id' => 2,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'ossobuco',
@@ -560,7 +560,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Ossobuco',
                 'description' => 'Braised veal shanks',
                 'cuisine_id' => 2,
-                'type_id' => 24,
+                'dish_type_id' => 24,
             ],
             [
                 'slug' => 'polenta',
@@ -569,7 +569,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Polenta',
                 'description' => 'Cornmeal dish',
                 'cuisine_id' => 2,
-                'type_id' => 11,
+                'dish_type_id' => 11,
             ],
             [
                 'slug' => 'panna-cotta',
@@ -578,7 +578,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Panna Cotta',
                 'description' => 'desert',
                 'cuisine_id' => 2,
-                'type_id' => 6,
+                'dish_type_id' => 6,
             ],
             [
                 'slug' => 'agnolotti',
@@ -587,7 +587,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Agnolotti',
                 'description' => 'Stuffed pasta from Piedmont',
                 'cuisine_id' => 2,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'margherita',
@@ -596,7 +596,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Pizza Margherita',
                 'description' => 'From Naples',
                 'cuisine_id' => 3,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'pasta-alla-norma',
@@ -605,7 +605,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Pasta alla Norma',
                 'description' => 'From Sicily',
                 'cuisine_id' => 3,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'caponata',
@@ -614,7 +614,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Caponata',
                 'description' => 'Sicilian eggplant dish',
                 'cuisine_id' => 3,
-                'type_id' => 11,
+                'dish_type_id' => 11,
             ],
             [
                 'slug' => 'parmigiana-di-melanzane',
@@ -623,7 +623,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Parmigiana di Melanzane',
                 'description' => 'Eggplant Parmesan',
                 'cuisine_id' => 3,
-                'type_id' => 14,
+                'dish_type_id' => 14,
             ],
             [
                 'slug' => 'focaccia',
@@ -632,7 +632,7 @@ class RecipesSeeder extends Seeder
                 'title' => 'Focaccia',
                 'description' => 'Flatbread',
                 'cuisine_id' => 3,
-                'type_id' => 26,
+                'dish_type_id' => 26,
             ],
         ]);
     }

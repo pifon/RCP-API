@@ -12,15 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('elements', function (Blueprint $table) {
+        Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('type')->constrained('element_types', 'id');
-            $table->foreignId('sub_type')->nullable()->constrained('element_sub_types');
-            $table->string('name');
-            $table->string('aka')->nullable();
-            $table->json('names')->nullable();
-            $table->text('description')->nullable();
-            $table->string('ref')->nullable();
+            $table->foreignId('recipe_id')->constrained('recipes', 'id');
+            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->integer('rate');
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('elements');
+        Schema::dropIfExists('ratings');
     }
 };

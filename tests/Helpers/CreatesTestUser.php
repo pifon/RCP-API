@@ -26,6 +26,8 @@ trait CreatesTestUser
             $user->setPassword('Pa$swo[d_1234');
             $user->setName(fake()->name());
             $user->setPasswordChangedAt(new DateTime);
+            $user->setCreatedAt();
+            $user->setUpdatedAt();
 
             $userRepo->storeUser($user);
         }

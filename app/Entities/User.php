@@ -37,10 +37,10 @@ class User implements Authenticatable, JWTSubject
     private ?DateTime $passwordChangedAt;
 
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
-    private DateTimeImmutable $createdAt;
+    private DateTime $createdAt;
 
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
-    private DateTimeImmutable $updatedAt;
+    private DateTime $updatedAt;
 
     public function getAuthIdentifierName(): string
     {
@@ -84,19 +84,19 @@ class User implements Authenticatable, JWTSubject
         return $this->passwordChangedAt;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    private function setCreatedAt(): void
+    public function setCreatedAt(): void
     {
-        $this->createdAt = new DateTimeImmutable('now');
+        $this->createdAt = new DateTime('now');
     }
 
     public function getUsername(): string
@@ -172,8 +172,8 @@ class User implements Authenticatable, JWTSubject
         ];
     }
 
-    protected function setUpdatedAt(): void
+    public function setUpdatedAt(): void
     {
-        $this->updatedAt = new DateTimeImmutable('now');
+        $this->updatedAt = new DateTime('now');
     }
 }
