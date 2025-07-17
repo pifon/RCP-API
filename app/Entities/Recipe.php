@@ -12,12 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 class Recipe
 {
-    #[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]
+    #[ORM\Column(name: 'id', type: 'integer', unique: true, nullable: false, options: ['unsigned' => true])]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    #[ORM\Column(name: 'slug', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'slug', type: 'string', length: 255, unique: true, nullable: false)]
     private string $slug;
 
     #[ORM\Column(name: 'title', type: 'string', length: 255, nullable: false)]
@@ -44,33 +44,30 @@ class Recipe
     #[ORM\JoinColumn(name: 'dish_type_id', referencedColumnName: 'id', nullable: false)]
     private DishType $type;
 
+    // Dates
+
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private DateTime $createdAt;
 
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
-    private function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
     public function getId(): int
     {
         return $this->id;
     }
 
-    private function setSlug(string $slug): void
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    private function setTitle(string $title): void
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    private function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -80,7 +77,7 @@ class Recipe
         $this->variant = $variant;
     }
 
-    private function setAuthor(Author $author): void
+    public function setAuthor(Author $author): void
     {
         $this->author = $author;
     }
@@ -95,14 +92,14 @@ class Recipe
         $this->type = $type;
     }
 
-    private function setCreatedAt(DateTime $createdAt): void
+    public function setCreatedAt(): void
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new DateTime;
     }
 
-    private function setUpdatedAt(DateTime $updatedAt): void
+    public function setUpdatedAt(): void
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new DateTime;
     }
 
     public function getAuthor(): Author

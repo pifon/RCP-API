@@ -7,7 +7,6 @@ namespace App\Entities;
 use App\Exceptions\v1\ValidationErrorException;
 use App\Repositories\v1\UserRepository;
 use DateTime;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;

@@ -7,6 +7,7 @@ namespace App\Repositories\v1;
 use App\DBAL\ServiceEntityRepository;
 use App\Entities\Author;
 use App\Entities\Cuisine;
+use App\Entities\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -44,15 +45,16 @@ class AuthorRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getAuthor(string $username): Author
+    public function getAuthor(User $user): Author
     {
         $qb = $this->createQueryBuilder('a')
             ->select('a')
-            ->where('a.name = :username')
-            ->setParameter('username', $username);
+            ->where('a.user = :user')
+            ->setParameter('user', $user->getId());
 
         $qb->setMaxResults(1);
 
+        /* @var Author $found */
         $found = $qb->getQuery()->getSingleResult();
         if (! $found) {
             throw new NoResultException;

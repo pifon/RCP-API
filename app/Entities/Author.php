@@ -61,7 +61,8 @@ class Author
         return $this->user;
     }
 
-    public function getUserId(){
+    public function getUserId()
+    {
         return $this->user->getId();
     }
 

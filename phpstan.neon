@@ -23,6 +23,14 @@ parameters:
                 - 'app/Entities/Cuisine.php'
                 - 'app/Entities/Recipe.php'
                 - 'app/Entities/DishType.php'
+        -
+                    message: '#Property .+::\$id is never written, only read.#'
+                    paths:
+                        #- 'app/Entities/User.php'
+                        - 'app/Entities/Author.php'
+                        #- 'app/Entities/Cuisine.php'
+                        - 'app/Entities/Recipe.php'
+                        #- 'app/Entities/DishType.php'
     paths:
         - app/
     excludePaths:

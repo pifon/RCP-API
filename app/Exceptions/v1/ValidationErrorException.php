@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Exceptions\v1;
 
 use Exception;
+use Illuminate\Support\MessageBag;
 
 class ValidationErrorException extends Exception
 {
@@ -23,5 +24,10 @@ class ValidationErrorException extends Exception
             'message' => $this->message,
             'errors' => $this->errors,
         ], $this->code);
+    }
+
+    public static function fromValidationBag(MessageBag $errors): self
+    {
+        return new self(__('Validation Error'), $errors->toArray());
     }
 }

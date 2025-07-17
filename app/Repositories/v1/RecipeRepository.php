@@ -27,14 +27,16 @@ class RecipeRepository extends ServiceEntityRepository
     public function getRecipes(?string $slug, ?int $limit): array
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('r')
-            ->setMaxResults($limit ?? 25);
+            ->select('r');
 
-        if ($slug) {
+        if ($slug !== null) {
             $qb->where('r.slug = :slug')
                 ->setParameter('slug', $slug);
         }
 
+        $qb->setMaxResults($limit ?? 25);
+
+        /** @var Recipe[] */
         return $qb->getQuery()->getResult();
     }
 
@@ -42,7 +44,7 @@ class RecipeRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getRecipe($slug): Recipe
+    public function getRecipe(string $slug): Recipe
     {
         $qb = $this->createQueryBuilder('r')
             ->select('r')
@@ -51,12 +53,25 @@ class RecipeRepository extends ServiceEntityRepository
 
         $qb->setMaxResults(1);
 
+        /** @var Recipe $found */
         $found = $qb->getQuery()->getSingleResult();
         if (! $found) {
             throw new NoResultException;
         }
 
         return $found;
+    }
+
+    public function slugExists(string $slug): bool
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select(1)
+            ->where('r.slug = :slug')
+            ->setParameter('slug', $slug);
+
+        $count = (int) $qb->getQuery()->getSingleScalarResult();
+
+        return $count > 0;
     }
 
     /**
