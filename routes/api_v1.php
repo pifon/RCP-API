@@ -18,7 +18,7 @@ Route::prefix('cuisines')->name('cuisines.')->group(function () {
 });
 
 Route::prefix('authors')->name('authors.')->group(function () {
-    Route::get('/{username}', \App\Http\Controllers\v1\Author\Show::class)->name('show');
+    Route::get('/{slug}', \App\Http\Controllers\v1\Author\Show::class)->name('show');
     Route::get('/{username}/details', \App\Http\Controllers\v1\Author\Details::class)->name('details');
 });
 

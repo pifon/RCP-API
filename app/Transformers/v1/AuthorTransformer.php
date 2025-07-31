@@ -5,6 +5,7 @@ namespace App\Transformers\v1;
 // use App\Entities\Author;
 // use App\Transformers\TransformerAbstract;
 
+use App\Entities\Author;
 use DateTimeInterface;
 
 class AuthorTransformer extends TransformerAbstract

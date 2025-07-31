@@ -125,4 +125,10 @@ class Author
     {
         $this->user = $user;
     }
+
+    public function getIdentifier(): string
+    {
+        return $this->getUsername();
+    }
+
 }

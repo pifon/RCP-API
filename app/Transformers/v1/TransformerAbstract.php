@@ -42,4 +42,22 @@ abstract class TransformerAbstract
      * @return array<string, mixed> The transformed representation.
      */
     abstract protected function transform(mixed $item): array;
+
+    /**
+     * Transform cuisine object to JSON format for inclusion
+     */
+    public function transformToJson(mixed $object): array
+    {
+        $objectName = strtolower(class_basename(get_class($object)));
+        return [
+            "type" => $objectName,
+            "id" => $object->getId(),
+            "attributes" => [
+                "name" => $object->getName(),
+            ],
+            "links" => [
+                "self" => route($objectName.'s.show', ['slug' => $object->getIdentifier()]),
+            ]
+        ];
+    }
 }

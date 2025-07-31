@@ -124,4 +124,9 @@ class Cuisine
     {
         return $this->variant;
     }
+
+    public function getIdentifier(): string
+    {
+        return $this->getSlug();
+    }
 }
