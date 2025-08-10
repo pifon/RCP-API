@@ -33,8 +33,8 @@ class AuthController extends Controller
 
         /** @var JWTGuard $jwtGuard */
         $jwtGuard = Auth::guard('api');
-
-        if (! $token = $jwtGuard->attempt($credentials)) {
+        $token = $jwtGuard->attempt($credentials);
+        if ($token === false ) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
 

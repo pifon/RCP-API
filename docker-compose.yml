@@ -14,6 +14,7 @@ services:
       - /home/przemek/Code/api:/var/www/html
       - /home/przemek/Code/api/docker/nginx/ssl:/etc/letsencrypt
       - /home/przemek/Code/api/docker/nginx/ssl/www:/var/www/html/certbot
+      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     networks:
       - laravel-network
     depends_on:

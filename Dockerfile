@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     openssl \
     supervisor \
     && docker-php-ext-install pdo pdo_mysql \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
     && rm -rf /var/lib/apt/lists/*
 
 

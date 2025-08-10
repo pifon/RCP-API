@@ -49,7 +49,7 @@ class RecipeTransformer extends TransformerAbstract
     
     /**
      * Transform ingredient object to JSON format for inclusion
-     */
+     *
     public function transformIngredientToJson($ingredient): array
     {
         return [
@@ -68,7 +68,7 @@ class RecipeTransformer extends TransformerAbstract
     
     /**
      * Transform a collection of ingredients to JSON format for inclusion
-     */
+     *
     public function transformIngredientsToJson($ingredients): array
     {
         $result = [];
@@ -102,4 +102,5 @@ class RecipeTransformer extends TransformerAbstract
             // 'related' => route('author.related', ['username' => $item->getUsername()]),
         ];
     }
+     */
 }
