@@ -27,7 +27,6 @@ class RecipeTransformer extends TransformerAbstract
                 'self' => route('recipes.show', ['slug' => $item->getSlug()]),
                 'ingredients' => route('recipes.ingredients.show', ['slug' => $item->getSlug()]),
                 'directions' => route('recipes.directions.show', ['slug' => $item->getSlug()]),
-                // TODO: fix to pint to documentation
                 'describedby' => url('/api/documentation#/Recipes/get_recipe'),
             ],
             'included' => $items['included'],
