@@ -15,7 +15,7 @@ class RecipeTransformer extends TransformerAbstract
         return [
             'data' => [
                 'type' => 'recipe',
-                'id' => strval($item->getId()),
+                'id' => $item->getIdentifier(),
                 'attributes' => array_merge([
                     'title' => $item->getTitle(),
                     'description' => $item->getDescription(),
@@ -28,7 +28,7 @@ class RecipeTransformer extends TransformerAbstract
                 'ingredients' => route('recipes.ingredients.show', ['slug' => $item->getSlug()]),
                 'directions' => route('recipes.directions.show', ['slug' => $item->getSlug()]),
                 // TODO: fix to pint to documentation
-                'describedby' => route('recipes.docs'),
+                'describedby' => url('/api/documentation#/Recipes/get_recipe'),
             ],
             'included' => $items['included'],
         ];
