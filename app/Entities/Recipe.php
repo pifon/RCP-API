@@ -117,12 +117,17 @@ class Recipe
         return $this->type;
     }
 
-    public function getVariant(): Recipe
+    public function getVariant(): ?Recipe
     {
         return $this->variant;
     }
 
     public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getName(): string
     {
         return $this->title;
     }
@@ -143,6 +148,11 @@ class Recipe
     }
 
     public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function getIdentifier(): string
     {
         return $this->slug;
     }

@@ -49,15 +49,35 @@ abstract class TransformerAbstract
     public function transformToJson(mixed $object): array
     {
         $objectName = strtolower(class_basename(get_class($object)));
+
         return [
-            "type" => $objectName,
-            "id" => $object->getId(),
-            "attributes" => [
-                "name" => $object->getName(),
+            'type' => $objectName,
+            'id' => $object->getIdentifier(),
+            'attributes' => [
+                'name' => $object->getName(),
             ],
-            "links" => [
-                "self" => route($objectName.'s.show', ['slug' => $object->getIdentifier()]),
-            ]
+            'links' => [
+                'self' => route($objectName.'s.show', ['slug' => $object->getIdentifier()]),
+            ],
+        ];
+    }
+
+    public function transformRelationToJson(mixed $subject, string $relation, mixed $related): array
+    {
+        $relatedName = strtolower(class_basename(get_class($related)));
+        $subjectName = strtolower(class_basename(get_class($subject)));
+        $subjectId = $subject->getIdentifier();
+        $relatedId = $related->getIdentifier();
+
+        return [
+            'links' => [
+                'self' => "/$subjectName/$subjectId/relationships/$relation",
+                'related' => "/$subjectName/$subjectId/$relation",
+            ],
+            'data' => [
+                'type' => "$relatedName",
+                'id' => "$relatedId",
+            ],
         ];
     }
 }

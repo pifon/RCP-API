@@ -209,7 +209,11 @@ class AuthenticationTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertJson([
-            'message' => 'Unauthenticated.',
+            'errors' => [[
+                'title' => 'Unauthenticated',
+                'code' => '401',
+                'detail' => 'You must login to access this resource',
+            ]],
         ]);
     }
 
@@ -219,7 +223,11 @@ class AuthenticationTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertJson([
-            'message' => 'Unauthenticated.',
+            'errors' => [[
+                'title' => 'Unauthenticated',
+                'code' => '401',
+                'detail' => 'You must login to access this resource',
+            ]],
         ]);
     }
 }

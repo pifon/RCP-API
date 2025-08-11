@@ -23,8 +23,16 @@ Route::prefix('authors')->name('authors.')->group(function () {
 });
 
 Route::prefix('recipes')->name('recipes.')->group(function () {
+    Route::get('/docs')->name('docs');
     Route::post('/create', App\Http\Controllers\v1\Recipe\Create::class)->name('create');
     Route::get('/{slug}', \App\Http\Controllers\v1\Recipe\Show::class)->name('show');
     Route::get('/{slug}/details', \App\Http\Controllers\v1\Recipe\Details::class)->name('details');
+    Route::get('/{slug}/directions', \App\Http\Controllers\v1\Recipe\Directions::class)->name('directions.show');
     Route::get('/{slug}/ingredients', \App\Http\Controllers\v1\Recipe\Ingredients::class)->name('ingredients.show');
+
+});
+
+Route::prefix('dishtypes')->name('dishtypes.')->group(function () {
+    Route::get('/{slug}', \App\Http\Controllers\v1\Dishtype\Show::class)->name('show');
+
 });

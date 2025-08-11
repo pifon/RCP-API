@@ -23,15 +23,15 @@ class DishTypeRepository extends ServiceEntityRepository
     /**
      * @return DishType[]
      */
-    public function getDishTypes(?string $type, ?int $limit): array
+    public function getDishTypes(?string $name, ?int $limit): array
     {
         $qb = $this->createQueryBuilder('dt')
             ->select('dt')
             ->setMaxResults($limit ?? 25);
 
-        if ($type) {
-            $qb->where('dt.type = :type')
-                ->setParameter('type', $type);
+        if ($name) {
+            $qb->where('dt.name = :name')
+                ->setParameter('name', $name);
         }
 
         return $qb->getQuery()->getResult();
@@ -41,12 +41,12 @@ class DishTypeRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getDishType($type): DishType
+    public function getDishType($name): DishType
     {
         $qb = $this->createQueryBuilder('dt')
             ->select('dt')
-            ->where('dt.type = :type')
-            ->setParameter('type', $type);
+            ->where('dt.name = :name')
+            ->setParameter('name', $name);
 
         $qb->setMaxResults(1);
 

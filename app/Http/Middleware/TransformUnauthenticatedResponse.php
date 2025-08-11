@@ -20,10 +20,10 @@ class TransformUnauthenticatedResponse
             if (isset($data['message']) && strtolower($data['message']) === 'unauthenticated.') {
                 $data = [
                     'errors' => [[
-                        'title' => "Unauthenticated",
-                        'code' => "401",
-                        'detail' => "You must login to access this resource"
-                    ]]
+                        'title' => 'Unauthenticated',
+                        'detail' => 'You must login to access this resource',
+                        'code' => '401',
+                    ]],
                 ];
                 $response->setData($data);
                 $response->setStatusCode(401);

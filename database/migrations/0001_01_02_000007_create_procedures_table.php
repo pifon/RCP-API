@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('serving_id')->constrained('servings', 'id');
             $table->foreignId('operation_id')->constrained('operations', 'id');
-            $table->foreignId('duration_id')->constrained('measures', 'id');
+            $table->integer('duration_id')->nullable();
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });

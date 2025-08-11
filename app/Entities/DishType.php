@@ -65,4 +65,9 @@ class DishType
     {
         $this->updatedAt = $updatedAt;
     }
+
+    public function getIdentifier(): string
+    {
+        return $this->getName();
+    }
 }

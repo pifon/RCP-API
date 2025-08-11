@@ -2,105 +2,52 @@
 
 namespace App\Transformers\v1;
 
-use App\Entities\Recipe;
-use DateTimeInterface;
-use Illuminate\Http\JsonResponse;
-use Psalm\Internal\Json\Json;
-
 class RecipeTransformer extends TransformerAbstract
 {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function transform(mixed $item): array
     {
+        $items = $this->getRelationships($item);
+
         return [
-            "data" => [
-                "type" => "recipe",
-                "id"=> $item->getId(),
-                "attributes" => [
-                    "title" => $item->getTitle(),
-                    "description" => $item->getDescription(),
-                    //"dish-type" => $item->getDishType(),
-                    "ingredients" => [], //$item->getIngredients(),
-                    "steps" => [] //$item->getSteps()
-                ],
-                "relationships" => [
-                    "author" => $item->getAuthor(), // object containing links and data
-                    "cuisine" => [] //$item->getCuisines()
-                ]
+            'data' => [
+                'type' => 'recipe',
+                'id' => strval($item->getId()),
+                'attributes' => array_merge([
+                    'title' => $item->getTitle(),
+                    'description' => $item->getDescription(),
+                ], $items['attributes']),
+                // 'steps' => [], // $item->getSteps()
+                'relationships' => $items['relationships'],
             ],
-            "links" => [
-                "self" => route('recipes.show', ['slug' => $item->getSlug()]),
-                "describedby" => route('recipes.details', ['slug' => $item->getSlug()])
+            'links' => [
+                'self' => route('recipes.show', ['slug' => $item->getSlug()]),
+                'ingredients' => route('recipes.ingredients.show', ['slug' => $item->getSlug()]),
+                'directions' => route('recipes.directions.show', ['slug' => $item->getSlug()]),
+                // TODO: fix to pint to documentation
+                'describedby' => route('recipes.docs'),
             ],
-            "included"  => [
-                $this->transformToJson($item->getAuthor()),
-                $this->transformToJson($item->getCuisine()),
-                // Uncomment and implement when ingredients are available
-                // ...$this->transformIngredientsToJson($item->getIngredients()),
-            ]
+            'included' => $items['included'],
         ];
     }
-    
 
-    
+    private function getRelationships(mixed $item): array
+    {
+        $items = [];
+        foreach (['cuisine', 'author', 'dishType', 'variant'] as $key) {
+            $method = 'get'.ucfirst($key);
+            $object = $item->{$method}();
+            if ($object) {
+                $items['relationships'][$key] = $this->transformRelationToJson($item, $key, $object);
+                $items['included'][] = $this->transformToJson($object);
+                $items['attributes'][$key] = $object->getName();
+            }
 
-    
-    /**
-     * Transform ingredient object to JSON format for inclusion
-     *
-    public function transformIngredientToJson($ingredient): array
-    {
-        return [
-            "type" => "ingredient",
-            "id" => $ingredient->getId(),
-            "attributes" => [
-                "name" => $ingredient->getName(),
-                "units" => $ingredient->getUnits(),
-                "amount" => $ingredient->getAmount(),
-            ],
-            "links" => [
-                "self" => route('recipes.show', ['slug' => $ingredient->getSlug()]),
-            ]
-        ];
-    }
-    
-    /**
-     * Transform a collection of ingredients to JSON format for inclusion
-     *
-    public function transformIngredientsToJson($ingredients): array
-    {
-        $result = [];
-        foreach ($ingredients as $ingredient) {
-            $result[] = $this->transformIngredientToJson($ingredient);
         }
-        return $result;
-    }
 
-    public function transformDetailed(mixed $item): array
-    {
-        return [
-            'title' => $item->getTitle(),
-            'details' => $item->getDescription(),
-            'author' => $item->getAuthor(),
-            // 'variant' => $item->getVariant(),
-            'created_at' => $item->getCreatedAt()->format(DateTimeInterface::ATOM),
-            'updated_at' => $item->getUpdatedAt()->format(DateTimeInterface::ATOM),
-            '_links' => $this->getDetailedLinks($item),
-        ];
+        return $items;
     }
-
-    private function getDetailedLinks(mixed $item): array
-    {
-        return [
-            'self' => route('recipes.details', ['slug' => $item->getSlug()]),
-            'handle' => route('recipes.show', ['slug' => $item->getSlug()]),
-            // 'ingredients' => route('author.recipes', ['username' => $item->getUsername()]),
-            // 'procedures' => route('author.cuisines', ['username' => $item->getUsername()]),
-            // 'cuisine' => route('author.cuisines', ['username' => $item->getUsername()]),
-            // 'related' => route('author.related', ['username' => $item->getUsername()]),
-        ];
-    }
-     */
 }

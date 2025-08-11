@@ -38,6 +38,6 @@ class Details extends Controller
             );
         }
 
-        return $this->transformer->transformDetailed($recipe);
+        return $this->transformer->transform($recipe);
     }
 }
