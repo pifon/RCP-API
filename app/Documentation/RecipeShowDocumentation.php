@@ -27,18 +27,23 @@ class RecipeShowDocumentation
      *     summary="Show details of recipe identified by unique slug",
      *     tags={"Recipes"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Parameter(
      *         name="slug",
      *         in="path",
      *         description="Unique slug identifying recipe",
      *         required=true,
+     *
      *         @OA\Schema(type="string", example="focaccia-barese")
      *     ),
+     *
      *     @OA\Response(
      *          response=200,
      *          description="Recipe details",
+     *
      *          @OA\JsonContent(
      *              type="object",
+     *
      *              @OA\Property(
      *                  property="data",
      *                  type="object",
@@ -134,7 +139,9 @@ class RecipeShowDocumentation
      *              @OA\Property(
      *                  property="included",
      *                  type="array",
+     *
      *                  @OA\Items(
+     *
      *                      @OA\Property(
      *                          @OA\Property(property="type", type="string", example="cuisine"),
      *                          @OA\Property(property="id", type="string", example="italian-apulian"),
@@ -160,4 +167,3 @@ class RecipeShowDocumentation
         // This method exists only for Swagger annotations
     }
 }
-
