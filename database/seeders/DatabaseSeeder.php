@@ -18,9 +18,16 @@ class DatabaseSeeder extends Seeder
         $this->call(ElementSubTypesSeeder::class);
         $this->call(ElementsSeeder::class);
         $this->call(GroupsSeeder::class);
-        $this->call(CuisineSeeder::class);
+        $this->call(CuisinesSeeder::class);
         $this->call(DishTypesSeeder::class);
         $this->call(RecipesSeeder::class);
-        $this->call(MeasureSeeder::class);
+        $this->call(MeasuresSeeder::class);
+        $this->call(DirectionsSeeder::class);
+        $this->call(IngredientsSeeder::class);
+        $this->call(ProductsSeeder::class);
+        $this->call(IngredientNotesSeeder::class);
+        $this->call(OperationsSeeder::class);
+        $this->call(ProceduresSeeder::class);
+        $this->call(ServingsSeeder::class);
     }
 }

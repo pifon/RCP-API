@@ -32,7 +32,7 @@ class Recipe
     #[ORM\ManyToOne(targetEntity: Recipe::class)]
     private ?Recipe $variant;
 
-    #[ORM\ManyToOne(targetEntity: Author::class)]
+    #[ORM\ManyToOne(targetEntity: Author::class, inversedBy: 'recipes')]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false)]
     private Author $author;
 

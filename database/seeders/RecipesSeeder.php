@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -7,13 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class RecipesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        DB::table('recipes')->insert(values: [
+        DB::table('recipes')->truncate();
+
+        DB::table('recipes')->insert([
             [
+                'id' => 1,
                 'slug' => 'pizza',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -21,8 +23,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 1,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 2,
                 'slug' => 'pasta',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -30,8 +35,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 1,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 3,
                 'slug' => 'spaghetti',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -39,8 +47,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 1,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 4,
                 'slug' => 'risotto',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -48,8 +59,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 1,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 5,
                 'slug' => 'gelato',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -57,8 +71,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 1,
                 'dish_type_id' => 6,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 6,
                 'slug' => 'tiramisu',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -66,8 +83,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 1,
                 'dish_type_id' => 6,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 7,
                 'slug' => 'dumplings',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -75,8 +95,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 14,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 8,
                 'slug' => 'sweet-and-sour-pork',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -84,8 +107,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 14,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 9,
                 'slug' => 'fried-rice',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -93,8 +119,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 14,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 10,
                 'slug' => 'peking-duck',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -102,8 +131,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 14,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 11,
                 'slug' => 'kung-pao-chicken',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -111,8 +143,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 14,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 12,
                 'slug' => 'butter-chicken',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -120,8 +155,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 27,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 13,
                 'slug' => 'biryani',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -129,8 +167,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 27,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 14,
                 'slug' => 'samosas',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -138,8 +179,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 27,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 15,
                 'slug' => 'naan',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -147,8 +191,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 27,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 16,
                 'slug' => 'tikka-masala',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -156,8 +203,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 27,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 17,
                 'slug' => 'taco',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -165,8 +215,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 41,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 18,
                 'slug' => 'buritto',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -174,8 +227,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 41,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 19,
                 'slug' => 'enchilada',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -183,8 +239,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 41,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 20,
                 'slug' => 'guacamole',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -192,8 +251,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 41,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 21,
                 'slug' => 'mexican-churros',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -201,8 +263,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 41,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 22,
                 'slug' => 'sushi',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -210,8 +275,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 53,
                 'dish_type_id' => 17,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 23,
                 'slug' => 'sashimi',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -219,8 +287,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 53,
                 'dish_type_id' => 17,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 24,
                 'slug' => 'ramen',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -228,8 +299,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 53,
                 'dish_type_id' => 15,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 25,
                 'slug' => 'tempura',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -237,8 +311,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 53,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 26,
                 'slug' => 'miso',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -246,8 +323,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 53,
                 'dish_type_id' => 15,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 27,
                 'slug' => 'burger',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -255,8 +335,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 54,
                 'dish_type_id' => 18,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 28,
                 'slug' => 'bbq-ribs',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -264,8 +347,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 54,
                 'dish_type_id' => 1,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 29,
                 'slug' => 'apple-pie',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -273,8 +359,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 54,
                 'dish_type_id' => 6,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 30,
                 'slug' => 'coq-au-vin',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -282,8 +371,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 55,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 31,
                 'slug' => 'creme-brulee',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -291,8 +383,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 55,
                 'dish_type_id' => 6,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 32,
                 'slug' => 'pad-thai',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -300,8 +395,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 64,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 33,
                 'slug' => 'green-curry',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -309,8 +407,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 64,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 34,
                 'slug' => 'tom-yum',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -318,8 +419,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 64,
                 'dish_type_id' => 15,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 35,
                 'slug' => 'mango-sticky-rice',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -327,8 +431,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 64,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 36,
                 'slug' => 'paella',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -336,8 +443,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 69,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 37,
                 'slug' => 'churros',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -345,8 +455,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 69,
                 'dish_type_id' => 2,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 38,
                 'slug' => 'gazpacho',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -354,8 +467,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 69,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 39,
                 'slug' => 'jamon-iberico',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -363,8 +479,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 69,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 40,
                 'slug' => 'hummus',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -372,8 +491,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 76,
                 'dish_type_id' => 16,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 41,
                 'slug' => 'falafel',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -381,8 +503,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 76,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 42,
                 'slug' => 'tabouleh',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -390,8 +515,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 76,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 43,
                 'slug' => 'kimchi',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -399,8 +527,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 83,
                 'dish_type_id' => 22,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 44,
                 'slug' => 'bulgogi',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -408,8 +539,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 83,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 45,
                 'slug' => 'bibimbap',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -417,8 +551,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 83,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 46,
                 'slug' => 'tteokbokki',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -426,8 +563,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 83,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 47,
                 'slug' => 'moussaka',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -435,8 +575,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 88,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 48,
                 'slug' => 'souvlaki',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -444,8 +587,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 88,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 49,
                 'slug' => 'tzatziki',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -453,8 +599,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 88,
                 'dish_type_id' => 12,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 50,
                 'slug' => 'baklava',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -462,8 +611,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 88,
                 'dish_type_id' => 23,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 51,
                 'slug' => 'greek-salad',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -471,8 +623,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 88,
                 'dish_type_id' => 10,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 52,
                 'slug' => 'shawarma',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -480,8 +635,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 94,
                 'dish_type_id' => 18,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 53,
                 'slug' => 'kebab',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -489,8 +647,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 94,
                 'dish_type_id' => 18,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 54,
                 'slug' => 'pho',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -498,8 +659,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 100,
                 'dish_type_id' => 15,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 55,
                 'slug' => 'banh-mi',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -507,8 +671,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 100,
                 'dish_type_id' => 18,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 56,
                 'slug' => 'spring-rolls',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -516,8 +683,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 100,
                 'dish_type_id' => 11,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 57,
                 'slug' => 'bun-cha',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -525,8 +695,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 100,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 58,
                 'slug' => 'baba-ganoush',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -534,8 +707,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 104,
                 'dish_type_id' => 13,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 59,
                 'slug' => 'fattoush',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -543,8 +719,11 @@ class RecipesSeeder extends Seeder
                 'description' => null,
                 'cuisine_id' => 104,
                 'dish_type_id' => 10,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 60,
                 'slug' => 'risotto-lombardy',
                 'variant_id' => 4,
                 'author_id' => 1,
@@ -552,8 +731,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'From Lombardy',
                 'cuisine_id' => 2,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 61,
                 'slug' => 'ossobuco',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -561,8 +743,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'Braised veal shanks',
                 'cuisine_id' => 2,
                 'dish_type_id' => 24,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 62,
                 'slug' => 'polenta',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -570,8 +755,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'Cornmeal dish',
                 'cuisine_id' => 2,
                 'dish_type_id' => 11,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 63,
                 'slug' => 'panna-cotta',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -579,8 +767,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'desert',
                 'cuisine_id' => 2,
                 'dish_type_id' => 6,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 64,
                 'slug' => 'agnolotti',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -588,8 +779,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'Stuffed pasta from Piedmont',
                 'cuisine_id' => 2,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 65,
                 'slug' => 'margherita',
                 'variant_id' => 1,
                 'author_id' => 2,
@@ -597,8 +791,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'From Naples',
                 'cuisine_id' => 3,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 66,
                 'slug' => 'pasta-alla-norma',
                 'variant_id' => 2,
                 'author_id' => 1,
@@ -606,8 +803,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'From Sicily',
                 'cuisine_id' => 3,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 67,
                 'slug' => 'caponata',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -615,8 +815,11 @@ class RecipesSeeder extends Seeder
                 'description' => 'Sicilian eggplant dish',
                 'cuisine_id' => 3,
                 'dish_type_id' => 11,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 68,
                 'slug' => 'parmigiana-di-melanzane',
                 'variant_id' => null,
                 'author_id' => 1,
@@ -624,15 +827,66 @@ class RecipesSeeder extends Seeder
                 'description' => 'Eggplant Parmesan',
                 'cuisine_id' => 3,
                 'dish_type_id' => 14,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 69,
                 'slug' => 'focaccia',
                 'variant_id' => null,
                 'author_id' => 1,
                 'title' => 'Focaccia',
-                'description' => 'Flatbread',
-                'cuisine_id' => 3,
+                'description' => 'Focaccia comes from Italy, and more specifically, its roots trace back to Liguria, the coastal region in the northwest of the country.
+
+The Ligurian city of Genoa is especially famous for focaccia genovese — the classic flat, olive-oil-rich bread with a dimpled surface.
+That said, variations of focaccia exist all over Italy:
+
+Liguria → soft, salty, and generously oiled
+
+Puglia → topped with tomatoes, olives, or potatoes
+
+Veneto → sometimes sweet, more like a cake
+
+Its origins go way back to ancient Rome (and even earlier to the Etruscans), when flatbreads baked on hearths were a staple.
+
+',
+                'cuisine_id' => 12,
                 'dish_type_id' => 26,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
+            ],
+            [
+                'id' => 70,
+                'slug' => 'focaccia-barese',
+                'variant_id' => 69,
+                'author_id' => 1,
+                'title' => 'Focaccia Barese',
+                'description' => 'In Puglia (the heel of Italy’s boot), focaccia is usually called focaccia barese — named after the city of Bari.
+
+Here are the main details and variations:
+
+🥖 Key traits
+Dough: Often enriched with mashed potatoes in addition to flour, making it softer and fluffier.
+
+Toppings: Cherry tomatoes (pomodorini), black or green olives, oregano, coarse sea salt, and lots of extra virgin olive oil.
+
+Texture: Crispy edges, soft center.
+
+Baking: Traditionally baked in heavy round pans, often in wood-fired ovens.
+
+📜 Other names / local references
+U\' fugass or u\' fugassë — in local Barese dialect.
+
+Focaccia pugliese — a general term for the region.
+
+Focaccia con patate — when potatoes are also used as a topping, not just in the dough.
+
+🍅 Fun note
+In Bari, it’s common to grab a slice of focaccia barese instead of a sandwich — it’s a street snack, breakfast, or lunch on the go. And in small bakeries, the focaccia is often sold by weight, not per slice.',
+                'cuisine_id' => 10,
+                'dish_type_id' => 26,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
         ]);
     }

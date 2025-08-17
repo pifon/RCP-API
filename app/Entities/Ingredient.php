@@ -4,6 +4,8 @@ namespace App\Entities;
 
 use App\Repositories\v1\IngredientRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'ingredients')]
@@ -28,4 +30,33 @@ class Ingredient
 
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
+
+    #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: IngredientNote::class)]
+    private Collection $notes;
+
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function getRecipe(): Recipe
+    {
+        return $this->recipe;
+
+    }
+
+    public function getServing(): Serving
+    {
+        return $this->serving;
+    }
 }

@@ -7,17 +7,17 @@ use App\DTOs\IngredientDTO;
 use App\DTOs\IngredientNoteDTO;
 use App\DTOs\MeasureDTO;
 use App\DTOs\ProductDTO;
-use App\Http\Controllers\v1\Recipe\Ingredients;
+use App\Entities\Ingredient;
 use Doctrine\ORM\EntityManager;
 
 /**
- * @extends ServiceEntityRepository<Ingredients>
+ * @extends ServiceEntityRepository<Ingredient>
  */
 class IngredientRepository extends ServiceEntityRepository
 {
     public function __construct(EntityManager $em)
     {
-        parent::__construct($em, Ingredients::class);
+        parent::__construct($em, Ingredient::class);
     }
 
     /**
@@ -28,19 +28,11 @@ class IngredientRepository extends ServiceEntityRepository
     public function findByRecipeId(int $recipeId): array
     {
         $qb = $this->createQueryBuilder('i')
-            ->select([
-                'i',
-                's',
-                'p',
-                'm',
-                'bm',
-                'n',
-            ])
             ->join('i.serving', 's')
             ->join('s.product', 'p')
             ->join('s.measure', 'm')
-            ->leftJoin('m.baseMeasure', 'bm')
-            ->leftJoin('i.notes', 'n')
+            ->leftJoin('i.notes', 'inote') // zmieniony alias
+            ->addSelect(['i', 's', 'p', 'm', 'inote'])
             ->where('i.recipe = :recipeId')
             ->setParameter('recipeId', $recipeId);
 
@@ -49,64 +41,34 @@ class IngredientRepository extends ServiceEntityRepository
         $ingredients = [];
 
         foreach ($rows as $ingredientEntity) {
-            // Map notes
+            $serving = $ingredientEntity->getServing();
+
+            $measureDTO = new MeasureDTO(
+                id: $serving->getMeasure()->getId(),
+                symbol: $serving->getMeasure()->getSymbol()
+            );
+
+            $product = $serving->getProduct();
+            $productDTO = new ProductDTO(
+                id: $product->getSlug(),
+                name: $product->getName()
+            );
+
+            // Pobieramy notatki
             $notes = [];
             foreach ($ingredientEntity->getNotes() as $noteEntity) {
-                $notes[] = new IngredientNoteDTO(
-                    id: $noteEntity->getId(),
-                    note: $noteEntity->getNote()
-                );
+                $notes[] = new IngredientNoteDTO(note: $noteEntity->getNote());
             }
-
-            // Map base measure
-            $baseMeasureEntity = $ingredientEntity->getServing()->getMeasure()->getBaseMeasure();
-            $baseMeasure = null;
-            if ($baseMeasureEntity) {
-                $baseMeasure = new MeasureDTO(
-                    id: $baseMeasureEntity->getId(),
-                    name: $baseMeasureEntity->getName(),
-                    symbol: $baseMeasureEntity->getSymbol(),
-                    type: $baseMeasureEntity->getType(),
-                    baseMeasure: null,
-                    isBaseMeasure: $baseMeasureEntity->getIsBaseMeasure(),
-                    factor: $baseMeasureEntity->getFactor()
-                );
-            }
-
-            $measureEntity = $ingredientEntity->getServing()->getMeasure();
-            $measure = new MeasureDTO(
-                id: $measureEntity->getId(),
-                name: $measureEntity->getName(),
-                symbol: $measureEntity->getSymbol(),
-                type: $measureEntity->getType(),
-                baseMeasure: $baseMeasure,
-                isBaseMeasure: $measureEntity->getIsBaseMeasure(),
-                factor: $measureEntity->getFactor()
-            );
-
-            $productEntity = $ingredientEntity->getServing()->getProduct();
-            $product = new ProductDTO(
-                id: $productEntity->getId(),
-                name: $productEntity->getName(),
-                slug: $productEntity->getSlug(),
-                description: $productEntity->getDescription(),
-                isVegan: $productEntity->getIsVegan(),
-                isVegetarian: $productEntity->getIsVegetarian(),
-                isHalal: $productEntity->getIsHalal(),
-                isKosher: $productEntity->getIsKosher(),
-                isAllergen: $productEntity->getIsAllergen()
-            );
 
             $ingredients[] = new IngredientDTO(
-                id: $ingredientEntity->getId(),
-                recipeId: $ingredientEntity->getRecipe()->getId(),
-                product: $product,
-                measure: $measure,
-                amount: $ingredientEntity->getServing()->getAmount(),
+                product: $productDTO,
+                amount: $serving->getAmount(),
+                measure: $measureDTO,
                 notes: $notes
             );
         }
 
         return $ingredients;
     }
+
 }

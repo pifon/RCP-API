@@ -14,9 +14,9 @@ return new class extends Migration
     {
         Schema::create('procedures', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('serving_id')->constrained('servings', 'id');
+            $table->foreignId('serving_id')->nullable()->constrained('servings', 'id');
             $table->foreignId('operation_id')->constrained('operations', 'id');
-            $table->integer('duration_id')->nullable();
+            $table->integer('duration')->nullable();
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });

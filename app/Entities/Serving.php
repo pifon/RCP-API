@@ -31,4 +31,26 @@ class Serving
 
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime;
+        $this->updatedAt = new DateTime;
+    }
+
+    public function getMeasure(): Measure
+    {
+        return $this->measure;
+    }
+
+    public function getProduct(): Product
+    {
+        return $this->product;
+
+    }
+
+    public function getAmount(): float
+    {
+        return $this->amount;
+    }
 }

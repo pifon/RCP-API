@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->foreignId('measure_id')->nullable()->constrained('measures', 'id');
             $table->text('description')->nullable();
             $table->boolean('vegan')->default(false);
             $table->boolean('vegetarian')->default(false);

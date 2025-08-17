@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('measures', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('abbr')->unique();
+            $table->string('slug')->unique();
             $table->enum('measure_type', ['M', 'V', 'L', 'T', 'C', 'O'])->default('M');
             $table->foreignId('base_id')->constrained('measures', 'id');
             $table->float('factor');

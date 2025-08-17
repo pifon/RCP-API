@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -7,21 +9,28 @@ use Illuminate\Support\Facades\DB;
 
 class AuthorsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        DB::table('authors')->insert(values: [
+        DB::table('authors')->truncate();
+
+        DB::table('authors')->insert([
             [
-                'name' => 'RCP System Author',
+                'id' => 1,
                 'user_id' => 1,
+                'name' => 'RCP System Author',
                 'email' => 'przemek.wolski@gmail.com',
+                'description' => null,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
             [
+                'id' => 2,
+                'user_id' => 4,
                 'name' => 'Test Author',
-                'user_id' => 3,
                 'email' => 'przemek.wolski@gmail.com',
+                'description' => null,
+                'created_at' => '2025-07-09 13:41:59',
+                'updated_at' => '2025-07-09 13:41:59',
             ],
         ]);
     }

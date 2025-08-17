@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('recipe_id')->constrained('recipes', 'id');
             $table->foreignId('procedure_id')->constrained('procedures', 'id');
-            $table->foreignId('ingredient_id')->constrained('ingredients', 'id');
+            $table->foreignId('ingredient_id')->nullable()->constrained('ingredients', 'id');
             $table->integer('sequence');
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
