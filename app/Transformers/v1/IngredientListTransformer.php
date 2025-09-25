@@ -27,7 +27,7 @@ class IngredientListTransformer extends TransformerAbstract
                 'self' => route('recipes.ingredients.show', ['slug' => $item->getSlug()]),
                 'recipe' => route('recipes.show', ['slug' => $item->getSlug()]),
                 'directions' => route('recipes.directions.show', ['slug' => $item->getSlug()]),
-                'describedby' => url('/api/documentation#/Recipes/get_ingredients')
+                'describedby' => url('/api/documentation#/Recipes/get_ingredients'),
             ],
             'included' => $items['included'],
         ];

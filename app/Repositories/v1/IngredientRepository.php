@@ -70,5 +70,4 @@ class IngredientRepository extends ServiceEntityRepository
 
         return $ingredients;
     }
-
 }

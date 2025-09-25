@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: 'Recipe API'
+  description: 'API Recipes'
+  version: 1.0.0
+paths:
+  '/api/v1/recipes/{slug}':
+    get:
+      tags:
+        - Recipes
+      summary: 'Show details of recipe identified by unique slug'
+      operationId: get_recipe
+      parameters:
+        -
+          name: slug
+          in: path
+          description: 'Unique slug identifying recipe'
+          required: true
+          schema:
+            type: string
+            example: focaccia-barese
+      responses:
+        '200':
+          description: 'Recipe details'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: { properties: { type: { type: string, example: recipe }, id: { type: string, example: focaccia-barese }, attributes: { properties: { title: { type: string, example: 'Focaccia Barese' }, description: { type: string, example: 'In Puglia (the heel of Italy’s boot), focaccia is usually called focaccia barese — named after the city of Bari...' }, cuisine: { type: string, example: Italian }, author: { type: string, example: 'RCP System Author' }, dishType: { type: string, example: bread }, variant: { type: string, example: Focaccia } }, type: object }, relationships: { properties: { cuisine: { properties: { links: { properties: { self: { type: string, example: /recipe/focaccia-barese/relationships/cuisine }, related: { type: string, example: /recipe/focaccia-barese/cuisine } }, type: object }, data: { properties: { type: { type: string, example: cuisine }, id: { type: string, example: italian-apulian } }, type: object } }, type: object }, author: { properties: { links: { properties: { self: { type: string, example: /recipe/focaccia-barese/relationships/author }, related: { type: string, example: /recipe/focaccia-barese/author } }, type: object }, data: { properties: { type: { type: string, example: author }, id: { type: string, example: system } }, type: object } }, type: object }, dishType: { properties: { links: { properties: { self: { type: string, example: /recipe/focaccia-barese/relationships/dishType }, related: { type: string, example: /recipe/focaccia-barese/dishType } }, type: object }, data: { properties: { type: { type: string, example: dishtype }, id: { type: string, example: bread } }, type: object } }, type: object }, variant: { properties: { links: { properties: { self: { type: string, example: /recipe/focaccia-barese/relationships/variant }, related: { type: string, example: /recipe/focaccia-barese/variant } }, type: object }, data: { properties: { type: { type: string, example: recipe }, id: { type: string, example: focaccia } }, type: object } }, type: object } }, type: object } }, type: object }
+                  links: { properties: { self: { type: string, example: /recipe/focaccia-barese }, ingredients: { type: string, example: /recipe/focaccia-barese/ingredients }, directions: { type: string, example: /recipe/focaccia-barese/directions }, describedby: { type: string, example: '/api/documentation#/Recipes/get_recipe' } }, type: object }
+                  included: { type: array, items: { properties: { '': { properties: { type: { type: string, example: cuisine }, id: { type: string, example: italian-apulian }, attributes: { properties: { name: { type: string, example: Italian } }, type: object }, links: { properties: { self: { type: string, example: /api/v1/cuisine/italian-apulian } }, type: object } }, type: object } }, type: object } }
+                type: object
+      security:
+        -
+          bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+tags:
+  -
+    name: Recipes
+    description: Recipes
