@@ -11,7 +11,8 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use CreatesTestUser, DatabaseTransactions;
+    use CreatesTestUser;
+    use DatabaseTransactions;
 
     private const string API_PROTECTED_ENDPOINT = '/api/v1/cuisines';
 

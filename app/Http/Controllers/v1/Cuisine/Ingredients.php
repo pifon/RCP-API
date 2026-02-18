@@ -14,7 +14,8 @@ class Ingredients extends Controller
     public function __construct(
         private readonly CuisineRepository $repository,
         private readonly CuisineTransformer $transformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>

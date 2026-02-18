@@ -19,7 +19,8 @@ class Recipes extends Controller
         private readonly CuisineRepository $repository,
         private readonly RecipeRepository $recipeRepository,
         private readonly RecipeTransformer $recipeTransformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>
@@ -30,7 +31,7 @@ class Recipes extends Controller
     {
         try {
             $cuisine = $this->repository->getCuisine($slug);
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             throw new ValidationErrorException(trans('cuisine.not_found.message'));
         }
 

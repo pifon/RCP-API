@@ -17,7 +17,8 @@ class Show extends Controller
     public function __construct(
         private readonly DishTypeRepository $repository,
         private readonly DishTypeTransformer $transformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>
@@ -28,7 +29,7 @@ class Show extends Controller
     {
         try {
             $recipe = $this->repository->getDishType($slug);
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             throw new NotFoundException($e->getMessage());
         }
 

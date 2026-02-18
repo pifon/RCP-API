@@ -5,14 +5,10 @@
     "keywords": ["laravel", "framework", "api"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "ext-openssl": "*",
         "darkaonline/l5-swagger": "^9.0",
-        "doctrine/annotations": "^2.0",
-        "doctrine/dbal": "^3.9",
         "doctrine/orm": "^3.5",
-        "doctrine/persistence": "^4.0",
-        "guzzlehttp/guzzle": "^7.0.1",
         "laravel-doctrine/migrations": "^3.0",
         "laravel-doctrine/orm": "^3.1",
         "laravel/framework": "^11.44.2",
@@ -22,13 +18,12 @@
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^2.0",
-        "laravel/pint": "^1.13",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.8",
         "phpunit/phpunit": "^11.0.1",
         "spatie/laravel-ignition": "^2.0",
+        "squizlabs/php_codesniffer": "^4.0",
         "tomasvotruba/type-coverage": "^1.0",
-        "vimeo/psalm": "^6.12",
         "zircote/swagger-php": "^5.2"
     },
     "autoload": {
@@ -53,7 +48,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf"
     },
     "extra": {
         "laravel": {

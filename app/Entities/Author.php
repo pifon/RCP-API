@@ -43,7 +43,7 @@ class Author
 
     public function __construct()
     {
-        $this->recipes = new ArrayCollection;
+        $this->recipes = new ArrayCollection();
     }
 
     public function getId(): int

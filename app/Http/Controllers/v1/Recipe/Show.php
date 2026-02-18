@@ -17,7 +17,8 @@ class Show extends Controller
     public function __construct(
         private readonly RecipeRepository $repository,
         private readonly RecipeTransformer $transformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>
@@ -28,7 +29,7 @@ class Show extends Controller
     {
         try {
             $recipe = $this->repository->getRecipe($slug);
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             throw new NotFoundException($e->getMessage());
         }
 

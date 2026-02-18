@@ -19,7 +19,8 @@ class Show extends Controller
         private readonly AuthorRepository $repository,
         private readonly UserRepository $userRepository,
         private readonly AuthorTransformer $transformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>
@@ -34,7 +35,7 @@ class Show extends Controller
                 throw new NotFoundException("User '{$username}' not found");
             }
             $author = $this->repository->getAuthor($user);
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             throw new NotFoundException($e->getMessage());
         }
 

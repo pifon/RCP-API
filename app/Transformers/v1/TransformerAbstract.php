@@ -57,7 +57,7 @@ abstract class TransformerAbstract
                 'name' => $object->getName(),
             ],
             'links' => [
-                'self' => route($objectName.'s.show', ['slug' => $object->getIdentifier()]),
+                'self' => route($objectName . 's.show', ['slug' => $object->getIdentifier()]),
             ],
         ];
     }

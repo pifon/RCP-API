@@ -31,6 +31,5 @@ class IngredientNote
     public function getNote(): string
     {
         return $this->note;
-
     }
 }

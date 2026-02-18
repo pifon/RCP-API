@@ -34,8 +34,8 @@ class Serving
 
     public function __construct()
     {
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getMeasure(): Measure
@@ -46,7 +46,6 @@ class Serving
     public function getProduct(): Product
     {
         return $this->product;
-
     }
 
     public function getAmount(): float
