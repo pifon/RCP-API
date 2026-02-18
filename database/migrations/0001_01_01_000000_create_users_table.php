@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('token')->unique('token')->nullable();
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
-
         });
         /*
                 Schema::create('password_reset_tokens', function (Blueprint $table) {

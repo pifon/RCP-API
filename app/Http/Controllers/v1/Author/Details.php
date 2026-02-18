@@ -19,7 +19,8 @@ class Details extends Controller
         private readonly AuthorRepository $repository,
         private readonly UserRepository $userRepository,
         private readonly AuthorTransformer $transformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>

@@ -37,14 +37,13 @@ class IngredientListTransformer extends TransformerAbstract
     {
         $items = [];
         foreach (['cuisine', 'author', 'dishType', 'variant'] as $key) {
-            $method = 'get'.ucfirst($key);
+            $method = 'get' . ucfirst($key);
             $object = $item->{$method}();
             if ($object) {
                 $items['relationships'][$key] = $this->transformRelationToJson($item, $key, $object);
                 $items['included'][] = $this->transformToJson($object);
                 $items['attributes'][$key] = $object->getName();
             }
-
         }
 
         return $items;

@@ -36,7 +36,7 @@ class Ingredient
 
     public function __construct()
     {
-        $this->notes = new ArrayCollection;
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): int
@@ -52,7 +52,6 @@ class Ingredient
     public function getRecipe(): Recipe
     {
         return $this->recipe;
-
     }
 
     public function getServing(): Serving

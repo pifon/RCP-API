@@ -61,7 +61,9 @@ class User implements Authenticatable, JWTSubject
         return null;
     }
 
-    public function setRememberToken(mixed $value): void {}
+    public function setRememberToken(mixed $value): void
+    {
+    }
 
     public function getRememberTokenName(): string
     {

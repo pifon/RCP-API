@@ -56,7 +56,7 @@ class RecipeRepository extends ServiceEntityRepository
         /** @var Recipe $found */
         $found = $qb->getQuery()->getSingleResult();
         if (! $found) {
-            throw new NoResultException;
+            throw new NoResultException();
         }
 
         return $found;

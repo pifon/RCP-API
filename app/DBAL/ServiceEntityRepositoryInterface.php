@@ -2,4 +2,6 @@
 
 namespace App\DBAL;
 
-interface ServiceEntityRepositoryInterface {}
+interface ServiceEntityRepositoryInterface
+{
+}

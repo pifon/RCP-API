@@ -17,7 +17,8 @@ class Details extends Controller
     public function __construct(
         private readonly RecipeRepository $repository,
         private readonly RecipeTransformer $transformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>

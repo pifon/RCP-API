@@ -39,7 +39,7 @@ class Cuisine
 
     public function __construct()
     {
-        $this->recipes = new ArrayCollection;
+        $this->recipes = new ArrayCollection();
     }
 
     public function getRecipes(): Collection
@@ -63,7 +63,7 @@ class Cuisine
             return $this->name;
         }
 
-        return $this->name.' - '.$this->variant;
+        return $this->name . ' - ' . $this->variant;
     }
 
     protected function setName(string $name): void
@@ -82,7 +82,7 @@ class Cuisine
             return strtolower($this->name);
         }
 
-        return strtolower($this->name.'-'.$this->variant);
+        return strtolower($this->name . '-' . $this->variant);
     }
 
     protected function setDescription(?string $description): void

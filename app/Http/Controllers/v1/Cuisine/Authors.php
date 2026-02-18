@@ -19,7 +19,8 @@ class Authors extends Controller
         private readonly CuisineRepository $repository,
         private readonly AuthorRepository $authorRepository,
         private readonly AuthorTransformer $authorTransformer
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>
@@ -30,7 +31,7 @@ class Authors extends Controller
     {
         try {
             $cuisine = $this->repository->getCuisine($slug);
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             throw new ValidationErrorException(trans('cuisine.not_found.message'));
         }
 

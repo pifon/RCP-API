@@ -77,7 +77,6 @@ class Product
     public function isVegan(): bool
     {
         return $this->vegan;
-
     }
 
     public function isVegetarian(): bool

@@ -94,12 +94,12 @@ class Recipe
 
     public function setCreatedAt(): void
     {
-        $this->createdAt = new DateTime;
+        $this->createdAt = new DateTime();
     }
 
     public function setUpdatedAt(): void
     {
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function getAuthor(): Author

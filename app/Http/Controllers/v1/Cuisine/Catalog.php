@@ -20,7 +20,8 @@ class Catalog extends Controller
     public function __construct(
         private readonly CuisineRepository $repository,
         private readonly CuisineTransformer $transformer
-    ) {}
+    ) {
+    }
 
     /**
      * @throws BadRequestException
@@ -30,7 +31,7 @@ class Catalog extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'filter' => ['sometimes', 'string', new LowercaseAlphaRule],
+            'filter' => ['sometimes', 'string', new LowercaseAlphaRule()],
             'limit' => 'sometimes|integer|min:1|max:50',
         ], [
             'filter.string' => trans('cuisine.filter.string'),

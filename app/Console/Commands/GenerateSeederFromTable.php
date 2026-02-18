@@ -47,7 +47,7 @@ class GenerateSeederFromTable extends Command
 
         $content .= "        ]);\n    }\n}\n";
 
-        $path = database_path('seeders/'.$seederName.'.php');
+        $path = database_path('seeders/' . $seederName . '.php');
         File::put($path, $content);
 
         $this->info("Seeder {$seederName} generated successfully at {$path}");

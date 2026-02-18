@@ -19,7 +19,8 @@ class Create extends Controller
     public function __construct(
         private readonly AuthorRepository $authorRepository,
         private readonly RecipeRepository $recipeRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationErrorException
@@ -42,7 +43,7 @@ class Create extends Controller
         $title = $request->get('title');
         $slug = $this->generateUniqueSlug($title);
 
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setTitle($title);
         $recipe->setSlug($slug);
         $recipe->setDescription((string) $request->get('description', ''));

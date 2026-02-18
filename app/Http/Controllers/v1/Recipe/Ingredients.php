@@ -19,14 +19,15 @@ class Ingredients extends Controller
         private readonly IngredientRepository $repository,
         private readonly RecipeRepository $recipeRepository,
         private readonly IngredientListTransformer $transformer,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): array
     {
 
         try {
             $recipe = $this->recipeRepository->getRecipe($slug);
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             throw new NotFoundException($e->getMessage());
         }
         $ingredients = $this->repository->findByRecipeId($recipe->getId());
