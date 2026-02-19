@@ -70,7 +70,7 @@ class AuthorRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('a')  // Alias for the Author entity
             ->select('DISTINCT a')  // Select distinct Author entities
-            ->innerJoin('a.recipes', 'r')  // Join the related recipes (Assuming 'recipes' is the property in the Author entity)
+            ->innerJoin('a.recipes', 'r')
             ->where('r.cuisine = :cuisine')  // Filter by the given Cuisine
             ->setParameter('cuisine', $cuisine)  // Set the parameter for the cuisine
             ->setMaxResults($limit ?? 25);

@@ -36,7 +36,7 @@ class AuthenticationTest extends TestCase
         $this->user = $this->createOrGetTestUser();
     }
 
-    public function test_user_can_login_with_valid_username_and_password(): void
+    public function testUserCanLoginWithValidUsernameAndPassword(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -51,7 +51,7 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
-    public function test_user_cannot_login_with_invalid_credentials(): void
+    public function testUserCannotLoginWithInvalidCredentials(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -64,7 +64,7 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
-    public function test_user_cannot_login_without_password_field(): void
+    public function testUserCannotLoginWithoutPasswordField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -76,7 +76,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.password.required'));
     }
 
-    public function test_user_cannot_login_without_username_field(): void
+    public function testUserCannotLoginWithoutUsernameField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'password' => self::PASSWORD,
@@ -88,7 +88,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.username.required'));
     }
 
-    public function test_user_cannot_login_with_non_string_username_field(): void
+    public function testUserCannotLoginWithNonStringUsernameField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => (object) [0 => '%', 1 => '*'],
@@ -101,7 +101,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.username.string'));
     }
 
-    public function test_user_cannot_login_with_extra_unexpected_field(): void
+    public function testUserCannotLoginWithExtraUnexpectedField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -115,7 +115,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.unexpected_fields.message'));
     }
 
-    public function test_user_cannot_login_with_empty_username_field(): void
+    public function testUserCannotLoginWithEmptyUsernameField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => '',
@@ -128,7 +128,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.username.required'));
     }
 
-    public function test_user_cannot_login_with_too_long_username_field(): void
+    public function testUserCannotLoginWithTooLongUsernameField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => str_repeat('a', 257),
@@ -141,7 +141,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.username.max'));
     }
 
-    public function test_user_cannot_login_with_non_string_password_field(): void
+    public function testUserCannotLoginWithNonStringPasswordField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -154,7 +154,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.password.string'));
     }
 
-    public function test_user_cannot_login_with_wildcard_password_field(): void
+    public function testUserCannotLoginWithWildcardPasswordField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -167,7 +167,7 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
-    public function test_user_cannot_login_with_empty_password_field(): void
+    public function testUserCannotLoginWithEmptyPasswordField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -180,7 +180,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.password.required'));
     }
 
-    public function test_user_cannot_login_with_too_long_password_field(): void
+    public function testUserCannotLoginWithTooLongPasswordField(): void
     {
         $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
             'username' => self::USERNAME,
@@ -193,7 +193,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('message', trans('auth.password.max'));
     }
 
-    public function test_authenticated_user_can_access_protected_route(): void
+    public function testAuthenticatedUserCanAccessProtectedRoute(): void
     {
         $token = auth('api')->login($this->user);
 
@@ -203,7 +203,7 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_block_fake_bearer_access_to_protected_route(): void
+    public function testBlockFakeBearerAccessToProtectedRoute(): void
     {
         $response = $this->withHeader('Authorization', 'Bearer not-real')
             ->getJson(self::API_PROTECTED_ENDPOINT);
@@ -218,7 +218,7 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
-    public function test_block_access_to_protected_route(): void
+    public function testBlockAccessToProtectedRoute(): void
     {
         $response = $this->getJson(self::API_PROTECTED_ENDPOINT);
 

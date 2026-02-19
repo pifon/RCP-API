@@ -31,7 +31,12 @@ class Ingredient
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: IngredientNote::class, cascade: ['remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'ingredient',
+        targetEntity: IngredientNote::class,
+        cascade: ['remove'],
+        orphanRemoval: true
+    )]
     private Collection $notes;
 
     #[ORM\Column(name: 'position', type: 'integer', nullable: false, options: ['default' => 0])]

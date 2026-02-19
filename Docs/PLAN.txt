@@ -1,0 +1,21 @@
+What next:
+- Alexa integration:
+    - "Alexa add new recipe: Placki ziemniaczane"
+    - "OK, adding new recipe, what cuisine?"
+    - "Polish"
+    [send request, entering recipe edit mode]
+    - "add step: sieve 500g of flour"
+    - "OK"
+    - "Note: simple white, wheat flour"
+
+- Alexa imtegration:
+    - "Alexa, lets cook bolognese"
+    - "OK, ready when you are"
+    - "Read me ingredients for 3 people"
+    - "OK, 200 grams of pasta"
+    - "OK"
+    - "500 ml passata"
+    - "OK"
+    - "2 teaspoons ordegano"
+    - "What kind of oregano?"
+    - "Dired, can be replaced by fresh" [notes]

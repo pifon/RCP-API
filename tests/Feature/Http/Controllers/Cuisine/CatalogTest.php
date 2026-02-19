@@ -83,8 +83,12 @@ class CatalogTest extends TestCase
             ->willReturn($output);
     }
 
-    protected function getAuthenticated(string $uri, array $params = [], string $method = 'GET', array $headers = []): TestResponse
-    {
+    protected function getAuthenticated(
+        string $uri,
+        array $params = [],
+        string $method = 'GET',
+        array $headers = []
+    ): TestResponse {
         $token = JWTAuth::fromUser($this->user);
 
         return $this->withHeaders(array_merge([
@@ -92,12 +96,12 @@ class CatalogTest extends TestCase
         ], $headers))->json($method, $uri, $params);
     }
 
-    public function test_index_without_parameters_returns_success(): void
+    public function testIndexWithoutParametersReturnsSuccess(): void
     {
         $this->getAuthenticated(self::API_ENDPOINT)->assertOk();
     }
 
-    public function test_index_no_params_returns_default_limit(): void
+    public function testIndexNoParamsReturnsDefaultLimit(): void
     {
         $this->mockRepositoryGetCuisines(null, null, ['cuisine1', 'cuisine2']);
         $this->mockTransformerTransformSet(['cuisine1', 'cuisine2'], ['data' => ['cuisine1', 'cuisine2']]);
@@ -110,7 +114,7 @@ class CatalogTest extends TestCase
             ]);
     }
 
-    public function test_index_applies_limit_parameter_correctly(): void
+    public function testIndexAppliesLimitParameterCorrectly(): void
     {
         $limit = 5;
 
@@ -126,7 +130,7 @@ class CatalogTest extends TestCase
     }
 
     #[DataProvider('invalidLimitProvider')]
-    public function test_invalid_limits_return_validation_error(string $limit, string $expectedMessageKey): void
+    public function testInvalidLimitsReturnValidationError(string $limit, string $expectedMessageKey): void
     {
         $response = $this->getAuthenticated(self::API_ENDPOINT . "?limit=$limit");
 
@@ -147,7 +151,7 @@ class CatalogTest extends TestCase
         ];
     }
 
-    public function test_index_with_valid_filter_returns_status_ok(): void
+    public function testIndexWithValidFilterReturnsStatusOk(): void
     {
         $this->repository
             ->expects($this->once())
@@ -161,7 +165,7 @@ class CatalogTest extends TestCase
     }
 
     #[DataProvider('invalidFilterProvider')]
-    public function test_invalid_filters_return_validation_error(mixed $filter, string $expectedMessageKey): void
+    public function testInvalidFiltersReturnValidationError(mixed $filter, string $expectedMessageKey): void
     {
         $response = $this->getAuthenticated(self::API_ENDPOINT, ['filter' => $filter]);
 
@@ -183,7 +187,7 @@ class CatalogTest extends TestCase
         ];
     }
 
-    public function test_index_with_unexpected_field_throws_bad_request(): void
+    public function testIndexWithUnexpectedFieldThrowsBadRequest(): void
     {
         $response = $this->getAuthenticated(self::API_ENDPOINT . '?something=unexpected');
 
@@ -193,7 +197,7 @@ class CatalogTest extends TestCase
         $this->assertJsonHasOnlyKeys(self::ERROR_KEYS, $response);
     }
 
-    public function test_index_with_filter_and_limit_returns_status_ok(): void
+    public function testIndexWithFilterAndLimitReturnsStatusOk(): void
     {
         $this->mockRepositoryGetCuisines('Vegan', 10, ['c1', 'c2']);
         $this->mockTransformerTransformSet(['c1', 'c2'], ['data' => ['c1', 'c2']]);
@@ -208,7 +212,7 @@ class CatalogTest extends TestCase
     }
 
     // Similarly for your other success tests returning JSON:
-    public function test_index_response_contract_with_mocked_transformer(): void
+    public function testIndexResponseContractWithMockedTransformer(): void
     {
         $cuisines = ['c1', 'c2'];
         $transformed = ['data' => ['c1', 'c2']];
@@ -224,13 +228,13 @@ class CatalogTest extends TestCase
         $this->assertJsonHasOnlyKeys(self::DATA_KEYS, $response);
     }
 
-    public function test_index_with_empty_filter_and_limit(): void
+    public function testIndexWithEmptyFilterAndLimit(): void
     {
         $response = $this->getAuthenticated(self::API_ENDPOINT . '?filter=&limit=');
         $response->assertStatus(422);
     }
 
-    public function test_index_limit_at_minimum_boundary(): void
+    public function testIndexLimitAtMinimumBoundary(): void
     {
         $this->mockRepositoryGetCuisines(null, 1, []);
         $this->mockTransformerTransformSet([], ['data' => []]);
@@ -240,7 +244,7 @@ class CatalogTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_index_limit_at_maximum_boundary(): void
+    public function testIndexLimitAtMaximumBoundary(): void
     {
         $this->mockRepositoryGetCuisines(null, 50, []);
         $this->mockTransformerTransformSet([], ['data' => []]);
@@ -250,7 +254,7 @@ class CatalogTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_index_with_filter_as_array_rejects_with_validation_error(): void
+    public function testIndexWithFilterAsArrayRejectsWithValidationError(): void
     {
         $response = $this->getAuthenticated(self::API_ENDPOINT, ['filter' => ['vegan', 'vegetarian']]);
 
@@ -259,7 +263,7 @@ class CatalogTest extends TestCase
             ->assertJsonPath('errors.filter.0', trans('cuisine.filter.string'));
     }
 
-    public function test_index_with_filter_as_object_rejects_with_validation_error(): void
+    public function testIndexWithFilterAsObjectRejectsWithValidationError(): void
     {
         $response = $this->getAuthenticated(self::API_ENDPOINT, ['filter' => (object) ['value' => 'vegan']]);
 
@@ -268,7 +272,7 @@ class CatalogTest extends TestCase
             ->assertJsonPath('errors.filter.0', trans('cuisine.filter.string'));
     }
 
-    public function test_response_has_only_expected_keys_and_data_structure(): void
+    public function testResponseHasOnlyExpectedKeysAndDataStructure(): void
     {
         $cuisines = ['c1', 'c2'];
         $transformed = ['data' => ['c1', 'c2']];
@@ -287,7 +291,7 @@ class CatalogTest extends TestCase
         $this->assertEquals(['data'], array_keys($json));
     }
 
-    public function test_empty_repository_results_return_empty_data_array(): void
+    public function testEmptyRepositoryResultsReturnEmptyDataArray(): void
     {
 
         $this->mockRepositoryGetCuisines(null, null, []);
@@ -303,7 +307,7 @@ class CatalogTest extends TestCase
      * Test the filter input is capitalized before passed to the repository.
      */
     #[DataProvider('filterCapitalizationProvider')]
-    public function test_filter_is_capitalized_before_passing_to_repository(string $inputFilter, string $expectedFilter): void
+    public function testFilterIsCapitalizedBeforePassingToRepository(string $inputFilter, string $expectedFilter): void
     {
         $this->repository->expects($this->once())
             ->method('getCuisines')
@@ -327,7 +331,7 @@ class CatalogTest extends TestCase
         ];
     }
 
-    public function test_repository_exception_returns_500_with_error_message(): void
+    public function testRepositoryExceptionReturns500WithErrorMessage(): void
     {
         $this->repository->expects($this->once())
             ->method('getCuisines')
@@ -343,7 +347,7 @@ class CatalogTest extends TestCase
             ->assertJsonFragment(['message' => 'Repository failure']);
     }
 
-    public function test_transformer_exception_returns_500_with_error_message(): void
+    public function testTransformerExceptionReturns500WithErrorMessage(): void
     {
         $this->repository->expects($this->once())
             ->method('getCuisines')
@@ -361,7 +365,7 @@ class CatalogTest extends TestCase
     }
 
     #[DataProvider('disallowedHttpMethodsProvider')]
-    public function test_disallowed_http_methods_return_405(string $method): void
+    public function testDisallowedHttpMethodsReturn405(string $method): void
     {
         $response = $this->getAuthenticated(self::API_ENDPOINT, [], $method);
         $response->assertMethodNotAllowed();
@@ -385,7 +389,7 @@ class CatalogTest extends TestCase
     /**
      * Test URL encoded query params behave as expected.
      */
-    public function test_url_encoded_query_parameters(): void
+    public function testUrlEncodedQueryParameters(): void
     {
         $filter = 'vegan';
         $limit = 10;

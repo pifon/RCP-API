@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:disable Generic.Files.LineLength
+
 declare(strict_types=1);
 
 namespace Database\Seeders;

@@ -46,13 +46,19 @@ Route::prefix('recipes')->name('recipes.')->group(function () {
         ->middleware('paid-recipe')
         ->name('preparation');
 
-    Route::get('/{slug}/ingredients', \App\Http\Controllers\v1\Recipe\IngredientIndex::class)->name('ingredients.index');
-    Route::post('/{slug}/ingredients', \App\Http\Controllers\v1\Recipe\IngredientAdd::class)->name('ingredients.add');
-    Route::delete('/{slug}/ingredients/{ingredientId}', \App\Http\Controllers\v1\Recipe\IngredientRemove::class)->name('ingredients.remove');
+    Route::get('/{slug}/ingredients', \App\Http\Controllers\v1\Recipe\IngredientIndex::class)
+        ->name('ingredients.index');
+    Route::post('/{slug}/ingredients', \App\Http\Controllers\v1\Recipe\IngredientAdd::class)
+        ->name('ingredients.add');
+    Route::delete('/{slug}/ingredients/{ingredientId}', \App\Http\Controllers\v1\Recipe\IngredientRemove::class)
+        ->name('ingredients.remove');
 
-    Route::get('/{slug}/directions', \App\Http\Controllers\v1\Recipe\DirectionIndex::class)->name('directions.index');
-    Route::post('/{slug}/directions', \App\Http\Controllers\v1\Recipe\DirectionAdd::class)->name('directions.add');
-    Route::delete('/{slug}/directions/{directionId}', \App\Http\Controllers\v1\Recipe\DirectionRemove::class)->name('directions.remove');
+    Route::get('/{slug}/directions', \App\Http\Controllers\v1\Recipe\DirectionIndex::class)
+        ->name('directions.index');
+    Route::post('/{slug}/directions', \App\Http\Controllers\v1\Recipe\DirectionAdd::class)
+        ->name('directions.add');
+    Route::delete('/{slug}/directions/{directionId}', \App\Http\Controllers\v1\Recipe\DirectionRemove::class)
+        ->name('directions.remove');
 
     Route::get('/{slug}/ratings', \App\Http\Controllers\v1\Recipe\RatingIndex::class)->name('ratings.index');
     Route::post('/{slug}/ratings', \App\Http\Controllers\v1\Recipe\RatingCreate::class)->name('ratings.create');

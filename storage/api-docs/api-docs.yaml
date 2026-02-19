@@ -1,0 +1,1425 @@
+openapi: '3.1.0'
+info:
+  title: RCP-API (Recipe API)
+  version: 1.0.0
+  description: |
+    Strictly JSON:API compliant recipe management API.
+    All responses follow the JSON:API v1.1 specification.
+  contact:
+    email: przemek.wolski@gmail.com
+  license:
+    name: MIT
+
+servers:
+  - url: https://localhost/api
+    description: Local Docker
+
+tags:
+  - name: Auth
+    description: Authentication & Registration
+  - name: Me
+    description: Current user profile & preferences
+  - name: Recipes
+    description: Recipe CRUD, ratings, comments, activity
+  - name: Recipe Creation
+    description: Full recipe creation, import, and fork/clone
+  - name: Ingredients
+    description: Recipe ingredient management
+  - name: Directions
+    description: Recipe direction/step management (auto-creates ingredients, recalcs prep-time)
+  - name: Collections
+    description: User recipe collections (bags & menus)
+  - name: Shopping Lists
+    description: Shopping list management
+  - name: Pantry
+    description: Pantry inventory & cookable recipe search
+  - name: Follows
+    description: Follow authors/users
+  - name: Plans
+    description: Subscription plans catalog
+  - name: Cuisines
+    description: Cuisine catalog
+  - name: Authors
+    description: Author profiles
+  - name: Dish Types
+    description: Dish type catalog
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    JsonApiDocument:
+      type: object
+      properties:
+        jsonapi:
+          type: object
+          properties:
+            version:
+              type: string
+              example: '1.1'
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/Resource'
+            - type: array
+              items:
+                $ref: '#/components/schemas/Resource'
+        meta:
+          type: object
+        links:
+          type: object
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/Resource'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorObject'
+
+    Resource:
+      type: object
+      required: [type, id]
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        attributes:
+          type: object
+        relationships:
+          type: object
+        links:
+          type: object
+        meta:
+          type: object
+
+    ErrorObject:
+      type: object
+      properties:
+        status:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+        source:
+          type: object
+        meta:
+          type: object
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: object
+          properties:
+            current-page:
+              type: integer
+            per-page:
+              type: integer
+            total:
+              type: integer
+            last-page:
+              type: integer
+
+  parameters:
+    PageNumber:
+      name: page[number]
+      in: query
+      schema:
+        type: integer
+        default: 1
+    PageSize:
+      name: page[size]
+      in: query
+      schema:
+        type: integer
+        default: 25
+    Include:
+      name: include
+      in: query
+      schema:
+        type: string
+      description: Comma-separated related resources to include
+    Fields:
+      name: fields[{type}]
+      in: query
+      schema:
+        type: string
+      description: Sparse fieldsets per resource type
+
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: '#/components/schemas/JsonApiDocument'
+    NotFound:
+      description: Resource not found
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: '#/components/schemas/JsonApiDocument'
+    ValidationError:
+      description: Validation failed
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: '#/components/schemas/JsonApiDocument'
+    Forbidden:
+      description: Insufficient permissions or plan limits
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: '#/components/schemas/JsonApiDocument'
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: '#/components/schemas/JsonApiDocument'
+
+paths:
+  # ─── Auth ───────────────────────────────────────────────────
+  /login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: JWT token returned
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /register:
+    post:
+      tags: [Auth]
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: users
+                    attributes:
+                      type: object
+                      required: [username, name, email, password]
+                      properties:
+                        username:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                          format: email
+                        password:
+                          type: string
+                          minLength: 8
+      responses:
+        '201':
+          description: User created
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  # ─── Me ─────────────────────────────────────────────────────
+  /v1/me:
+    get:
+      tags: [Me]
+      summary: Current user profile
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: User resource
+    patch:
+      tags: [Me]
+      summary: Update profile
+      security: [{bearerAuth: []}]
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated user resource
+
+  /v1/me/preferences:
+    get:
+      tags: [Me]
+      summary: Get user preferences
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: Preferences resource
+    patch:
+      tags: [Me]
+      summary: Update preferences
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: Updated preferences
+
+  /v1/me/following:
+    get:
+      tags: [Me]
+      summary: List followed entities
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: filter[type]
+          in: query
+          schema:
+            type: string
+            enum: [authors, users]
+      responses:
+        '200':
+          description: Paginated follows list
+
+  /v1/me/subscription:
+    get:
+      tags: [Me]
+      summary: Current subscription
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: Subscription resource or free plan meta
+    post:
+      tags: [Me]
+      summary: Subscribe to a plan
+      security: [{bearerAuth: []}]
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Subscription created
+    delete:
+      tags: [Me]
+      summary: Cancel subscription
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: Subscription cancelled
+
+  # ─── Plans ─────────────────────────────────────────────────
+  /v1/plans:
+    get:
+      tags: [Plans]
+      summary: List available plans
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: Plans with features meta
+
+  /v1/plans/{slug}:
+    get:
+      tags: [Plans]
+      summary: Show plan details
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Plan resource with features
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Recipes ────────────────────────────────────────────────
+  /v1/recipes:
+    get:
+      tags: [Recipes]
+      summary: List recipes
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+            enum: [draft, published, archived]
+        - name: filter[difficulty]
+          in: query
+          schema:
+            type: string
+            enum: [easy, medium, hard, expert]
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: 'e.g. -created-at,title'
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: Paginated recipes
+    post:
+      tags: [Recipes]
+      summary: Create recipe
+      security: [{bearerAuth: []}]
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Recipe created
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/recipes/{slug}:
+    get:
+      tags: [Recipes]
+      summary: Show recipe (paid-recipe middleware applies)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: Recipe resource
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/recipes/{slug}/ratings:
+    get:
+      tags: [Recipes]
+      summary: List ratings for recipe
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated ratings
+    post:
+      tags: [Recipes]
+      summary: Rate recipe (upsert)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Rating created
+        '200':
+          description: Rating updated (existing)
+
+  /v1/recipes/{slug}/comments:
+    get:
+      tags: [Recipes]
+      summary: List top-level comments
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated comments
+    post:
+      tags: [Recipes]
+      summary: Post comment (supports threading via parent-id)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Comment created
+
+  /v1/recipes/{slug}/activity:
+    post:
+      tags: [Recipes]
+      summary: Log activity (viewed, cooked, saved, shared)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Activity recorded
+
+  # ─── Recipe Creation (full, import, fork) ─────────────────
+  /v1/recipes/full:
+    post:
+      tags: [Recipe Creation]
+      summary: Create complete recipe in one request
+      description: |
+        Accepts general recipe data (JSON:API format in `data`), plus `ingredients` and `directions`
+        arrays at the top level. Creates everything in a single transaction.
+        Directions reference ingredients by position (1-based, matching array order).
+        Operations are auto-created if the action name doesn't exist.
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: recipes
+                    attributes:
+                      type: object
+                      required: [title]
+                      properties:
+                        title:
+                          type: string
+                        slug:
+                          type: string
+                        description:
+                          type: string
+                        prep-time-minutes:
+                          type: integer
+                        cook-time-minutes:
+                          type: integer
+                        difficulty:
+                          type: string
+                          enum: [easy, medium, hard, expert]
+                        serves:
+                          type: integer
+                        status:
+                          type: string
+                          enum: [draft, published]
+                    relationships:
+                      type: object
+                      properties:
+                        cuisine:
+                          type: object
+                          properties:
+                            data:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                id:
+                                  type: integer
+                        dish-type:
+                          type: object
+                          properties:
+                            data:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                id:
+                                  type: integer
+                ingredients:
+                  type: array
+                  items:
+                    type: object
+                    required: [product-id, amount, measure-id]
+                    properties:
+                      product-id:
+                        type: integer
+                      amount:
+                        type: number
+                      measure-id:
+                        type: integer
+                      notes:
+                        type: array
+                        items:
+                          type: string
+                directions:
+                  type: array
+                  items:
+                    type: object
+                    required: [action]
+                    properties:
+                      action:
+                        type: string
+                      ingredient:
+                        type: integer
+                        description: Position (1-based) referencing ingredients array
+                      duration-minutes:
+                        type: integer
+                      product-id:
+                        type: integer
+                      amount:
+                        type: number
+                      measure-id:
+                        type: integer
+                      notes:
+                        type: array
+                        items:
+                          type: string
+      responses:
+        '201':
+          description: Recipe created with all ingredients and directions
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/recipes/import:
+    post:
+      tags: [Recipe Creation]
+      summary: Import recipe from exported JSON file
+      description: |
+        Accepts the `pifon-recipe` v1.0 export format. Always creates a new recipe (never updates).
+        If the slug already exists, a unique suffix is appended. The importing user becomes the author.
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pifon-recipe, recipe]
+              properties:
+                pifon-recipe:
+                  type: string
+                  example: '1.0'
+                recipe:
+                  type: object
+                  required: [title]
+                  properties:
+                    title:
+                      type: string
+                    slug:
+                      type: string
+                    description:
+                      type: string
+                    difficulty:
+                      type: string
+                    serves:
+                      type: integer
+                    cuisine:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                    dish-type:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                ingredients:
+                  type: array
+                  items:
+                    type: object
+                directions:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '201':
+          description: Recipe imported
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/recipes/{slug}/export:
+    get:
+      tags: [Recipe Creation]
+      summary: Export full recipe as JSON file (owner-only)
+      description: |
+        Produces a portable `pifon-recipe` v1.0 JSON file containing the complete recipe:
+        general info, all ingredients, and all directions. Returns with `Content-Disposition: attachment`.
+        Restricted to the recipe's author via the `recipe-owner` middleware.
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recipe export JSON file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pifon-recipe:
+                    type: string
+                  exported-at:
+                    type: string
+                    format: date-time
+                  recipe:
+                    type: object
+                  ingredients:
+                    type: array
+                    items:
+                      type: object
+                  directions:
+                    type: array
+                    items:
+                      type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/recipes/{slug}/fork:
+    post:
+      tags: [Recipe Creation]
+      summary: Fork (clone) a recipe
+      description: |
+        Deep-copies the recipe for the authenticated user. Clones all ingredients (with notes),
+        all directions (with notes, procedures, servings). The new author is the forking user.
+        `forkedFrom` links back to the original (1 level only). Fork starts as `draft`.
+        Slug is `{original}-fork` with auto-suffix on collision.
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Forked recipe created
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Recipe Preparation ───────────────────────────────────
+  /v1/recipes/{slug}/preparation:
+    get:
+      tags: [Recipes]
+      summary: Full recipe preparation view
+      description: |
+        Returns the recipe resource with embedded ingredients and directions in relationships,
+        all included as sideloaded resources. Provides a complete view for cooking.
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recipe with ingredients and directions
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Ingredients ──────────────────────────────────────────
+  /v1/recipes/{slug}/ingredients:
+    get:
+      tags: [Ingredients]
+      summary: List recipe ingredients
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ingredient list ordered by position
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags: [Ingredients]
+      summary: Add ingredient to recipe
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: ingredients
+                    attributes:
+                      type: object
+                      required: [product-id, amount, measure-id]
+                      properties:
+                        product-id:
+                          type: integer
+                        amount:
+                          type: number
+                        measure-id:
+                          type: integer
+                        position:
+                          type: integer
+                        notes:
+                          type: array
+                          items:
+                            type: string
+      responses:
+        '201':
+          description: Ingredient added
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/recipes/{slug}/ingredients/{ingredientId}:
+    delete:
+      tags: [Ingredients]
+      summary: Remove ingredient from recipe
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ingredient removed
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Directions ───────────────────────────────────────────
+  /v1/recipes/{slug}/directions:
+    get:
+      tags: [Directions]
+      summary: List recipe directions (steps)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Direction list ordered by sequence
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags: [Directions]
+      summary: Add direction step to recipe
+      description: |
+        When a product-id is provided, the system automatically creates or accumulates an ingredient
+        on the recipe (same product+measure → adds amount to existing). The direction is linked to
+        that ingredient. After every add, `prep_time_minutes` is recalculated as the sum of all
+        direction durations. Use the `step` attribute to inject at a specific position (renumbers subsequent steps).
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: directions
+                    attributes:
+                      type: object
+                      required: [action]
+                      properties:
+                        action:
+                          type: string
+                          description: Operation/verb name (auto-created if new)
+                        duration-minutes:
+                          type: integer
+                        step:
+                          type: integer
+                          description: Insert at this position (renumbers subsequent). Appends if omitted.
+                        product-id:
+                          type: integer
+                          description: Auto-creates/accumulates ingredient when provided
+                        amount:
+                          type: number
+                        measure-id:
+                          type: integer
+                        notes:
+                          type: array
+                          items:
+                            type: string
+                    relationships:
+                      type: object
+                      properties:
+                        ingredient:
+                          type: object
+                          description: Explicitly link to existing ingredient (overridden by product-id)
+                          properties:
+                            data:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                id:
+                                  type: integer
+      responses:
+        '201':
+          description: Direction created with meta showing linked ingredient and updated prep-time
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/recipes/{slug}/directions/{directionId}:
+    delete:
+      tags: [Directions]
+      summary: Remove direction step (renumbers remaining, recalcs prep-time)
+      description: |
+        Deletes the direction and its notes. Renumbers all subsequent steps (sequence - 1).
+        Recalculates `prep_time_minutes` from the remaining directions.
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: directionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Direction removed, remaining steps renumbered, prep-time updated
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Collections ────────────────────────────────────────────
+  /v1/collections:
+    get:
+      tags: [Collections]
+      summary: List user collections
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: filter[type]
+          in: query
+          schema:
+            type: string
+            enum: [bag, menu]
+      responses:
+        '200':
+          description: Paginated collections
+    post:
+      tags: [Collections]
+      summary: Create collection (plan limit enforced)
+      security: [{bearerAuth: []}]
+      responses:
+        '201':
+          description: Collection created
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/collections/{id}:
+    get:
+      tags: [Collections]
+      summary: Show collection
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Collection resource
+    patch:
+      tags: [Collections]
+      summary: Update collection
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Updated collection
+    delete:
+      tags: [Collections]
+      summary: Delete collection (soft)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted
+
+  /v1/collections/{collectionId}/items:
+    post:
+      tags: [Collections]
+      summary: Add recipe to collection
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Item added
+
+  /v1/collections/{collectionId}/items/{itemId}:
+    delete:
+      tags: [Collections]
+      summary: Remove item from collection
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item removed
+
+  # ─── Shopping Lists ─────────────────────────────────────────
+  /v1/shopping-lists:
+    get:
+      tags: [Shopping Lists]
+      summary: List shopping lists
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+            enum: [active, completed, archived]
+      responses:
+        '200':
+          description: Paginated shopping lists
+    post:
+      tags: [Shopping Lists]
+      summary: Create shopping list (plan limit enforced)
+      security: [{bearerAuth: []}]
+      responses:
+        '201':
+          description: Shopping list created
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/shopping-lists/{id}:
+    get:
+      tags: [Shopping Lists]
+      summary: Show shopping list
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Shopping list resource
+    patch:
+      tags: [Shopping Lists]
+      summary: Update shopping list
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Updated
+    delete:
+      tags: [Shopping Lists]
+      summary: Delete shopping list
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted
+
+  /v1/shopping-lists/{listId}/items:
+    get:
+      tags: [Shopping Lists]
+      summary: List items in shopping list
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Paginated items
+    post:
+      tags: [Shopping Lists]
+      summary: Add item to shopping list
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Item added
+
+  /v1/shopping-lists/{listId}/items/{itemId}:
+    patch:
+      tags: [Shopping Lists]
+      summary: Check/uncheck item (optionally add to pantry)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item updated
+    delete:
+      tags: [Shopping Lists]
+      summary: Remove item from list
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item removed
+
+  # ─── Pantry ─────────────────────────────────────────────────
+  /v1/pantry:
+    get:
+      tags: [Pantry]
+      summary: List pantry items
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: filter[expired]
+          in: query
+          schema:
+            type: string
+            enum: ['true', 'false']
+      responses:
+        '200':
+          description: Paginated pantry items
+    post:
+      tags: [Pantry]
+      summary: Add item to pantry (plan limit enforced)
+      security: [{bearerAuth: []}]
+      responses:
+        '201':
+          description: Pantry item created
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/pantry/cookable:
+    get:
+      tags: [Pantry]
+      summary: Find cookable recipes from pantry
+      description: |
+        Returns recipes ranked by ingredient match against user's pantry.
+        Each recipe includes meta with total-ingredients, matched, and missing counts.
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: filter[max-missing]
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: Maximum missing ingredients allowed
+      responses:
+        '200':
+          description: Recipes with match metadata
+
+  /v1/pantry/{id}:
+    get:
+      tags: [Pantry]
+      summary: Show pantry item
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pantry item resource
+    patch:
+      tags: [Pantry]
+      summary: Update pantry item
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Updated
+    delete:
+      tags: [Pantry]
+      summary: Remove pantry item
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Removed
+
+  /v1/pantry/{id}/consume:
+    post:
+      tags: [Pantry]
+      summary: Consume quantity from pantry item
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Updated item (or removed if depleted)
+
+  # ─── Follows ────────────────────────────────────────────────
+  /v1/follows:
+    post:
+      tags: [Follows]
+      summary: Follow author or user
+      security: [{bearerAuth: []}]
+      responses:
+        '201':
+          description: Follow created
+
+  /v1/follows/{id}:
+    delete:
+      tags: [Follows]
+      summary: Unfollow
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Unfollowed
+
+  # ─── Cuisines ───────────────────────────────────────────────
+  /v1/cuisines:
+    get:
+      tags: [Cuisines]
+      summary: List cuisines
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated cuisines
+
+  /v1/cuisines/{slug}:
+    get:
+      tags: [Cuisines]
+      summary: Show cuisine
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cuisine resource
+
+  # ─── Authors ────────────────────────────────────────────────
+  /v1/authors/{slug}:
+    get:
+      tags: [Authors]
+      summary: Show author profile
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Author resource
+
+  # ─── Dish Types ─────────────────────────────────────────────
+  /v1/dish-types/{slug}:
+    get:
+      tags: [Dish Types]
+      summary: Show dish type
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dish type resource
