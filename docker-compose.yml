@@ -16,7 +16,7 @@ services:
     depends_on:
       - database
     healthcheck:
-      test: [ "CMD", "wget", "--no-check-certificate", "-qO-", "https://localhost" ]
+      test: ["CMD", "curl", "-fsk", "https://localhost/api/"]
       interval: 30s
       timeout: 10s
       retries: 5

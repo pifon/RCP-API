@@ -19,18 +19,21 @@ class Author
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private User $user;
 
-    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(name: 'name', type: 'string', length: 255, unique: true, nullable: false)]
     private string $name;
 
     #[ORM\Column(name: 'email', type: 'string', length: 255, nullable: false)]
     private string $email;
 
-    #[ORM\Column(name: 'description', type: 'string', nullable: true)]
-    private ?string $description;
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(name: 'tier', type: 'string', length: 20, nullable: false, options: ['default' => 'free'])]
+    private string $tier = 'free';
 
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private DateTime $createdAt;
@@ -38,12 +41,17 @@ class Author
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
+    #[ORM\Column(name: 'deleted_at', type: 'datetime', nullable: true)]
+    private ?DateTime $deletedAt = null;
+
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Recipe::class)]
     private Collection $recipes;
 
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -51,19 +59,14 @@ class Author
         return $this->id;
     }
 
-    public function getRecipes(): Collection
-    {
-        return $this->recipes;
-    }
-
     public function getUser(): User
     {
         return $this->user;
     }
 
-    public function getUserId()
+    public function setUser(User $user): void
     {
-        return $this->user->getId();
+        $this->user = $user;
     }
 
     public function getName(): string
@@ -71,39 +74,49 @@ class Author
         return $this->name;
     }
 
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getTier(): string
+    {
+        return $this->tier;
+    }
+
+    public function setTier(string $tier): void
+    {
+        $this->tier = $tier;
+    }
+
     public function getUsername(): string
     {
         return $this->user->getUsername();
     }
 
-    public function getDescription(): string
+    public function getRecipes(): Collection
     {
-        return $this->description;
-    }
-
-    private function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    private function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
-    }
-
-    private function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    private function setUpdatedAt(DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
+        return $this->recipes;
     }
 
     public function getCreatedAt(): DateTime
@@ -116,14 +129,19 @@ class Author
         return $this->updatedAt;
     }
 
-    public function getEmail(): string
+    public function softDelete(): void
     {
-        return $this->email;
+        $this->deletedAt = new DateTime();
     }
 
-    private function setUser(User $user): void
+    public function restore(): void
     {
-        $this->user = $user;
+        $this->deletedAt = null;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
     }
 
     public function getIdentifier(): string

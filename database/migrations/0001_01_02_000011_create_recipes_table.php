@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('author_id')->constrained('authors');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('cuisine_id')->constrained('cuisines');
-            $table->foreignId('dish_type_id')->constrained('dish_types');
+            $table->foreignId('cuisine_id')->nullable()->constrained('cuisines');
+            $table->foreignId('dish_type_id')->nullable()->constrained('dish_types');
             $table->dateTime('created_at')->default(Carbon::now());
             $table->dateTime('updated_at')->default(Carbon::now());
         });

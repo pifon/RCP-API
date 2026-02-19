@@ -1,33 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use App\Http\Middleware\ForceJsonResponse;
-use App\Http\Middleware\TransformUnauthenticatedResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     */
-    public function register(): void
-    {
-        //
-    }
-
-    /**
-     * Bootstrap services.
-     */
     public function boot(): void
     {
         Route::prefix('api')
-            ->middleware(['api', ForceJsonResponse::class])
+            ->middleware([
+                'api',
+                \App\Http\Middleware\ForceJsonResponse::class,
+                \App\Http\Middleware\ValidateJsonApi::class,
+            ])
             ->group(base_path('routes/api.php'));
 
         Route::prefix('api/v1')
-            ->middleware(['auth:api', TransformUnauthenticatedResponse::class, ForceJsonResponse::class])
+            ->middleware([
+                'auth:api',
+                \App\Http\Middleware\ForceJsonResponse::class,
+                \App\Http\Middleware\ValidateJsonApi::class,
+                \App\Http\Middleware\TieredRateLimit::class,
+            ])
             ->group(base_path('routes/api_v1.php'));
     }
 }

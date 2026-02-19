@@ -11,7 +11,9 @@ class ProductsSeeder extends Seeder
 {
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('products')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         DB::table('products')->insert([
             [
@@ -23,7 +25,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 1,
-                'allergen' => 0,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
@@ -36,7 +37,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 1,
-                'allergen' => 0,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
@@ -49,7 +49,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 0,
-                'allergen' => 1,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
@@ -62,7 +61,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 1,
-                'allergen' => 0,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
@@ -75,7 +73,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 0,
-                'allergen' => 0,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
@@ -88,7 +85,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 1,
-                'allergen' => 0,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
@@ -101,7 +97,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 1,
-                'allergen' => 0,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
@@ -114,7 +109,6 @@ class ProductsSeeder extends Seeder
                 'vegetarian' => 1,
                 'halal' => 1,
                 'kosher' => 1,
-                'allergen' => 0,
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],

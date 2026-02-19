@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Exceptions\v1\BadRequestException;
+use App\JsonApi\Document;
+use App\JsonApi\ErrorObject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +24,10 @@ class AuthController extends Controller
             'password.max' => trans('auth.password.max'),
         ]);
 
-        if (! empty(array_diff(array_keys($request->all()), ['username', 'password']))) {
+        if (!empty(array_diff(array_keys($request->all()), ['username', 'password']))) {
             throw new BadRequestException(
                 trans('auth.unexpected_fields.message'),
-                [
-                    trans('auth.unexpected_fields.error'),
-                ]
+                [trans('auth.unexpected_fields.error')],
             );
         }
 
@@ -34,15 +36,26 @@ class AuthController extends Controller
         /** @var JWTGuard $jwtGuard */
         $jwtGuard = Auth::guard('api');
         $token = $jwtGuard->attempt($credentials);
+
         if ($token === false) {
-            return response()->json(['message' => 'Invalid credentials.'], 401);
+            return response()->json(
+                Document::errors(new ErrorObject(
+                    status: '401',
+                    title: 'Unauthorized',
+                    detail: 'Invalid credentials.',
+                )),
+                401,
+                ['Content-Type' => 'application/vnd.api+json'],
+            );
         }
 
-        // TODO: Store token on user in token field
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => $jwtGuard->factory()->getTTL() * 60,
-        ]);
+        return response()->json(
+            Document::meta([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => $jwtGuard->factory()->getTTL() * 60,
+            ]),
+            200,
+        );
     }
 }

@@ -1,49 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Transformers\v1;
 
-// use App\Entities\Author;
-// use App\Transformers\TransformerAbstract;
-
 use App\Entities\Author;
-use DateTimeInterface;
+use App\JsonApi\AbstractTransformer;
 
-class AuthorTransformer extends TransformerAbstract
+class AuthorTransformer extends AbstractTransformer
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function transform(mixed $item): array
+    public function getType(): string
     {
-        return [
-            'name' => $item->getName(),
-            '_links' => [
-                'self' => route('authors.show', ['username' => $item->getUsername()]),
-                'details' => route('authors.details', ['username' => $item->getUsername()]),
-            ],
-        ];
+        return 'authors';
     }
 
-    public function transformDetailed(mixed $item): array
+    public function getId(object $entity): string
     {
-        return [
-            'name' => $item->getFullName(),
-            'username' => $item->getUsername(),
-            'description' => $item->getDescription(),
-            'created_at' => $item->getCreatedAt()->format(DateTimeInterface::ATOM),
-            'updated_at' => $item->getUpdatedAt()->format(DateTimeInterface::ATOM),
-            '_links' => $this->getDetailedLinks($item),
-        ];
+        /** @var Author $entity */
+        return $entity->getIdentifier();
     }
 
-    private function getDetailedLinks(mixed $item): array
+    public function selfLink(object $entity): string
     {
+        /** @var Author $entity */
+        return '/api/v1/authors/' . $entity->getIdentifier();
+    }
+
+    protected function attributes(object $entity): array
+    {
+        /** @var Author $entity */
         return [
-            'self' => route('author.details', ['username' => $item->getUsername()]),
-            'handle' => route('author.show', ['username' => $item->getUsername()]),
-            // 'recipes' => route('author.recipes', ['username' => $item->getUsername()]),
-            // 'cuisines' => route('author.cuisines', ['username' => $item->getUsername()]),
-            // 'related' => route('author.related', ['username' => $item->getUsername()]),
+            'name' => $entity->getName(),
+            'username' => $entity->getUsername(),
+            'description' => $entity->getDescription(),
+            'tier' => $entity->getTier(),
+            'created-at' => $entity->getCreatedAt()->format('c'),
         ];
     }
 }

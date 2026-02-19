@@ -1,101 +1,1337 @@
 {
 	"info": {
 		"_postman_id": "0b504a07-4322-4974-8b56-48dc7ab06529",
-		"name": "Pifon",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10927397"
+		"name": "Pifon RCP-API",
+		"description": "JSON:API compliant Recipe API – all endpoints.\n\nSet the `baseUrl` variable to your host (e.g. https://localhost) and run **Login** first to auto-populate the `token` variable.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "recipeSlug",
+			"value": "focaccia-barese",
+			"type": "string"
+		},
+		{
+			"key": "cuisineSlug",
+			"value": "italian-apulian",
+			"type": "string"
+		},
+		{
+			"key": "authorSlug",
+			"value": "system",
+			"type": "string"
+		},
+		{
+			"key": "dishTypeSlug",
+			"value": "bread",
+			"type": "string"
+		},
+		{
+			"key": "collectionId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "shoppingListId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "pantryItemId",
+			"value": "1",
+			"type": "string"
+		}
+	],
 	"item": [
 		{
 			"name": "Auth",
 			"item": [
 				{
-					"name": "Register account",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
-					},
+					"name": "Register",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/vnd.api+json"
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "email",
-									"value": "przemek.wolski@gmail.com",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "password1234",
-									"type": "text"
-								}
-							]
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"users\",\n    \"attributes\": {\n      \"username\": \"newuser\",\n      \"name\": \"New User\",\n      \"email\": \"newuser@example.com\",\n      \"password\": \"secret1234\"\n    }\n  }\n}"
 						},
 						"url": {
-							"raw": "https://pifon.co.uk/api/register",
-							"protocol": "https",
-							"host": [
-								"pifon",
-								"co",
-								"uk"
-							],
-							"path": [
-								"api",
-								"register"
-							]
+							"raw": "{{baseUrl}}/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["register"]
 						},
-						"description": "Register account request"
+						"description": "Register a new user account."
 					},
 					"response": []
 				},
 				{
-					"name": "login",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var json = pm.response.json();",
+									"if (json.meta && json.meta.access_token) {",
+									"    pm.collectionVariables.set('token', json.meta.access_token);",
+									"}",
+									"if (json.access_token) {",
+									"    pm.collectionVariables.set('token', json.access_token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"test-user\",\n  \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["login"]
+						},
+						"description": "Authenticate and obtain a JWT token. The token is automatically saved to the `token` collection variable."
 					},
+					"response": []
+				},
+				{
+					"name": "API Root",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": ["{{baseUrl}}"]
+						},
+						"description": "Public API root – returns JSON:API meta with name and version."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Me",
+			"item": [
+				{
+					"name": "Show profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update profile",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"users\",\n    \"attributes\": {\n      \"name\": \"Updated Name\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show preferences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/me/preferences",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me", "preferences"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update preferences",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"user-preferences\",\n    \"attributes\": {\n      \"spice-tolerance\": 75,\n      \"preferred-cuisines\": [1, 2],\n      \"excluded-products\": [5],\n      \"dietary-restrictions\": [1]\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/me/preferences",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me", "preferences"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List following",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/me/following?page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me", "following"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show subscription",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/me/subscription",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me", "subscription"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subscribe to plan",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"subscriptions\",\n    \"relationships\": {\n      \"plan\": {\n        \"data\": { \"type\": \"plans\", \"id\": \"pro\" }\n      }\n    },\n    \"attributes\": {\n      \"billing-cycle\": \"monthly\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/me/subscription",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me", "subscription"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel subscription",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/me/subscription",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "me", "subscription"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Plans",
+			"item": [
+				{
+					"name": "List plans",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/plans",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "plans"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show plan",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/plans/pro",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "plans", "pro"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recipes",
+			"item": [
+				{
+					"name": "List recipes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes?page[number]=1&page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes"],
+							"query": [
 								{
-									"key": "email",
-									"value": "przemek.wolski@gmail.com",
-									"type": "text"
+									"key": "page[number]",
+									"value": "1"
 								},
 								{
-									"key": "password",
-									"value": "password1234",
-									"type": "text"
+									"key": "page[size]",
+									"value": "10"
+								},
+								{
+									"key": "filter[status]",
+									"value": "published",
+									"disabled": true
+								},
+								{
+									"key": "filter[difficulty]",
+									"value": "easy",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-created-at",
+									"disabled": true
+								},
+								{
+									"key": "include",
+									"value": "cuisine,author",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create recipe",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"recipes\",\n    \"attributes\": {\n      \"title\": \"My New Recipe\",\n      \"description\": \"A delicious test recipe.\",\n      \"difficulty\": \"easy\",\n      \"prep-time-minutes\": 15,\n      \"cook-time-minutes\": 30,\n      \"serves\": 4\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}"],
+							"query": [
+								{
+									"key": "include",
+									"value": "cuisine,author,dish-type",
+									"disabled": true
+								},
+								{
+									"key": "fields[recipes]",
+									"value": "title,description,difficulty",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List ratings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/ratings?page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "ratings"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rate recipe",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"ratings\",\n    \"attributes\": {\n      \"rate\": 5\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/ratings",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "ratings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List comments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/comments?page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "comments"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"comments\",\n    \"attributes\": {\n      \"body\": \"Great recipe, loved it!\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/comments",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "comments"]
+						},
+						"description": "Set `parent-id` in attributes to reply to an existing comment."
+					},
+					"response": []
+				},
+				{
+					"name": "Log activity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"activities\",\n    \"attributes\": {\n      \"action\": \"viewed\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/activity",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "activity"]
+						},
+						"description": "Actions: viewed, cooked, saved, shared"
+					},
+					"response": []
+				},
+				{
+					"name": "Create full recipe",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"recipes\",\n    \"attributes\": {\n      \"title\": \"Pasta Carbonara\",\n      \"description\": \"Classic Roman pasta dish\",\n      \"difficulty\": \"medium\",\n      \"serves\": 4,\n      \"status\": \"draft\"\n    },\n    \"relationships\": {\n      \"cuisine\": { \"data\": { \"type\": \"cuisines\", \"id\": 1 } }\n    }\n  },\n  \"ingredients\": [\n    { \"product-id\": 1, \"amount\": 400, \"measure-id\": 1 },\n    { \"product-id\": 2, \"amount\": 200, \"measure-id\": 1, \"notes\": [\"use guanciale if available\"] }\n  ],\n  \"directions\": [\n    { \"action\": \"boil\", \"ingredient\": 1, \"duration-minutes\": 10, \"notes\": [\"salt the water generously\"] },\n    { \"action\": \"fry\", \"ingredient\": 2, \"duration-minutes\": 5 },\n    { \"action\": \"mix\", \"notes\": [\"combine off-heat to avoid scrambling\"] }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/full",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "full"]
+						},
+						"description": "Create a complete recipe with ingredients and directions in one request."
+					},
+					"response": []
+				},
+				{
+					"name": "Import recipe",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pifon-recipe\": \"1.0\",\n  \"recipe\": {\n    \"title\": \"Imported Recipe\",\n    \"slug\": \"imported-recipe\",\n    \"description\": \"A recipe imported from an export file.\",\n    \"difficulty\": \"easy\",\n    \"serves\": 2\n  },\n  \"ingredients\": [\n    { \"position\": 1, \"product-id\": 1, \"amount\": 500, \"measure-id\": 1 }\n  ],\n  \"directions\": [\n    { \"step\": 1, \"action\": \"mix\", \"ingredient\": 1, \"duration-minutes\": 5 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/import",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "import"]
+						},
+						"description": "Import recipe from pifon-recipe v1.0 export format. Always creates new (never updates). Importing user becomes the author."
+					},
+					"response": []
+				},
+				{
+					"name": "Export recipe (owner-only)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/export",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "export"]
+						},
+						"description": "Export complete recipe as a portable JSON file. Only the recipe author can export."
+					},
+					"response": []
+				},
+				{
+					"name": "Fork recipe",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/fork",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "fork"]
+						},
+						"description": "Deep-clone the recipe. New author is the current user, forkedFrom links to original. Starts as draft."
+					},
+					"response": []
+				},
+				{
+					"name": "Show preparation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/preparation",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "preparation"]
+						},
+						"description": "Full recipe view with general info, ingredients, and directions."
+					},
+					"response": []
+				},
+				{
+					"name": "List ingredients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/ingredients",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "ingredients"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add ingredient",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"ingredients\",\n    \"attributes\": {\n      \"product-id\": 1,\n      \"amount\": 500,\n      \"measure-id\": 1,\n      \"notes\": [\"sifted\"]\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/ingredients",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "ingredients"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove ingredient",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/ingredients/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "ingredients", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List directions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/directions",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "directions"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add direction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"directions\",\n    \"attributes\": {\n      \"action\": \"sieve\",\n      \"product-id\": 1,\n      \"amount\": 500,\n      \"measure-id\": 1,\n      \"duration-minutes\": 2,\n      \"notes\": [\"into a large bowl\"]\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/directions",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "directions"]
+						},
+						"description": "Add a direction step. If product-id is provided, an ingredient is auto-created or accumulated. Prep-time is recalculated. Use 'step' attribute to inject at a specific position."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove direction",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}/directions/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}", "directions", "1"]
+						},
+						"description": "Removes the direction, renumbers remaining steps, and recalculates prep-time."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collections",
+			"item": [
+				{
+					"name": "List collections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/collections?page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "collections"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "10"
+								},
+								{
+									"key": "filter[type]",
+									"value": "bag",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create collection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var json = pm.response.json();",
+									"if (json.data && json.data.id) {",
+									"    pm.collectionVariables.set('collectionId', json.data.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"collections\",\n    \"attributes\": {\n      \"name\": \"My Bag\",\n      \"type\": \"bag\",\n      \"description\": \"A test collection\",\n      \"is-public\": false\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/collections",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "collections"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show collection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/collections/{{collectionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "collections", "{{collectionId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update collection",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"collections\",\n    \"attributes\": {\n      \"name\": \"Renamed Collection\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/collections/{{collectionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "collections", "{{collectionId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete collection",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/collections/{{collectionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "collections", "{{collectionId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add item to collection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"collection-items\",\n    \"attributes\": {\n      \"position\": 1,\n      \"note\": \"Must try this!\"\n    },\n    \"relationships\": {\n      \"recipe\": {\n        \"data\": { \"type\": \"recipes\", \"id\": \"70\" }\n      }\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/collections/{{collectionId}}/items",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "collections", "{{collectionId}}", "items"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove item from collection",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/collections/{{collectionId}}/items/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "collections", "{{collectionId}}", "items", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shopping Lists",
+			"item": [
+				{
+					"name": "List shopping lists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists?page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "10"
+								},
+								{
+									"key": "filter[status]",
+									"value": "active",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create shopping list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var json = pm.response.json();",
+									"if (json.data && json.data.id) {",
+									"    pm.collectionVariables.set('shoppingListId', json.data.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"shopping-lists\",\n    \"attributes\": {\n      \"name\": \"Weekly Groceries\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show shopping list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists/{{shoppingListId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists", "{{shoppingListId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update shopping list",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"shopping-lists\",\n    \"attributes\": {\n      \"name\": \"Renamed List\",\n      \"status\": \"completed\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists/{{shoppingListId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists", "{{shoppingListId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete shopping list",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists/{{shoppingListId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists", "{{shoppingListId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists/{{shoppingListId}}/items",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists", "{{shoppingListId}}", "items"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"shopping-list-items\",\n    \"attributes\": {\n      \"quantity\": 2\n    },\n    \"relationships\": {\n      \"product\": {\n        \"data\": { \"type\": \"products\", \"id\": \"1\" }\n      }\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists/{{shoppingListId}}/items",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists", "{{shoppingListId}}", "items"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check/uncheck item",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"shopping-list-items\",\n    \"attributes\": {\n      \"checked\": true,\n      \"add-to-pantry\": false\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists/{{shoppingListId}}/items/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists", "{{shoppingListId}}", "items", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/shopping-lists/{{shoppingListId}}/items/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "shopping-lists", "{{shoppingListId}}", "items", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pantry",
+			"item": [
+				{
+					"name": "List pantry items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/pantry?page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "pantry"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "10"
+								},
+								{
+									"key": "filter[expired]",
+									"value": "false",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add pantry item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var json = pm.response.json();",
+									"if (json.data && json.data.id) {",
+									"    pm.collectionVariables.set('pantryItemId', json.data.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"pantry-items\",\n    \"attributes\": {\n      \"quantity\": 500,\n      \"expires-at\": \"2026-12-31\"\n    },\n    \"relationships\": {\n      \"product\": {\n        \"data\": { \"type\": \"products\", \"id\": \"1\" }\n      },\n      \"measure\": {\n        \"data\": { \"type\": \"measures\", \"id\": \"1\" }\n      }\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/pantry",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "pantry"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show pantry item",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/pantry/{{pantryItemId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "pantry", "{{pantryItemId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update pantry item",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"pantry-items\",\n    \"attributes\": {\n      \"quantity\": 400\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/pantry/{{pantryItemId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "pantry", "{{pantryItemId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consume from pantry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"pantry-items\",\n    \"attributes\": {\n      \"quantity\": 100\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/pantry/{{pantryItemId}}/consume",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "pantry", "{{pantryItemId}}", "consume"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete pantry item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/pantry/{{pantryItemId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "pantry", "{{pantryItemId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cookable recipes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/pantry/cookable?page[size]=10&filter[max-missing]=3",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "pantry", "cookable"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "10"
+								},
+								{
+									"key": "filter[max-missing]",
+									"value": "3"
 								}
 							]
 						},
+						"description": "Find recipes you can cook from current pantry inventory. Each recipe includes meta with total-ingredients, matched, and missing counts."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Follows",
+			"item": [
+				{
+					"name": "Follow",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"follows\",\n    \"attributes\": {\n      \"followable-type\": \"authors\",\n      \"followable-id\": 1\n    }\n  }\n}"
+						},
 						"url": {
-							"raw": "https://pifon.co.uk/api/login",
-							"protocol": "https",
-							"host": [
-								"pifon",
-								"co",
-								"uk"
-							],
-							"path": [
-								"api",
-								"login"
+							"raw": "{{baseUrl}}/v1/follows",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "follows"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfollow",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/follows/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "follows", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cuisines",
+			"item": [
+				{
+					"name": "List cuisines",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/cuisines?page[size]=25",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "cuisines"],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "25"
+								}
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show cuisine",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/cuisines/{{cuisineSlug}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "cuisines", "{{cuisineSlug}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authors",
+			"item": [
+				{
+					"name": "Show author",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/authors/{{authorSlug}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "authors", "{{authorSlug}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dish Types",
+			"item": [
+				{
+					"name": "Show dish type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/dish-types/{{dishTypeSlug}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "dish-types", "{{dishTypeSlug}}"]
 						}
 					},
 					"response": []

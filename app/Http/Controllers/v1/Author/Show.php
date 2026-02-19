@@ -6,11 +6,14 @@ namespace App\Http\Controllers\v1\Author;
 
 use App\Exceptions\v1\NotFoundException;
 use App\Http\Controllers\Controller;
+use App\JsonApi\Document;
+use App\JsonApi\QueryParameters;
 use App\Repositories\v1\AuthorRepository;
 use App\Repositories\v1\UserRepository;
 use App\Transformers\v1\AuthorTransformer;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class Show extends Controller
@@ -18,27 +21,26 @@ class Show extends Controller
     public function __construct(
         private readonly AuthorRepository $repository,
         private readonly UserRepository $userRepository,
-        private readonly AuthorTransformer $transformer
+        private readonly AuthorTransformer $transformer,
     ) {
     }
 
-    /**
-     * @return array<string, mixed>
-     *
-     * @throws NotFoundException
-     */
-    public function __invoke(Request $request, string $username): array
+    public function __invoke(Request $request, string $slug): JsonResponse
     {
         try {
-            $user = $this->userRepository->getUserByUsername($username);
+            $user = $this->userRepository->getUserByUsername($slug);
             if ($user === null) {
-                throw new NotFoundException("User '{$username}' not found");
+                throw new NotFoundException("Author '{$slug}' not found");
             }
             $author = $this->repository->getAuthor($user);
-        } catch (NoResultException | NonUniqueResultException $e) {
-            throw new NotFoundException($e->getMessage());
+        } catch (NoResultException | NonUniqueResultException) {
+            throw new NotFoundException("Author '{$slug}' not found");
         }
 
-        return $this->transformer->transform($author);
+        $params = QueryParameters::fromArray($request->query->all());
+
+        return response()->json(
+            Document::single($this->transformer, $author, $params),
+        );
     }
 }

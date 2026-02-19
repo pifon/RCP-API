@@ -5,53 +5,56 @@ declare(strict_types=1);
 namespace App\Transformers\v1;
 
 use App\Entities\Cuisine;
-use DateTimeInterface;
+use App\JsonApi\AbstractTransformer;
 
-/**
- * @extends TransformerAbstract<Cuisine>
- */
-class CuisineTransformer extends TransformerAbstract
+class CuisineTransformer extends AbstractTransformer
 {
-    /**
-     * @param  Cuisine  $item
-     * @return array<string, mixed> Transferred cuisine item representation
-     */
-    public function transform(mixed $item): array
+    public function getType(): string
     {
+        return 'cuisines';
+    }
+
+    public function getId(object $entity): string
+    {
+        /** @var Cuisine $entity */
+        return $entity->getSlug();
+    }
+
+    public function selfLink(object $entity): string
+    {
+        /** @var Cuisine $entity */
+        return '/api/v1/cuisines/' . $entity->getSlug();
+    }
+
+    protected function attributes(object $entity): array
+    {
+        /** @var Cuisine $entity */
         return [
-            'name' => $item->getFullName(),
-            '_links' => $this->getLinks($item),
+            'name' => $entity->getName(),
+            'full-name' => $entity->getFullName(),
+            'variant' => $entity->getVariant(),
+            'description' => $entity->getDescription(),
+            'created-at' => $entity->getCreatedAt()->format('c'),
         ];
     }
 
-    private function getLinks(mixed $item): array
+    protected function relationships(object $entity): array
     {
-        return [
-            'self' => route('cuisines.show', ['slug' => $item->getSlug()]),
-            'details' => route('cuisines.details', ['slug' => $item->getSlug()]),
-        ];
-    }
+        /** @var Cuisine $entity */
+        $rels = [];
 
-    public function transformDetailed(mixed $item): array
-    {
-        return [
-            'name' => $item->getFullName(),
-            'description' => $item->getDescription(),
-            'created_at' => $item->getCreatedAt()->format(DateTimeInterface::ATOM),
-            'updated_at' => $item->getUpdatedAt()->format(DateTimeInterface::ATOM),
-            '_links' => $this->getDetailedLinks($item),
-        ];
-    }
+        $parent = $entity->getParent();
+        if ($parent !== null) {
+            $rels['parent'] = [
+                'data' => ['type' => 'cuisines', 'id' => $parent->getSlug()],
+                'links' => [
+                    'related' => '/api/v1/cuisines/' . $parent->getSlug(),
+                ],
+                'entity' => $parent,
+                'transformer' => self::class,
+            ];
+        }
 
-    private function getDetailedLinks(mixed $item): array
-    {
-        return [
-            'self' => route('cuisines.details', ['slug' => $item->getSlug()]),
-            'handle' => route('cuisines.show', ['slug' => $item->getSlug()]),
-            'recipes' => route('cuisines.show', ['slug' => $item->getSlug()]),
-            'authors' => route('cuisines.authors', ['slug' => $item->getSlug()]),
-            'ingredients' => route('cuisines.show', ['slug' => $item->getSlug()]),
-            'related' => route('cuisines.show', ['slug' => $item->getSlug()]),
-        ];
+        return $rels;
     }
 }

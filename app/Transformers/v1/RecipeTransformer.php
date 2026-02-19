@@ -1,51 +1,107 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Transformers\v1;
 
-class RecipeTransformer extends TransformerAbstract
-{
-    /**
-     * {@inheritDoc}
-     */
-    #[\Override]
-    public function transform(mixed $item): array
-    {
-        $items = $this->getRelationships($item);
+use App\Entities\Recipe;
+use App\JsonApi\AbstractTransformer;
 
+class RecipeTransformer extends AbstractTransformer
+{
+    public function getType(): string
+    {
+        return 'recipes';
+    }
+
+    public function getId(object $entity): string
+    {
+        /** @var Recipe $entity */
+        return $entity->getSlug();
+    }
+
+    public function selfLink(object $entity): string
+    {
+        /** @var Recipe $entity */
+        return '/api/v1/recipes/' . $entity->getSlug();
+    }
+
+    protected function attributes(object $entity): array
+    {
+        /** @var Recipe $entity */
         return [
-            'data' => [
-                'type' => 'recipe',
-                'id' => $item->getIdentifier(),
-                'attributes' => array_merge([
-                    'title' => $item->getTitle(),
-                    'description' => $item->getDescription(),
-                ], $items['attributes']),
-                // 'steps' => [], // $item->getSteps()
-                'relationships' => $items['relationships'],
-            ],
-            'links' => [
-                'self' => route('recipes.show', ['slug' => $item->getSlug()]),
-                'ingredients' => route('recipes.ingredients.show', ['slug' => $item->getSlug()]),
-                'directions' => route('recipes.directions.show', ['slug' => $item->getSlug()]),
-                'describedby' => url('/api/documentation#/Recipes/get_recipe'),
-            ],
-            'included' => $items['included'],
+            'title' => $entity->getTitle(),
+            'description' => $entity->getDescription(),
+            'status' => $entity->getStatus(),
+            'prep-time-minutes' => $entity->getPrepTimeMinutes(),
+            'cook-time-minutes' => $entity->getCookTimeMinutes(),
+            'total-time-minutes' => $entity->getTotalTimeMinutes(),
+            'difficulty' => $entity->getDifficulty(),
+            'serves' => $entity->getServes(),
+            'source-url' => $entity->getSourceUrl(),
+            'source-description' => $entity->getSourceDescription(),
+            'price' => $entity->getPrice(),
+            'currency' => $entity->getCurrency(),
+            'is-free' => $entity->isFree(),
+            'published-at' => $entity->getPublishedAt()?->format('c'),
+            'created-at' => $entity->getCreatedAt()->format('c'),
+            'updated-at' => $entity->getUpdatedAt()->format('c'),
         ];
     }
 
-    private function getRelationships(mixed $item): array
+    protected function relationships(object $entity): array
     {
-        $items = [];
-        foreach (['cuisine', 'author', 'dishType', 'variant'] as $key) {
-            $method = 'get' . ucfirst($key);
-            $object = $item->{$method}();
-            if ($object) {
-                $items['relationships'][$key] = $this->transformRelationToJson($item, $key, $object);
-                $items['included'][] = $this->transformToJson($object);
-                $items['attributes'][$key] = $object->getName();
-            }
+        /** @var Recipe $entity */
+        $rels = [];
+        $slug = $entity->getSlug();
+
+        $author = $entity->getAuthor();
+        $rels['author'] = [
+            'data' => ['type' => 'authors', 'id' => $author->getIdentifier()],
+            'links' => [
+                'self' => "/api/v1/recipes/{$slug}/relationships/author",
+                'related' => "/api/v1/recipes/{$slug}/author",
+            ],
+            'entity' => $author,
+            'transformer' => AuthorTransformer::class,
+        ];
+
+        $cuisine = $entity->getCuisine();
+        if ($cuisine !== null) {
+            $rels['cuisine'] = [
+                'data' => ['type' => 'cuisines', 'id' => $cuisine->getIdentifier()],
+                'links' => [
+                    'self' => "/api/v1/recipes/{$slug}/relationships/cuisine",
+                    'related' => "/api/v1/recipes/{$slug}/cuisine",
+                ],
+                'entity' => $cuisine,
+                'transformer' => CuisineTransformer::class,
+            ];
         }
 
-        return $items;
+        $dishType = $entity->getDishType();
+        if ($dishType !== null) {
+            $rels['dish-type'] = [
+                'data' => ['type' => 'dish-types', 'id' => $dishType->getIdentifier()],
+                'links' => [
+                    'self' => "/api/v1/recipes/{$slug}/relationships/dish-type",
+                    'related' => "/api/v1/recipes/{$slug}/dish-type",
+                ],
+                'entity' => $dishType,
+                'transformer' => DishTypeTransformer::class,
+            ];
+        }
+
+        $forkedFrom = $entity->getForkedFrom();
+        if ($forkedFrom !== null) {
+            $rels['forked-from'] = [
+                'data' => ['type' => 'recipes', 'id' => $forkedFrom->getIdentifier()],
+                'links' => [
+                    'related' => "/api/v1/recipes/{$forkedFrom->getSlug()}",
+                ],
+            ];
+        }
+
+        return $rels;
     }
 }

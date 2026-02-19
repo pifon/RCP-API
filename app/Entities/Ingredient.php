@@ -31,12 +31,17 @@ class Ingredient
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private DateTime $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: IngredientNote::class)]
+    #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: IngredientNote::class, cascade: ['remove'], orphanRemoval: true)]
     private Collection $notes;
+
+    #[ORM\Column(name: 'position', type: 'integer', nullable: false, options: ['default' => 0])]
+    private int $position = 0;
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -44,18 +49,48 @@ class Ingredient
         return $this->id;
     }
 
-    public function getNotes(): Collection
-    {
-        return $this->notes;
-    }
-
     public function getRecipe(): Recipe
     {
         return $this->recipe;
     }
 
+    public function setRecipe(Recipe $recipe): void
+    {
+        $this->recipe = $recipe;
+    }
+
     public function getServing(): Serving
     {
         return $this->serving;
+    }
+
+    public function setServing(Serving $serving): void
+    {
+        $this->serving = $serving;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): void
+    {
+        $this->position = $position;
+    }
+
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
     }
 }

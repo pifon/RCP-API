@@ -38,9 +38,9 @@ class Serving
         $this->updatedAt = new DateTime();
     }
 
-    public function getMeasure(): Measure
+    public function getId(): int
     {
-        return $this->measure;
+        return $this->id;
     }
 
     public function getProduct(): Product
@@ -48,8 +48,28 @@ class Serving
         return $this->product;
     }
 
+    public function setProduct(Product $product): void
+    {
+        $this->product = $product;
+    }
+
     public function getAmount(): float
     {
         return $this->amount;
+    }
+
+    public function setAmount(float $amount): void
+    {
+        $this->amount = $amount;
+    }
+
+    public function getMeasure(): Measure
+    {
+        return $this->measure;
+    }
+
+    public function setMeasure(Measure $measure): void
+    {
+        $this->measure = $measure;
     }
 }

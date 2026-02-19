@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call(ElementSubTypesSeeder::class);
         $this->call(ElementsSeeder::class);
         $this->call(GroupsSeeder::class);
+        $this->call(SensationsSeeder::class);
+        $this->call(AllergensSeeder::class);
+        $this->call(TagsSeeder::class);
+        $this->call(EquipmentSeeder::class);
         // TODO: create missing seeders
         // $this->call(CuisinesSeeder::class);
         $this->call(DishTypesSeeder::class);

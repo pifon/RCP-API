@@ -1,39 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Transformers\v1;
 
-use DateTimeInterface;
+use App\Entities\DishType;
+use App\JsonApi\AbstractTransformer;
 
-class DishTypeTransformer extends TransformerAbstract
+class DishTypeTransformer extends AbstractTransformer
 {
-    /**
-     * {@inheritDoc}
-     */
-    #[\Override]
-    public function transform(mixed $item): array
+    public function getType(): string
     {
-        return [
-            'name' => $item->getName(),
-            '_links' => [
-                'self' => route('dishtypes.show', ['slug' => $item->getName()]),
-            ],
-        ];
+        return 'dish-types';
     }
 
-    public function transformDetailed(mixed $item): array
+    public function getId(object $entity): string
     {
-        return [
-            'name' => $item->getName(),
-            'created_at' => $item->getCreatedAt()->format(DateTimeInterface::ATOM),
-            'updated_at' => $item->getUpdatedAt()->format(DateTimeInterface::ATOM),
-            '_links' => $this->getDetailedLinks($item),
-        ];
+        /** @var DishType $entity */
+        return $entity->getIdentifier();
     }
 
-    private function getDetailedLinks(mixed $item): array
+    public function selfLink(object $entity): string
     {
+        /** @var DishType $entity */
+        return '/api/v1/dish-types/' . $entity->getIdentifier();
+    }
+
+    protected function attributes(object $entity): array
+    {
+        /** @var DishType $entity */
         return [
-            'self' => route('dishtypes.show', ['slug' => $item->getName()]),
+            'name' => $entity->getName(),
+            'created-at' => $entity->getCreatedAt()->format('c'),
         ];
     }
 }
