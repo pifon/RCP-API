@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Enums\MeasureType;
 use App\Repositories\v1\MeasureRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -66,9 +65,6 @@ class Measure
         return $this->baseMeasure->getId() === $this->getId();
     }
 
-    /**
-     * @return MeasureType
-     */
     public function getMeasureType(): string
     {
         return $this->measureType;

@@ -10,7 +10,6 @@ use App\Entities\Recipe;
 use App\Exceptions\v1\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Repositories\v1\RecipeRepository;
-use Doctrine\ORM\EntityManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,7 +19,6 @@ class Export extends Controller
 
     public function __construct(
         private readonly RecipeRepository $recipeRepository,
-        private readonly EntityManager $em,
     ) {
     }
 

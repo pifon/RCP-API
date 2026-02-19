@@ -16,21 +16,19 @@ parameters:
         - ENVIRONMENT
     ignoreErrors:
         -
+            message: '#Property .+::\$.+ is never written, only read.#'
+            path: app/Entities/
+        -
+            message: '#Property .+::\$.+ is never read, only written.#'
+            path: app/Entities/
+        -
+            message: '#Property .+::\$.+ is unused.#'
+            path: app/Entities/
+        -
             message: '#Method .+::set.+\(\) is unused#'
             paths:
-                - 'app/Entities/User.php'
-                - 'app/Entities/Author.php'
-                - 'app/Entities/Cuisine.php'
-                - 'app/Entities/Recipe.php'
-                - 'app/Entities/DishType.php'
-        -
-                    message: '#Property .+::\$id is never written, only read.#'
-                    paths:
-                        #- 'app/Entities/User.php'
-                        - 'app/Entities/Author.php'
-                        #- 'app/Entities/Cuisine.php'
-                        - 'app/Entities/Recipe.php'
-                        #- 'app/Entities/DishType.php'
+                - app/Entities/User.php
+                - app/Entities/DishType.php
     paths:
         - app/
     excludePaths:

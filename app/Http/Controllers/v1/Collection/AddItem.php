@@ -46,7 +46,7 @@ class AddItem extends Controller
         if ($recipeRef === null) {
             throw new ValidationErrorException(
                 'Recipe reference is required.',
-                ['recipe' => 'Provide relationships.recipe.data.id (slug).'],
+                ['recipe' => ['Provide relationships.recipe.data.id (slug).']],
             );
         }
 

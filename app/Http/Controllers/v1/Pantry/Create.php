@@ -37,7 +37,7 @@ class Create extends Controller
         if ($productRef === null) {
             throw new ValidationErrorException(
                 'Product reference is required.',
-                ['product' => 'Provide relationships.product.data.id.'],
+                ['product' => ['Provide relationships.product.data.id.']],
             );
         }
 

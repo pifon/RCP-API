@@ -84,9 +84,6 @@ abstract class AbstractTransformer
             }
 
             $related = $rels[$name]['entity'];
-            if ($related === null) {
-                continue;
-            }
 
             /** @var AbstractTransformer $transformer */
             $transformer = new ($rels[$name]['transformer'])();

@@ -44,7 +44,7 @@ class Register extends Controller
         if ($existing !== null) {
             throw new ValidationErrorException(
                 'Username already taken.',
-                ['/data/attributes/username' => 'This username is already in use.'],
+                ['/data/attributes/username' => ['This username is already in use.']],
             );
         }
 

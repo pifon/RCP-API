@@ -58,7 +58,7 @@ class Subscription extends Controller
         if ($planRef === null) {
             throw new ValidationErrorException(
                 'Plan reference is required.',
-                ['plan' => 'Provide relationships.plan.data.id (slug).'],
+                ['plan' => ['Provide relationships.plan.data.id (slug).']],
             );
         }
 

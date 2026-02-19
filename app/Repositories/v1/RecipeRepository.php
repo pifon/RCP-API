@@ -17,9 +17,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class RecipeRepository extends ServiceEntityRepository
 {
-    private const ALLOWED_FILTERS = ['status', 'difficulty', 'cuisine', 'author'];
-    private const ALLOWED_SORTS = ['title', 'created_at', 'prep_time_minutes', 'cook_time_minutes', 'difficulty'];
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em, Recipe::class);
