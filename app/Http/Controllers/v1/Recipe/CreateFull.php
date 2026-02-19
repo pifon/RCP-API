@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\Recipe;
 
-use App\Entities\Cuisine;
 use App\Entities\Direction;
 use App\Entities\DirectionNote;
 use App\Entities\DishType;
@@ -31,6 +30,8 @@ use Illuminate\Support\Str;
 
 class CreateFull extends Controller
 {
+    use Concerns\ResolvesCuisine;
+
     public function __construct(
         private readonly AuthorRepository $authorRepository,
         private readonly RecipeRepository $recipeRepository,
@@ -62,10 +63,16 @@ class CreateFull extends Controller
             throw ValidationErrorException::fromValidationBag($validator->errors());
         }
 
+        $tempRecipe = new Recipe();
+        $cuisineError = $this->applyCuisine($rels, $tempRecipe, $this->em);
+        if ($cuisineError !== null) {
+            return $cuisineError;
+        }
+
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $recipe = $this->buildRecipe($attrs, $rels);
+            $recipe = $this->buildRecipe($attrs, $rels, $tempRecipe);
 
             $this->em->persist($recipe);
             $this->em->flush();
@@ -95,7 +102,7 @@ class CreateFull extends Controller
         return response()->json($doc, 201);
     }
 
-    private function buildRecipe(array $attrs, array $rels): Recipe
+    private function buildRecipe(array $attrs, array $rels, Recipe $recipe): Recipe
     {
         $user = auth()->user();
         $author = $this->authorRepository->getAuthor($user);
@@ -113,7 +120,6 @@ class CreateFull extends Controller
             $slug = $this->generateUniqueSlug($title);
         }
 
-        $recipe = new Recipe();
         $recipe->setTitle($title);
         $recipe->setSlug($slug);
         $recipe->setDescription($attrs['description'] ?? null);
@@ -129,14 +135,6 @@ class CreateFull extends Controller
         }
         if (isset($attrs['source-description'])) {
             $recipe->setSourceDescription($attrs['source-description']);
-        }
-
-        $cuisineId = $rels['cuisine']['data']['id'] ?? null;
-        if ($cuisineId !== null) {
-            $cuisine = $this->em->getRepository(Cuisine::class)->find((int) $cuisineId);
-            if ($cuisine !== null) {
-                $recipe->setCuisine($cuisine);
-            }
         }
 
         $dishTypeId = $rels['dish-type']['data']['id'] ?? null;

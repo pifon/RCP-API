@@ -395,6 +395,72 @@
 					"response": []
 				},
 				{
+					"name": "Search recipes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/search?q=pizza&page[size]=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "pizza"
+								},
+								{
+									"key": "page[size]",
+									"value": "10"
+								},
+								{
+									"key": "filter[status]",
+									"value": "published",
+									"disabled": true
+								},
+								{
+									"key": "filter[difficulty]",
+									"value": "easy",
+									"disabled": true
+								},
+								{
+									"key": "filter[cuisine]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "filter[dish-type]",
+									"value": "14",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Autocomplete recipes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/search/autocomplete?q=pa&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "search", "autocomplete"],
+							"query": [
+								{
+									"key": "q",
+									"value": "pa"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create recipe",
 					"request": {
 						"method": "POST",
@@ -604,6 +670,76 @@
 							"path": ["v1", "recipes", "{{recipeSlug}}", "export"]
 						},
 						"description": "Export complete recipe as a portable JSON file. Only the recipe author can export."
+					},
+					"response": []
+				},
+				{
+					"name": "Update recipe",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"recipes\",\n    \"id\": \"{{recipeSlug}}\",\n    \"attributes\": {\n      \"description\": \"Updated description\",\n      \"difficulty\": \"medium\",\n      \"serves\": 4,\n      \"prep-time-minutes\": 15,\n      \"cook-time-minutes\": 30\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Publish recipe",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"recipes\",\n    \"id\": \"{{recipeSlug}}\",\n    \"attributes\": {\n      \"status\": \"published\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete recipe",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/recipes/{{recipeSlug}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "recipes", "{{recipeSlug}}"]
+						}
 					},
 					"response": []
 				},
@@ -1259,6 +1395,144 @@
 							"raw": "{{baseUrl}}/v1/follows/1",
 							"host": ["{{baseUrl}}"],
 							"path": ["v1", "follows", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cuisine Requests",
+			"item": [
+				{
+					"name": "List pending cuisine requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/cuisine-requests",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "cuisine-requests"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create cuisine request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"cuisine-requests\",\n    \"attributes\": {\n      \"name\": \"Ethiopian\",\n      \"variant\": null,\n      \"description\": \"East African cuisine\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/cuisine-requests",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "cuisine-requests"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show cuisine request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/cuisine-requests/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "cuisine-requests", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve cuisine request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"cuisine-requests\",\n    \"attributes\": {\n      \"admin-notes\": \"Approved - valid cuisine\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/cuisine-requests/1/approve",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "cuisine-requests", "1", "approve"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject cuisine request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"cuisine-requests\",\n    \"attributes\": {\n      \"admin-notes\": \"Already exists as Thai\"\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/cuisine-requests/1/reject",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "cuisine-requests", "1", "reject"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Search products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/search?q=salt",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "products", "search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "salt"
+								},
+								{
+									"key": "page[size]",
+									"value": "25",
+									"disabled": true
+								}
+							]
 						}
 					},
 					"response": []

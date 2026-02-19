@@ -18,6 +18,7 @@ Production: [pifon.co.uk/api](https://pifon.co.uk/api)
 | Containers | Docker Compose (app + database) |
 | Documentation | OpenAPI 3.1 YAML served via L5-Swagger UI |
 | Testing | PHPUnit 11, PHPStan/Larastan, PHP_CodeSniffer |
+| CI/CD | GitHub Actions (lint, analyse, test) |
 
 ## Architecture
 
@@ -72,6 +73,8 @@ All responses use `Content-Type: application/vnd.api+json` and follow the JSON:A
 | **Simple** | `POST /recipes` | Create recipe shell, add ingredients/directions later |
 | **One-shot** | `POST /recipes/full` | Full recipe with ingredients + directions in one request |
 | **Step-by-step** | `POST /recipes/{slug}/directions` × N | Build recipe by adding method steps — ingredients auto-extracted |
+| **Update** | `PATCH /recipes/{slug}` | Update metadata (title, description, difficulty, status, etc.) — owner-only |
+| **Delete** | `DELETE /recipes/{slug}` | Soft-delete a recipe — owner-only |
 | **Import** | `POST /recipes/import` | Restore from exported `.recipe.json` file |
 
 ### Recipe Preparation (Ingredients & Directions)
@@ -82,9 +85,24 @@ All responses use `Content-Type: application/vnd.api+json` and follow the JSON:A
 - **Same-product accumulation**: if a later step uses the same product+measure, the existing ingredient's amount is increased rather than creating a duplicate
 - **Step injection**: directions can be inserted at a specific position, with automatic renumbering of subsequent steps
 
+### Cuisine Management
+- **Cuisine is required** on every recipe (via existing cuisine ID or a cuisine request).
+- If a recipe is created with a non-existent cuisine ID, the API returns a `422` with a link to `POST /cuisine-requests`.
+- Authors can submit `POST /cuisine-requests` with a name, variant, and description.
+- Admins approve (`POST /cuisine-requests/{id}/approve`) which creates the cuisine and automatically upgrades all recipes referencing that request.
+- Admins can reject (`POST /cuisine-requests/{id}/reject`) with notes.
+
 ### Recipe Export & Import
 - **Export** (`GET /recipes/{slug}/export`): produces a portable JSON file containing the full recipe (general info, ingredients, directions) in the `pifon-recipe` v1.0 format — **owner-only** (protected by `recipe-owner` middleware)
 - **Import** (`POST /recipes/import`): accepts the export format and creates a brand-new recipe (never updates existing); slug collisions are auto-resolved with suffixes; the importing user becomes the author
+
+### Step-by-Step Workflow (Draft → Publish)
+1. `POST /recipes` with a title — creates a `draft` recipe, returns the slug
+2. `PATCH /recipes/{slug}` — update metadata (description, difficulty, serves, etc.)
+3. `POST /recipes/{slug}/ingredients` / `POST /recipes/{slug}/directions` — build up the recipe
+4. `PATCH /recipes/{slug}` with `status: published` — publish (sets `published-at` timestamp)
+
+All calls are stateless; the slug is the only state the client carries between steps. `PATCH` is naturally idempotent.
 
 ### Recipe Fork / Clone
 - `POST /recipes/{slug}/fork` deep-copies any recipe for the authenticated user
@@ -121,6 +139,12 @@ All responses use `Content-Type: application/vnd.api+json` and follow the JSON:A
 - Consume endpoint to decrement quantities (auto-removes when depleted)
 - Full audit trail via `pantry_logs` (added, consumed, expired, adjusted)
 - Plan-based limits enforced via middleware
+
+### Search & Discovery
+- **Recipe search** (`GET /recipes/search?q=`): full-text search across recipe titles, descriptions, and ingredient names — ranked by relevance (title=10, description=5, ingredient=3)
+- **Autocomplete** (`GET /recipes/search/autocomplete?q=`): fast prefix-based title suggestions with configurable `limit` param (min 2 chars, max 25 results)
+- **Product search** (`GET /products/search?q=`): search products by name or slug
+- All search endpoints support JSON:API pagination, and recipe search supports `filter[status]`, `filter[difficulty]`, `filter[cuisine]`, `filter[dish-type]`
 
 ### "What Can I Cook?" Search
 - `GET /v1/pantry/cookable` matches pantry products against recipe ingredients
@@ -192,10 +216,14 @@ All responses use `Content-Type: application/vnd.api+json` and follow the JSON:A
 | Method | URI | Description |
 |--------|-----|-------------|
 | GET | `/recipes` | List (filterable, sortable, paginated) |
+| GET | `/recipes/search?q=` | Full-text search (title, description, ingredients) |
+| GET | `/recipes/search/autocomplete?q=` | Fast prefix-based title suggestions |
 | POST | `/recipes` | Create recipe (shell) |
 | POST | `/recipes/full` | Create complete recipe (general + ingredients + directions) |
 | POST | `/recipes/import` | Import recipe from exported JSON file |
 | GET | `/recipes/{slug}` | Show recipe (paid-recipe gate) |
+| PATCH | `/recipes/{slug}` | Update recipe metadata (owner-only) |
+| DELETE | `/recipes/{slug}` | Soft-delete recipe (owner-only) |
 | GET | `/recipes/{slug}/export` | Export full recipe as JSON (owner-only) |
 | POST | `/recipes/{slug}/fork` | Fork/clone recipe for current user |
 | GET | `/recipes/{slug}/preparation` | Full recipe view (general + ingredients + directions) |
@@ -256,12 +284,23 @@ All responses use `Content-Type: application/vnd.api+json` and follow the JSON:A
 | POST | `/follows` | Follow author/user |
 | DELETE | `/follows/{id}` | Unfollow |
 
+**Products**
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/products/search?q=` | Search products by name or slug |
+
 **Catalog**
 
 | Method | URI | Description |
 |--------|-----|-------------|
 | GET | `/cuisines` | List cuisines |
 | GET | `/cuisines/{slug}` | Show cuisine |
+| GET | `/cuisine-requests` | List pending cuisine requests |
+| POST | `/cuisine-requests` | Submit a new cuisine request |
+| GET | `/cuisine-requests/{id}` | Show cuisine request |
+| POST | `/cuisine-requests/{id}/approve` | Approve request (creates cuisine, upgrades recipes) |
+| POST | `/cuisine-requests/{id}/reject` | Reject request with admin notes |
 | GET | `/authors/{slug}` | Show author |
 | GET | `/dish-types/{slug}` | Show dish type |
 
@@ -314,8 +353,11 @@ tests/
 │   │                       OperationTest, ProcedureTest, ServingTest, CuisineTest, AuthorTest
 │   ├── Middleware/         ForceJsonResponseTest, ValidateJsonApiTest, CheckAuthorTierTest
 │   └── Exceptions/         NotFoundExceptionTest, ValidationErrorExceptionTest
-├── Feature/                AuthenticationTest, JsonApiContractTest, CatalogTest
-├── Helpers/                CreatesTestUser trait
+├── Feature/
+│   ├── AuthenticationTest, JsonApiContractTest
+│   └── Http/Controllers/   Recipe (CRUD, ImportExport, StepByStep, RatingsComments),
+│                            ShoppingListTest, PantryTest, PlansTest, CatalogTest
+├── Helpers/                CreatesTestUser, JsonApiRequests traits
 └── Postman/                Pifon.postman_collection.json (61 requests, 11 folders)
 ```
 
@@ -385,34 +427,60 @@ docker exec api php artisan docs:publish
 
 > **Note**: Do **not** use `l5-swagger:generate` — it expects PHP annotations. The spec is maintained as a hand-written YAML file. Use `docs:publish` to copy it to the location L5-Swagger serves.
 
+## CI / CD
+
+GitHub Actions runs three jobs on every push and PR to `master`:
+
+| Job | Tool | What it checks |
+|-----|------|---------------|
+| **lint** | PHP_CodeSniffer (PSR-12) | Code style across `app/`, `tests/`, `routes/`, `config/`, `database/seeders/` |
+| **analyse** | PHPStan level 5 + Larastan | Static type analysis, unused code, type coverage |
+| **test** | PHPUnit 11 | Full test suite (unit + feature) against a MariaDB service container |
+
+See `.github/workflows/ci.yml` for the full pipeline definition.
+
 ## Testing
 
 ```bash
-# Run full test suite (118 unit + feature tests)
-docker exec api php artisan test
+# Run full test suite (241 tests, 819 assertions)
+docker exec api vendor/bin/phpunit --no-coverage
 
 # Run unit tests only
-docker exec api php artisan test --testsuite=Unit
+docker exec api vendor/bin/phpunit --testsuite=Unit --no-coverage
 
 # Run feature tests only
-docker exec api php artisan test --testsuite=Feature
+docker exec api vendor/bin/phpunit --testsuite=Feature --no-coverage
+
+# Run from host (override DB_HOST for Docker-exposed port)
+DB_HOST=127.0.0.1 php vendor/bin/phpunit --no-coverage
 
 # Static analysis
-docker exec api vendor/bin/phpstan analyse
+docker exec api vendor/bin/phpstan analyse --memory-limit=512M
 
 # Code style
 docker exec api vendor/bin/phpcs
-docker exec api vendor/bin/phpcbf
+docker exec api vendor/bin/phpcbf   # auto-fix
 ```
 
-### Unit Test Coverage
+### Test Coverage
 
 | Area | Tests | What's covered |
 |------|-------|---------------|
 | **JSON:API Core** | SortField, ErrorObject, QueryParameters, Pagination, Document, AbstractTransformer | Parsing, serialization, sparse fieldsets, pagination math, links, error formatting |
-| **Entities** | Recipe, Ingredient, Direction, DirectionNote, Operation, Procedure, Serving, Cuisine, Author | Constructors, defaults, setters/getters, soft deletes, computed fields (totalTime, isFree) |
+| **Entities** | Recipe, Ingredient, Direction, DirectionNote, Operation, Procedure, Serving, Cuisine, Author | Constructors, defaults, setters/getters, soft deletes, computed fields |
 | **Middleware** | ForceJsonResponse, ValidateJsonApi, CheckAuthorTier | Accept header forcing, content-type validation (415), tier enforcement (403) |
-| **Exceptions** | NotFoundException, ValidationErrorException | JSON:API error rendering, field-level errors, MessageBag factory, custom status codes |
+| **Exceptions** | NotFoundException, ValidationErrorException | JSON:API error rendering, field-level errors, MessageBag factory |
+| **Recipe CRUD** | CrudTest (12 tests) | Index pagination/sorting, show by slug, 404, create minimal/full, validation, slug uniqueness |
+| **Update/Delete** | UpdateDeleteTest (15 tests) | Update title/description/multi-field, publish sets published-at, idempotent PATCH, validation (invalid difficulty/status/negative prep-time), clear nullable fields, preserves unchanged fields, soft-delete, delete 404, full step-by-step workflow |
+| **Cuisine Requests** | CuisineRequestTest (14 tests) | Create/list/show requests, approve creates cuisine + upgrades recipes, reject with notes, double-approve/reject rejection, recipe requires cuisine, non-existent cuisine link, recipe with cuisine-request |
+| **Import/Export/Fork** | ImportExportTest (11 tests) | Export structure, round-trip import, fork deep-copy, fork independence, 404 handling |
+| **Step-by-Step** | StepByStepTest (12 tests) | Add/remove ingredients, add/remove directions, auto-create ingredient, accumulate amounts, prep-time recalc, step injection |
+| **Shopping Lists** | ShoppingListTest (7 tests) | CRUD lifecycle, add/list items |
+| **Pantry** | PantryTest (7 tests) | CRUD lifecycle, consume, cookable recipes |
+| **Plans** | PlansTest (4 tests) | List plans, show by slug, 404, subscription endpoint |
+| **Ratings/Comments** | RatingsCommentsTest (5 tests) | List/create ratings, list/create comments, log activity |
+| **Search** | SearchTest (17 tests) | Recipe full-text search, autocomplete, product search, pagination, filters, empty/no-match |
+| **Auth & Contract** | AuthenticationTest, JsonApiContractTest | Login flows, JSON:API structure compliance, endpoint integration |
 
 ## JSON:API Compliance
 

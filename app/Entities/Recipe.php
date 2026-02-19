@@ -93,6 +93,10 @@ class Recipe
     #[ORM\JoinColumn(name: 'cuisine_id', referencedColumnName: 'id', nullable: true)]
     private ?Cuisine $cuisine = null;
 
+    #[ORM\ManyToOne(targetEntity: CuisineRequest::class)]
+    #[ORM\JoinColumn(name: 'cuisine_request_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?CuisineRequest $cuisineRequest = null;
+
     #[ORM\ManyToOne(targetEntity: DishType::class)]
     #[ORM\JoinColumn(name: 'dish_type_id', referencedColumnName: 'id', nullable: true)]
     private ?DishType $dishType = null;
@@ -295,6 +299,16 @@ class Recipe
     public function setCuisine(?Cuisine $cuisine): void
     {
         $this->cuisine = $cuisine;
+    }
+
+    public function getCuisineRequest(): ?CuisineRequest
+    {
+        return $this->cuisineRequest;
+    }
+
+    public function setCuisineRequest(?CuisineRequest $cuisineRequest): void
+    {
+        $this->cuisineRequest = $cuisineRequest;
     }
 
     public function getDishType(): ?DishType

@@ -92,6 +92,18 @@ class RecipeTransformer extends AbstractTransformer
             ];
         }
 
+        $cuisineRequest = $entity->getCuisineRequest();
+        if ($cuisineRequest !== null) {
+            $rels['cuisine-request'] = [
+                'data' => ['type' => 'cuisine-requests', 'id' => (string) $cuisineRequest->getId()],
+                'links' => [
+                    'related' => '/api/v1/cuisine-requests/' . $cuisineRequest->getId(),
+                ],
+                'entity' => $cuisineRequest,
+                'transformer' => CuisineRequestTransformer::class,
+            ];
+        }
+
         $forkedFrom = $entity->getForkedFrom();
         if ($forkedFrom !== null) {
             $rels['forked-from'] = [

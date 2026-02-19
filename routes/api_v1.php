@@ -31,12 +31,20 @@ Route::prefix('plans')->name('plans.')->group(function () {
 // ─── Recipes ─────────────────────────────────────────────────
 Route::prefix('recipes')->name('recipes.')->group(function () {
     Route::get('/', \App\Http\Controllers\v1\Recipe\Index::class)->name('index');
+    Route::get('/search', \App\Http\Controllers\v1\Recipe\Search::class)->name('search');
+    Route::get('/search/autocomplete', \App\Http\Controllers\v1\Recipe\Autocomplete::class)->name('autocomplete');
     Route::post('/', \App\Http\Controllers\v1\Recipe\Create::class)->name('create');
     Route::post('/full', \App\Http\Controllers\v1\Recipe\CreateFull::class)->name('create-full');
     Route::post('/import', \App\Http\Controllers\v1\Recipe\Import::class)->name('import');
     Route::get('/{slug}', \App\Http\Controllers\v1\Recipe\Show::class)
         ->middleware('paid-recipe')
         ->name('show');
+    Route::patch('/{slug}', \App\Http\Controllers\v1\Recipe\Update::class)
+        ->middleware('recipe-owner')
+        ->name('update');
+    Route::delete('/{slug}', \App\Http\Controllers\v1\Recipe\Destroy::class)
+        ->middleware('recipe-owner')
+        ->name('destroy');
     Route::get('/{slug}/export', \App\Http\Controllers\v1\Recipe\Export::class)
         ->middleware('recipe-owner')
         ->name('export');
@@ -131,6 +139,20 @@ Route::prefix('follows')->name('follows.')->group(function () {
 Route::prefix('cuisines')->name('cuisines.')->group(function () {
     Route::get('/', \App\Http\Controllers\v1\Cuisine\Catalog::class)->name('index');
     Route::get('/{slug}', \App\Http\Controllers\v1\Cuisine\Show::class)->name('show');
+});
+
+// ─── Cuisine Requests ─────────────────────────────────────────
+Route::prefix('cuisine-requests')->name('cuisine-requests.')->group(function () {
+    Route::get('/', \App\Http\Controllers\v1\CuisineRequest\Index::class)->name('index');
+    Route::post('/', \App\Http\Controllers\v1\CuisineRequest\Create::class)->name('create');
+    Route::get('/{id}', \App\Http\Controllers\v1\CuisineRequest\Show::class)->name('show');
+    Route::post('/{id}/approve', \App\Http\Controllers\v1\CuisineRequest\Approve::class)->name('approve');
+    Route::post('/{id}/reject', \App\Http\Controllers\v1\CuisineRequest\Reject::class)->name('reject');
+});
+
+// ─── Products ────────────────────────────────────────────────
+Route::prefix('products')->name('products.')->group(function () {
+    Route::get('/search', \App\Http\Controllers\v1\Product\Search::class)->name('search');
 });
 
 // ─── Authors ─────────────────────────────────────────────────

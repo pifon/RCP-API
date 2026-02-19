@@ -7,6 +7,7 @@ namespace App\Http\Controllers\v1\Recipe;
 use App\Entities\Recipe;
 use App\Exceptions\v1\ValidationErrorException;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\v1\Recipe\Concerns\ResolvesCuisine;
 use App\JsonApi\Document;
 use App\Repositories\v1\AuthorRepository;
 use App\Repositories\v1\RecipeRepository;
@@ -19,6 +20,8 @@ use Illuminate\Support\Str;
 
 class Create extends Controller
 {
+    use ResolvesCuisine;
+
     public function __construct(
         private readonly AuthorRepository $authorRepository,
         private readonly RecipeRepository $recipeRepository,
@@ -31,6 +34,7 @@ class Create extends Controller
     {
         $data = $request->input('data', []);
         $attrs = $data['attributes'] ?? [];
+        $rels = $data['relationships'] ?? [];
 
         $requestValidator = Validator::make($attrs, [
             'title' => ['required', 'string'],
@@ -60,6 +64,11 @@ class Create extends Controller
         $recipe->setDifficulty($attrs['difficulty'] ?? null);
         $recipe->setServes(isset($attrs['serves']) ? (int) $attrs['serves'] : null);
         $recipe->setAuthor($author);
+
+        $cuisineError = $this->applyCuisine($rels, $recipe, $this->em);
+        if ($cuisineError !== null) {
+            return $cuisineError;
+        }
 
         $this->em->persist($recipe);
         $this->em->flush();

@@ -33,6 +33,10 @@ tags:
     description: Shopping list management
   - name: Pantry
     description: Pantry inventory & cookable recipe search
+  - name: Cuisine Requests
+    description: Request new cuisines, admin approve/reject workflow
+  - name: Search
+    description: Full-text search, autocomplete, and product search
   - name: Follows
     description: Follow authors/users
   - name: Plans
@@ -423,6 +427,151 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Recipes]
+      summary: Update recipe metadata (owner-only)
+      description: |
+        Partial update of recipe attributes.  Only the fields present in
+        the request body are changed; omitted fields are left untouched.
+        Setting `status` to `published` records `published-at` automatically.
+        Protected by the `recipe-owner` middleware.
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: object
+                  required: [type, id]
+                  properties:
+                    type:
+                      type: string
+                      enum: [recipes]
+                    id:
+                      type: string
+                      description: Recipe slug
+                    attributes:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+                          nullable: true
+                        status:
+                          type: string
+                          enum: [draft, published]
+                        difficulty:
+                          type: string
+                          enum: [easy, medium, hard, expert]
+                          nullable: true
+                        prep-time-minutes:
+                          type: integer
+                          minimum: 0
+                          nullable: true
+                        cook-time-minutes:
+                          type: integer
+                          minimum: 0
+                          nullable: true
+                        serves:
+                          type: integer
+                          minimum: 1
+                          nullable: true
+                        source-url:
+                          type: string
+                          format: uri
+                          nullable: true
+                        source-description:
+                          type: string
+                          nullable: true
+                        price:
+                          type: number
+                          nullable: true
+                        currency:
+                          type: string
+                          nullable: true
+                    relationships:
+                      type: object
+                      properties:
+                        cuisine:
+                          type: object
+                          properties:
+                            data:
+                              type: object
+                              nullable: true
+                              properties:
+                                type:
+                                  type: string
+                                  enum: [cuisines]
+                                id:
+                                  type: integer
+                        dish-type:
+                          type: object
+                          properties:
+                            data:
+                              type: object
+                              nullable: true
+                              properties:
+                                type:
+                                  type: string
+                                  enum: [dish-types]
+                                id:
+                                  type: integer
+      responses:
+        '200':
+          description: Updated recipe resource
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags: [Recipes]
+      summary: Soft-delete recipe (owner-only)
+      description: |
+        Marks the recipe as deleted (soft-delete via `deleted_at` timestamp).
+        The recipe will no longer appear in listings or search results.
+        Protected by the `recipe-owner` middleware.
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deletion confirmation
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Recipe deleted.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /v1/recipes/{slug}/ratings:
     get:
@@ -780,6 +929,274 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+
+  # ─── Cuisine Requests ────────────────────────────────────
+  /v1/cuisine-requests:
+    get:
+      tags: [Cuisine Requests]
+      summary: List pending cuisine requests
+      security: [{bearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated list of pending cuisine requests
+    post:
+      tags: [Cuisine Requests]
+      summary: Submit a new cuisine request
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [cuisine-requests]
+                    attributes:
+                      type: object
+                      required: [name]
+                      properties:
+                        name:
+                          type: string
+                        variant:
+                          type: string
+                          nullable: true
+                        description:
+                          type: string
+                          nullable: true
+      responses:
+        '201':
+          description: Cuisine request created
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/cuisine-requests/{id}:
+    get:
+      tags: [Cuisine Requests]
+      summary: Show cuisine request
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Cuisine request resource
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/cuisine-requests/{id}/approve:
+    post:
+      tags: [Cuisine Requests]
+      summary: Approve cuisine request (admin)
+      description: |
+        Creates a new cuisine from the request and automatically upgrades
+        all recipes referencing this request to the new cuisine.
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    attributes:
+                      type: object
+                      properties:
+                        admin-notes:
+                          type: string
+      responses:
+        '200':
+          description: Request approved, cuisine created
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/cuisine-requests/{id}/reject:
+    post:
+      tags: [Cuisine Requests]
+      summary: Reject cuisine request (admin)
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    attributes:
+                      type: object
+                      properties:
+                        admin-notes:
+                          type: string
+      responses:
+        '200':
+          description: Request rejected
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  # ─── Search ──────────────────────────────────────────────
+  /v1/recipes/search:
+    get:
+      tags: [Search]
+      summary: Full-text recipe search
+      description: |
+        Searches recipes by title, description, and ingredient names.
+        Returns results ranked by relevance.  Supports filtering by status,
+        difficulty, cuisine, and dish-type.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+          description: Search query (min 2 characters)
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+            enum: [draft, published]
+          description: Filter by recipe status
+        - name: filter[difficulty]
+          in: query
+          schema:
+            type: string
+            enum: [easy, medium, hard]
+          description: Filter by difficulty level
+        - name: filter[cuisine]
+          in: query
+          schema:
+            type: integer
+          description: Filter by cuisine ID
+        - name: filter[dish-type]
+          in: query
+          schema:
+            type: integer
+          description: Filter by dish-type ID
+        - name: page[number]
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page[size]
+          in: query
+          schema:
+            type: integer
+            default: 25
+            maximum: 100
+      responses:
+        '200':
+          description: Paginated search results with relevance meta
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/recipes/search/autocomplete:
+    get:
+      tags: [Search]
+      summary: Autocomplete recipe titles
+      description: |
+        Fast prefix-based title suggestions.
+        Returns a compact array of matching recipe stubs.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+          description: Prefix to search (min 2 characters)
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            maximum: 50
+          description: Maximum number of suggestions
+      responses:
+        '200':
+          description: Array of matching recipe stubs
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /v1/products/search:
+    get:
+      tags: [Search]
+      summary: Search products
+      description: |
+        Searches products by name or slug.
+        Returns paginated results in JSON:API format.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+          description: Search query (min 2 characters)
+        - name: page[number]
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page[size]
+          in: query
+          schema:
+            type: integer
+            default: 25
+            maximum: 100
+      responses:
+        '200':
+          description: Paginated product results
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiDocument'
+        '422':
+          $ref: '#/components/responses/ValidationError'
 
   # ─── Ingredients ──────────────────────────────────────────
   /v1/recipes/{slug}/ingredients:

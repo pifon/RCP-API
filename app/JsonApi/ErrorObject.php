@@ -13,6 +13,7 @@ final class ErrorObject
         public readonly ?string $code = null,
         public readonly ?array $source = null,
         public readonly ?array $meta = null,
+        public readonly ?array $links = null,
     ) {
     }
 
@@ -37,6 +38,10 @@ final class ErrorObject
 
         if ($this->meta !== null) {
             $error['meta'] = $this->meta;
+        }
+
+        if ($this->links !== null) {
+            $error['links'] = $this->links;
         }
 
         return $error;

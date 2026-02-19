@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\Recipe;
 
-use App\Entities\Cuisine;
 use App\Entities\Direction;
 use App\Entities\DirectionNote;
 use App\Entities\DishType;
@@ -30,6 +29,8 @@ use Illuminate\Support\Str;
 
 class Import extends Controller
 {
+    use Concerns\ResolvesCuisine;
+
     public function __construct(
         private readonly AuthorRepository $authorRepository,
         private readonly RecipeRepository $recipeRepository,
@@ -122,11 +123,19 @@ class Import extends Controller
             $recipe->setSourceDescription($def['source-description']);
         }
 
+        $importRels = [];
         if (isset($def['cuisine']['id'])) {
-            $cuisine = $this->em->find(Cuisine::class, (int) $def['cuisine']['id']);
-            if ($cuisine !== null) {
-                $recipe->setCuisine($cuisine);
-            }
+            $importRels['cuisine'] = ['data' => ['id' => (int) $def['cuisine']['id']]];
+        }
+        if (isset($def['cuisine-request-id'])) {
+            $importRels['cuisine-request'] = ['data' => ['id' => (int) $def['cuisine-request-id']]];
+        }
+        $cuisineError = $this->applyCuisine($importRels, $recipe, $this->em);
+        if ($cuisineError !== null) {
+            throw new ValidationErrorException(
+                'Cuisine is required in imported recipe.',
+                ['cuisine' => ['Provide an existing cuisine or a cuisine-request.']],
+            );
         }
 
         if (isset($def['dish-type']['id'])) {

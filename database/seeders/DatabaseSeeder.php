@@ -22,11 +22,10 @@ class DatabaseSeeder extends Seeder
         $this->call(AllergensSeeder::class);
         $this->call(TagsSeeder::class);
         $this->call(EquipmentSeeder::class);
-        // TODO: create missing seeders
-        // $this->call(CuisinesSeeder::class);
+        $this->call(CuisinesSeeder::class);
         $this->call(DishTypesSeeder::class);
+        $this->call(MeasuresSeeder::class);
         $this->call(RecipesSeeder::class);
-        // $this->call(MeasuresSeeder::class);
         $this->call(DirectionsSeeder::class);
         $this->call(IngredientsSeeder::class);
         // $this->call(ProductsSeeder::class);
@@ -34,5 +33,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(OperationsSeeder::class);
         $this->call(ProceduresSeeder::class);
         // $this->call(ServingsSeeder::class);
+        $this->call(RecipeEnrichmentSeeder::class);
     }
 }
