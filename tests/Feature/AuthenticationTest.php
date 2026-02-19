@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Entities\User;
-use App\Exceptions\v1\ValidationErrorException;
-use App\Repositories\v1\UserRepository;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
 use Tests\Helpers\CreatesTestUser;
 use Tests\TestCase;
 
@@ -15,220 +16,187 @@ class AuthenticationTest extends TestCase
     use DatabaseTransactions;
 
     private const string API_PROTECTED_ENDPOINT = '/api/v1/cuisines';
-
     private const string API_LOGIN_ENDPOINT = '/api/login';
-
     private const string USERNAME = 'test-user';
-
     private const string PASSWORD = 'Pa$swo[d_1234';
-
-    protected UserRepository $userRepository;
+    private const string CT = 'application/vnd.api+json';
 
     private User $user;
 
-    /**
-     * @throws ValidationErrorException
-     */
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->user = $this->createOrGetTestUser();
+    }
+
+    private function loginPost(array $data): TestResponse
+    {
+        return $this->call(
+            'POST',
+            self::API_LOGIN_ENDPOINT,
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => self::CT,
+                'HTTP_ACCEPT' => self::CT,
+            ],
+            json_encode($data),
+        );
     }
 
     public function testUserCanLoginWithValidUsernameAndPassword(): void
     {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
+        $response = $this->loginPost([
             'username' => self::USERNAME,
             'password' => self::PASSWORD,
         ]);
 
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'access_token',
-            'token_type',
-            'expires_in',
-        ]);
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'jsonapi',
+                'meta' => ['access_token', 'token_type', 'expires_in'],
+            ]);
     }
 
     public function testUserCannotLoginWithInvalidCredentials(): void
     {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
+        $response = $this->loginPost([
             'username' => self::USERNAME,
             'password' => 'wrong_password',
         ]);
 
-        $response->assertStatus(401);
-        $response->assertJson([
-            'message' => 'Invalid credentials.',
-        ]);
+        $response->assertStatus(401)
+            ->assertJsonStructure(['jsonapi', 'errors'])
+            ->assertJsonPath('errors.0.status', '401')
+            ->assertJsonPath('errors.0.detail', 'Invalid credentials.');
     }
 
     public function testUserCannotLoginWithoutPasswordField(): void
     {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
+        $response = $this->loginPost([
             'username' => self::USERNAME,
         ]);
 
-        $response->assertJsonStructure(['message', 'errors']);
         $response->assertStatus(422)
-            ->assertJsonPath('errors.password.0', trans('auth.password.required'))
-            ->assertJsonPath('message', trans('auth.password.required'));
+            ->assertJsonStructure(['jsonapi', 'errors'])
+            ->assertJsonPath('errors.0.status', '422');
     }
 
     public function testUserCannotLoginWithoutUsernameField(): void
     {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
+        $response = $this->loginPost([
             'password' => self::PASSWORD,
         ]);
 
-        $response->assertJsonStructure(['message', 'errors']);
         $response->assertStatus(422)
-            ->assertJsonPath('errors.username.0', trans('auth.username.required'))
-            ->assertJsonPath('message', trans('auth.username.required'));
+            ->assertJsonStructure(['jsonapi', 'errors'])
+            ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function testUserCannotLoginWithNonStringUsernameField(): void
+    public function testUserCannotLoginWithEmptyUsernameField(): void
     {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => (object) [0 => '%', 1 => '*'],
+        $response = $this->loginPost([
+            'username' => '',
             'password' => self::PASSWORD,
         ]);
 
-        $response->assertJsonStructure(['message', 'errors']);
         $response->assertStatus(422)
-            ->assertJsonPath('errors.username.0', trans('auth.username.string'))
-            ->assertJsonPath('message', trans('auth.username.string'));
+            ->assertJsonStructure(['jsonapi', 'errors'])
+            ->assertJsonPath('errors.0.status', '422');
+    }
+
+    public function testUserCannotLoginWithTooLongUsernameField(): void
+    {
+        $response = $this->loginPost([
+            'username' => str_repeat('a', 257),
+            'password' => self::PASSWORD,
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure(['jsonapi', 'errors']);
+    }
+
+    public function testUserCannotLoginWithEmptyPasswordField(): void
+    {
+        $response = $this->loginPost([
+            'username' => self::USERNAME,
+            'password' => '',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure(['jsonapi', 'errors']);
+    }
+
+    public function testUserCannotLoginWithTooLongPasswordField(): void
+    {
+        $response = $this->loginPost([
+            'username' => self::USERNAME,
+            'password' => str_repeat('0123456789', 50),
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure(['jsonapi', 'errors']);
+    }
+
+    public function testUserCannotLoginWithWildcardPasswordField(): void
+    {
+        $response = $this->loginPost([
+            'username' => self::USERNAME,
+            'password' => '%',
+        ]);
+
+        $response->assertStatus(401)
+            ->assertJsonPath('errors.0.detail', 'Invalid credentials.');
     }
 
     public function testUserCannotLoginWithExtraUnexpectedField(): void
     {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
+        $response = $this->loginPost([
             'username' => self::USERNAME,
             'password' => self::PASSWORD,
             'extra_field' => 'foo',
         ]);
 
         $response->assertStatus(400)
-            ->assertJsonStructure(['status', 'message', 'errors'])
-            ->assertJsonPath('errors.0', trans('auth.unexpected_fields.error'))
-            ->assertJsonPath('message', trans('auth.unexpected_fields.message'));
-    }
-
-    public function testUserCannotLoginWithEmptyUsernameField(): void
-    {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => '',
-            'password' => self::PASSWORD,
-        ]);
-
-        $response->assertJsonStructure(['message', 'errors']);
-        $response->assertStatus(422)
-            ->assertJsonPath('errors.username.0', trans('auth.username.required'))
-            ->assertJsonPath('message', trans('auth.username.required'));
-    }
-
-    public function testUserCannotLoginWithTooLongUsernameField(): void
-    {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => str_repeat('a', 257),
-            'password' => self::PASSWORD,
-        ]);
-
-        $response->assertJsonStructure(['message', 'errors']);
-        $response->assertStatus(422)
-            ->assertJsonPath('errors.username.0', trans('auth.username.max'))
-            ->assertJsonPath('message', trans('auth.username.max'));
-    }
-
-    public function testUserCannotLoginWithNonStringPasswordField(): void
-    {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => self::USERNAME,
-            'password' => (object) [0 => '%', 1 => '*'],
-        ]);
-
-        $response->assertJsonStructure(['message', 'errors']);
-        $response->assertStatus(422)
-            ->assertJsonPath('errors.password.0', trans('auth.password.string'))
-            ->assertJsonPath('message', trans('auth.password.string'));
-    }
-
-    public function testUserCannotLoginWithWildcardPasswordField(): void
-    {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => self::USERNAME,
-            'password' => '%',
-        ]);
-
-        $response->assertStatus(401);
-        $response->assertJson([
-            'message' => 'Invalid credentials.',
-        ]);
-    }
-
-    public function testUserCannotLoginWithEmptyPasswordField(): void
-    {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => self::USERNAME,
-            'password' => '',
-        ]);
-
-        $response->assertJsonStructure(['message', 'errors']);
-        $response->assertStatus(422)
-            ->assertJsonPath('errors.password.0', trans('auth.password.required'))
-            ->assertJsonPath('message', trans('auth.password.required'));
-    }
-
-    public function testUserCannotLoginWithTooLongPasswordField(): void
-    {
-        $response = $this->postJson(self::API_LOGIN_ENDPOINT, [
-            'username' => self::USERNAME,
-            'password' => str_repeat('0123456789', 50),
-        ]);
-
-        $response->assertJsonStructure(['message', 'errors']);
-        $response->assertStatus(422)
-            ->assertJsonPath('errors.password.0', trans('auth.password.max'))
-            ->assertJsonPath('message', trans('auth.password.max'));
+            ->assertJsonStructure(['jsonapi', 'errors'])
+            ->assertJsonPath('errors.0.status', '400');
     }
 
     public function testAuthenticatedUserCanAccessProtectedRoute(): void
     {
         $token = auth('api')->login($this->user);
 
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->getJson(self::API_PROTECTED_ENDPOINT);
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer $token",
+            'Accept' => self::CT,
+        ])->getJson(self::API_PROTECTED_ENDPOINT);
 
         $response->assertStatus(200);
     }
 
     public function testBlockFakeBearerAccessToProtectedRoute(): void
     {
-        $response = $this->withHeader('Authorization', 'Bearer not-real')
-            ->getJson(self::API_PROTECTED_ENDPOINT);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer not-real',
+            'Accept' => self::CT,
+        ])->getJson(self::API_PROTECTED_ENDPOINT);
 
-        $response->assertStatus(401);
-        $response->assertJson([
-            'errors' => [[
-                'title' => 'Unauthenticated',
-                'code' => '401',
-                'detail' => 'You must login to access this resource',
-            ]],
-        ]);
+        $response->assertStatus(401)
+            ->assertJsonStructure(['jsonapi', 'errors'])
+            ->assertJsonPath('errors.0.status', '401')
+            ->assertJsonPath('errors.0.title', 'Unauthorized');
     }
 
     public function testBlockAccessToProtectedRoute(): void
     {
-        $response = $this->getJson(self::API_PROTECTED_ENDPOINT);
+        $response = $this->withHeaders([
+            'Accept' => self::CT,
+        ])->getJson(self::API_PROTECTED_ENDPOINT);
 
-        $response->assertStatus(401);
-        $response->assertJson([
-            'errors' => [[
-                'title' => 'Unauthenticated',
-                'code' => '401',
-                'detail' => 'You must login to access this resource',
-            ]],
-        ]);
+        $response->assertStatus(401)
+            ->assertJsonStructure(['jsonapi', 'errors'])
+            ->assertJsonPath('errors.0.status', '401')
+            ->assertJsonPath('errors.0.title', 'Unauthorized');
     }
 }

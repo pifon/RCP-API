@@ -23,14 +23,16 @@ trait CreatesTestUser
             $user = new User();
             $user->setUsername('test-user');
             $user->setEmail(fake()->unique()->safeEmail());
-            $user->setPassword('Pa$swo[d_1234');
             $user->setName(fake()->name());
-            $user->setPasswordChangedAt(new DateTime());
             $user->setCreatedAt();
             $user->setUpdatedAt();
-
-            $userRepo->storeUser($user);
+            $user->setPasswordChangedAt(new DateTime());
         }
+
+        $user->setPassword('Pa$swo[d_1234');
+        $user->setUpdatedAt();
+        $em->persist($user);
+        $em->flush();
 
         return $user;
     }
