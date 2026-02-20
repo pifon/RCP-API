@@ -9,8 +9,12 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - .:/var/www/html
+      - /etc/letsencrypt:/etc/letsencrypt
+      - ../foodbook.uk/docker/nginx/foodbook-proxy.conf:/etc/nginx/conf.d/foodbook.conf:ro
     networks:
       - laravel-network
     depends_on:
