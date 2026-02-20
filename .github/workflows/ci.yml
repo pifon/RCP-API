@@ -47,6 +47,11 @@ jobs:
   test:
     name: Tests (PHPUnit)
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: 127.0.0.1
+      DB_DATABASE: rcp_api
+      DB_USERNAME: root
+      DB_PASSWORD: secret
     services:
       mariadb:
         image: mariadb:lts

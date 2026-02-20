@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Helpers;
 
+use App\Entities\Author;
 use App\Entities\Plan;
 use App\Entities\User;
 use App\Entities\UserSubscription;
 use App\Exceptions\v1\ValidationErrorException;
 use DateTime;
+use Doctrine\ORM\EntityManager;
 
 trait CreatesTestUser
 {
@@ -36,15 +38,29 @@ trait CreatesTestUser
         $em->persist($user);
         $em->flush();
 
+        $this->ensureAuthor($em, $user);
         $this->ensurePremiumSubscription($em, $user);
 
         return $user;
     }
 
-    private function ensurePremiumSubscription(
-        \Doctrine\ORM\EntityManager $em,
-        User $user,
-    ): void {
+    private function ensureAuthor(EntityManager $em, User $user): void
+    {
+        $existing = $em->getRepository(Author::class)->findOneBy(['user' => $user]);
+        if ($existing !== null) {
+            return;
+        }
+
+        $author = new Author();
+        $author->setUser($user);
+        $author->setName($user->getUsername());
+        $author->setEmail($user->getEmail());
+        $em->persist($author);
+        $em->flush();
+    }
+
+    private function ensurePremiumSubscription(EntityManager $em, User $user): void
+    {
         $plan = $em->getRepository(Plan::class)->findOneBy(['slug' => 'premium']);
         if ($plan === null) {
             return;
