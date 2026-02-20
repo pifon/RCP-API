@@ -8,6 +8,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ElementTypesSeeder extends Seeder
 {
@@ -16,6 +17,10 @@ class ElementTypesSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+        DB::table('element_types')->truncate();
+        Schema::enableForeignKeyConstraints();
+
         DB::table('element_types')->insert([
             [
                 'name' => 'water',

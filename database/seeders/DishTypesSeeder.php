@@ -6,12 +6,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DishTypesSeeder extends Seeder
 {
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         DB::table('dish_types')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         DB::table('dish_types')->insert([
             [

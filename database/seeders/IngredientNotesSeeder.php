@@ -6,12 +6,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class IngredientNotesSeeder extends Seeder
 {
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         DB::table('ingredient_notes')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         DB::table('ingredient_notes')->insert([
             [

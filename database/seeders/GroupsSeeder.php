@@ -8,6 +8,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class GroupsSeeder extends Seeder
 {
@@ -16,6 +17,10 @@ class GroupsSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+        DB::table('product_groups')->truncate();
+        Schema::enableForeignKeyConstraints();
+
         DB::table('product_groups')->insert([
             [
                 'name' => 'vegan',

@@ -7,12 +7,17 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class AllergensSeeder extends Seeder
 {
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+        DB::table('allergens')->truncate();
+        Schema::enableForeignKeyConstraints();
+
         $allergens = [
             ['name' => 'Gluten', 'description' => 'Found in wheat, barley, rye, and oats'],
             ['name' => 'Crustaceans', 'description' => 'Shrimp, crab, lobster, and similar shellfish'],

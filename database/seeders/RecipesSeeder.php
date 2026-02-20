@@ -8,12 +8,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class RecipesSeeder extends Seeder
 {
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         DB::table('recipes')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         DB::table('recipes')->insert([
             [

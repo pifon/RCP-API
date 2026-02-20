@@ -7,12 +7,17 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class SensationsSeeder extends Seeder
 {
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+        DB::table('sensations')->truncate();
+        Schema::enableForeignKeyConstraints();
+
         $sensations = [
             ['name' => 'Spicy', 'description' => 'Heat from capsaicin or similar compounds (chili, pepper, wasabi)'],
             ['name' => 'Fatty', 'description' => 'Richness and mouthcoating from fats and oils'],

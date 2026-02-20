@@ -14,6 +14,7 @@ class UsersSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         DB::table('users')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         DB::table('users')->insert([
             [

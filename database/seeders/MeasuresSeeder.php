@@ -6,12 +6,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class MeasuresSeeder extends Seeder
 {
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         DB::table('measures')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         DB::table('measures')->insert([
             [

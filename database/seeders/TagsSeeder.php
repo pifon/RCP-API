@@ -5,12 +5,17 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class TagsSeeder extends Seeder
 {
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+        DB::table('tags')->truncate();
+        Schema::enableForeignKeyConstraints();
+
         $tags = [
             // Meal context
             ['name' => 'Quick meal', 'group' => 'time'],
