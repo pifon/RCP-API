@@ -18,8 +18,7 @@ class Search extends Controller
     public function __construct(
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -33,7 +32,7 @@ class Search extends Controller
         }
 
         $conn = $this->em->getConnection();
-        $like = '%' . $query . '%';
+        $like = '%'.$query.'%';
 
         $countSql = $this->buildSearchSql(true);
         $total = (int) $conn->fetchOne($countSql, $this->buildBindings(
@@ -122,18 +121,18 @@ class Search extends Controller
         $select = $countOnly
             ? 'SELECT COUNT(DISTINCT r.id)'
             : 'SELECT DISTINCT r.id, ('
-                . 'CASE WHEN r.title LIKE :q THEN 10 ELSE 0 END + '
-                . 'CASE WHEN r.description LIKE :q THEN 5 ELSE 0 END + '
-                . 'CASE WHEN p.name LIKE :q THEN 3 ELSE 0 END'
-                . ') AS relevance';
+                .'CASE WHEN r.title LIKE :q THEN 10 ELSE 0 END + '
+                .'CASE WHEN r.description LIKE :q THEN 5 ELSE 0 END + '
+                .'CASE WHEN p.name LIKE :q THEN 3 ELSE 0 END'
+                .') AS relevance';
 
-        return $select . ' FROM recipes r'
-            . ' LEFT JOIN ingredients i ON i.recipe_id = r.id'
-            . ' LEFT JOIN servings s ON s.id = i.serving_id'
-            . ' LEFT JOIN products p ON p.id = s.product_id'
-            . ' WHERE r.deleted_at IS NULL'
-            . ' AND (r.title LIKE :q OR r.description LIKE :q OR p.name LIKE :q)'
-            . $this->buildFilterClauses();
+        return $select.' FROM recipes r'
+            .' LEFT JOIN ingredients i ON i.recipe_id = r.id'
+            .' LEFT JOIN servings s ON s.id = i.serving_id'
+            .' LEFT JOIN products p ON p.id = s.product_id'
+            .' WHERE r.deleted_at IS NULL'
+            .' AND (r.title LIKE :q OR r.description LIKE :q OR p.name LIKE :q)'
+            .$this->buildFilterClauses();
     }
 
     private function buildFilterClauses(): string

@@ -21,8 +21,7 @@ class Update extends Controller
         private readonly CollectionRepository $repository,
         private readonly CollectionTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, int $id): JsonResponse
     {
@@ -31,7 +30,7 @@ class Update extends Controller
 
         $collection = $this->repository->findByIdForUser($id, $user);
         if ($collection === null) {
-            throw new NotFoundException("Collection not found.");
+            throw new NotFoundException('Collection not found.');
         }
 
         $data = $request->input('data', []);

@@ -7,13 +7,14 @@ namespace App\JsonApi;
 final class QueryParameters
 {
     private const DEFAULT_PAGE_SIZE = 25;
+
     private const MAX_PAGE_SIZE = 100;
 
     /**
-     * @param array<string, string> $filters
-     * @param SortField[] $sort
-     * @param string[] $include
-     * @param array<string, string[]> $fields
+     * @param  array<string, string>  $filters
+     * @param  SortField[]  $sort
+     * @param  string[]  $include
+     * @param  array<string, string[]>  $fields
      */
     public function __construct(
         public readonly array $filters = [],
@@ -22,11 +23,10 @@ final class QueryParameters
         public readonly array $fields = [],
         public readonly int $pageNumber = 1,
         public readonly int $pageSize = self::DEFAULT_PAGE_SIZE,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $query Raw query parameters ($_GET or similar)
+     * @param  array<string, mixed>  $query  Raw query parameters ($_GET or similar)
      */
     public static function fromArray(array $query): self
     {
@@ -74,7 +74,7 @@ final class QueryParameters
      */
     private static function parseFilters(mixed $raw): array
     {
-        if (!is_array($raw)) {
+        if (! is_array($raw)) {
             return [];
         }
 
@@ -89,7 +89,7 @@ final class QueryParameters
      */
     private static function parseSort(mixed $raw): array
     {
-        if (!is_string($raw) || $raw === '') {
+        if (! is_string($raw) || $raw === '') {
             return [];
         }
 
@@ -104,7 +104,7 @@ final class QueryParameters
      */
     private static function parseInclude(mixed $raw): array
     {
-        if (!is_string($raw) || $raw === '') {
+        if (! is_string($raw) || $raw === '') {
             return [];
         }
 
@@ -116,7 +116,7 @@ final class QueryParameters
      */
     private static function parseFields(mixed $raw): array
     {
-        if (!is_array($raw)) {
+        if (! is_array($raw)) {
             return [];
         }
 
@@ -135,7 +135,7 @@ final class QueryParameters
      */
     private static function parsePage(mixed $raw): array
     {
-        if (!is_array($raw)) {
+        if (! is_array($raw)) {
             return ['number' => 1, 'size' => self::DEFAULT_PAGE_SIZE];
         }
 

@@ -93,6 +93,7 @@ class RecipeRepository extends ServiceEntityRepository
     {
         if ($params->sort === []) {
             $qb->orderBy('r.createdAt', 'DESC');
+
             return;
         }
 

@@ -18,7 +18,7 @@ final class Document
         object $entity,
         ?QueryParameters $params = null,
     ): array {
-        $params ??= new QueryParameters();
+        $params ??= new QueryParameters;
 
         $doc = [
             'jsonapi' => ['version' => self::VERSION],
@@ -36,7 +36,7 @@ final class Document
     /**
      * Build a JSON:API document for a resource collection.
      *
-     * @param object[] $entities
+     * @param  object[]  $entities
      * @return array<string, mixed>
      */
     public static function collection(
@@ -45,7 +45,7 @@ final class Document
         ?QueryParameters $params = null,
         ?Pagination $pagination = null,
     ): array {
-        $params ??= new QueryParameters();
+        $params ??= new QueryParameters;
 
         $data = array_map(
             fn (object $e) => $transformer->toResource($e, $params),
@@ -103,7 +103,7 @@ final class Document
     /**
      * Remove duplicate included resources (same type + id).
      *
-     * @param array<int, array<string, mixed>> $included
+     * @param  array<int, array<string, mixed>>  $included
      * @return array<int, array<string, mixed>>
      */
     private static function deduplicateIncluded(array $included): array
@@ -112,7 +112,7 @@ final class Document
         $unique = [];
 
         foreach ($included as $resource) {
-            $key = $resource['type'] . ':' . $resource['id'];
+            $key = $resource['type'].':'.$resource['id'];
             if (isset($seen[$key])) {
                 continue;
             }

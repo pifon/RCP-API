@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\Recipe;
 
-use App\Entities\Recipe;
 use App\Exceptions\v1\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\JsonApi\Document;
@@ -25,14 +24,13 @@ class Preparation extends Controller
         private readonly RecipeTransformer $recipeTransformer,
         private readonly IngredientTransformer $ingredientTransformer,
         private readonly DirectionTransformer $directionTransformer,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
         try {
             $recipe = $this->repository->getRecipe($slug);
-        } catch (NoResultException | NonUniqueResultException) {
+        } catch (NoResultException|NonUniqueResultException) {
             throw new NotFoundException("Recipe '{$slug}' not found");
         }
 

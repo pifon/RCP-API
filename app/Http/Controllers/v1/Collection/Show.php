@@ -18,8 +18,7 @@ class Show extends Controller
     public function __construct(
         private readonly CollectionRepository $repository,
         private readonly CollectionTransformer $transformer,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, int $id): JsonResponse
     {
@@ -28,7 +27,7 @@ class Show extends Controller
 
         $collection = $this->repository->findByIdForUser($id, $user);
         if ($collection === null) {
-            throw new NotFoundException("Collection not found.");
+            throw new NotFoundException('Collection not found.');
         }
 
         $params = QueryParameters::fromArray($request->query->all());

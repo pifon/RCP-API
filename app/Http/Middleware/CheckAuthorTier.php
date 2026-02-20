@@ -17,8 +17,7 @@ class CheckAuthorTier
 
     public function __construct(
         private readonly AuthorRepository $authorRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Usage: ->middleware('author.tier:pro')
@@ -54,7 +53,7 @@ class CheckAuthorTier
                     status: '403',
                     title: 'Insufficient Author Tier',
                     detail: "Requires at least '{$minTier}' tier. "
-                        . "Your current tier is '{$author->getTier()}'.",
+                        ."Your current tier is '{$author->getTier()}'.",
                     meta: ['current-tier' => $author->getTier(), 'required-tier' => $minTier],
                 )),
                 403,

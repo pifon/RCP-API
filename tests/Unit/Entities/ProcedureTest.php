@@ -15,17 +15,17 @@ class ProcedureTest extends TestCase
     #[Test]
     public function defaults(): void
     {
-        $proc = new Procedure();
+        $proc = new Procedure;
 
         $this->assertNull($proc->getServing());
         $this->assertNull($proc->getDuration());
     }
 
     #[Test]
-    public function operationRelation(): void
+    public function operation_relation(): void
     {
-        $proc = new Procedure();
-        $op = new Operation();
+        $proc = new Procedure;
+        $op = new Operation;
         $op->setName('boil');
 
         $proc->setOperation($op);
@@ -33,10 +33,10 @@ class ProcedureTest extends TestCase
     }
 
     #[Test]
-    public function servingRelation(): void
+    public function serving_relation(): void
     {
-        $proc = new Procedure();
-        $serving = new Serving();
+        $proc = new Procedure;
+        $serving = new Serving;
 
         $proc->setServing($serving);
         $this->assertSame($serving, $proc->getServing());
@@ -46,9 +46,9 @@ class ProcedureTest extends TestCase
     }
 
     #[Test]
-    public function durationSetter(): void
+    public function duration_setter(): void
     {
-        $proc = new Procedure();
+        $proc = new Procedure;
         $proc->setDuration(10);
         $this->assertSame(10, $proc->getDuration());
 

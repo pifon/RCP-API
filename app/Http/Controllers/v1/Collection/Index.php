@@ -18,8 +18,7 @@ class Index extends Controller
     public function __construct(
         private readonly CollectionRepository $repository,
         private readonly CollectionTransformer $transformer,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

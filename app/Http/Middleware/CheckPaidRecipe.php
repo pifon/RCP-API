@@ -17,8 +17,7 @@ class CheckPaidRecipe
     public function __construct(
         private readonly FeatureGate $featureGate,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request, Closure $next): mixed
     {
@@ -37,7 +36,7 @@ class CheckPaidRecipe
             return $this->denyAccess($recipe);
         }
 
-        if (!$this->featureGate->canAccessPaidRecipes($user)) {
+        if (! $this->featureGate->canAccessPaidRecipes($user)) {
             return $this->denyAccess($recipe);
         }
 

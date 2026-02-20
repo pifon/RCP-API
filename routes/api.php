@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return response()->json(
         Document::meta([
-            'name' => config('app.name') . ' API',
+            'name' => config('app.name').' API',
             'version' => 'v1',
         ]),
         200,

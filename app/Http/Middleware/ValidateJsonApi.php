@@ -18,12 +18,12 @@ class ValidateJsonApi
     {
         if ($request->isMethod('POST') || $request->isMethod('PATCH')) {
             $contentType = $request->header('Content-Type', '');
-            if (!str_contains($contentType, self::CONTENT_TYPE)) {
+            if (! str_contains($contentType, self::CONTENT_TYPE)) {
                 return response()->json(
                     Document::errors(new ErrorObject(
                         status: '415',
                         title: 'Unsupported Media Type',
-                        detail: 'Content-Type must be ' . self::CONTENT_TYPE,
+                        detail: 'Content-Type must be '.self::CONTENT_TYPE,
                     )),
                     415,
                     ['Content-Type' => self::CONTENT_TYPE],

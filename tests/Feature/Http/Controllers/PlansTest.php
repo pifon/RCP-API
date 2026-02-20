@@ -17,6 +17,7 @@ class PlansTest extends TestCase
     use JsonApiRequests;
 
     private User $user;
+
     private string $token;
 
     protected function setUp(): void
@@ -31,7 +32,7 @@ class PlansTest extends TestCase
         return $this->token;
     }
 
-    public function testListPlans(): void
+    public function test_list_plans(): void
     {
         $response = $this->apiGet('/api/v1/plans');
 
@@ -39,7 +40,7 @@ class PlansTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function testShowPlanBySlug(): void
+    public function test_show_plan_by_slug(): void
     {
         $list = $this->apiGet('/api/v1/plans');
         $list->assertOk();
@@ -57,14 +58,14 @@ class PlansTest extends TestCase
             ->assertJsonPath('data.id', $slug);
     }
 
-    public function testShowPlanReturns404ForMissing(): void
+    public function test_show_plan_returns404_for_missing(): void
     {
         $response = $this->apiGet('/api/v1/plans/nonexistent-plan-xyz');
 
         $response->assertNotFound();
     }
 
-    public function testMeSubscriptionReturnsValidResponse(): void
+    public function test_me_subscription_returns_valid_response(): void
     {
         $response = $this->apiGet('/api/v1/me/subscription');
 

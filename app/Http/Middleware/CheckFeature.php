@@ -14,8 +14,7 @@ class CheckFeature
 {
     public function __construct(
         private readonly FeatureGate $featureGate,
-    ) {
-    }
+    ) {}
 
     /**
      * Usage in routes: ->middleware('feature:paid_recipes')
@@ -42,8 +41,8 @@ class CheckFeature
                         Document::errors(new ErrorObject(
                             status: '403',
                             title: 'Plan Limit Reached',
-                            detail: "Your plan allows a maximum of "
-                                . "{$limit} {$countTable}. Upgrade to increase your limit.",
+                            detail: 'Your plan allows a maximum of '
+                                ."{$limit} {$countTable}. Upgrade to increase your limit.",
                             meta: ['feature' => $feature, 'limit' => $limit, 'current' => $current],
                         )),
                         403,

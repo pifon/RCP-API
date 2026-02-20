@@ -10,6 +10,5 @@ class IngredientDTO
         public readonly MeasureDTO $measure,
         /** @var IngredientNoteDTO[] */
         public readonly array $notes,
-    ) {
-    }
+    ) {}
 }

@@ -92,6 +92,6 @@ class DirectionTransformer extends AbstractTransformer
             $parts[] = "for {$duration} minutes";
         }
 
-        return implode(' ', $parts) . '.';
+        return implode(' ', $parts).'.';
     }
 }

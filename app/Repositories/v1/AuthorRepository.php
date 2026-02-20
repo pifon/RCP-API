@@ -57,7 +57,7 @@ class AuthorRepository extends ServiceEntityRepository
         /* @var Author $found */
         $found = $qb->getQuery()->getSingleResult();
         if (! $found) {
-            throw new NoResultException();
+            throw new NoResultException;
         }
 
         return $found;

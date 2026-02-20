@@ -15,7 +15,7 @@ class BadRequestException extends Exception
     protected array $errors;
 
     /**
-     * @param string[] $errors
+     * @param  string[]  $errors
      */
     public function __construct(string $message, array $errors = [], int $status = 400)
     {

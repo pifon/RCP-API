@@ -16,8 +16,7 @@ class Destroy extends Controller
     public function __construct(
         private readonly CollectionRepository $repository,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(int $id): JsonResponse
     {
@@ -26,7 +25,7 @@ class Destroy extends Controller
 
         $collection = $this->repository->findByIdForUser($id, $user);
         if ($collection === null) {
-            throw new NotFoundException("Collection not found.");
+            throw new NotFoundException('Collection not found.');
         }
 
         $collection->softDelete();

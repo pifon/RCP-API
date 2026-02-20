@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class SortFieldTest extends TestCase
 {
     #[Test]
-    public function ascendingFieldFromString(): void
+    public function ascending_field_from_string(): void
     {
         $field = SortField::fromString('title');
 
@@ -21,7 +21,7 @@ class SortFieldTest extends TestCase
     }
 
     #[Test]
-    public function descendingFieldFromString(): void
+    public function descending_field_from_string(): void
     {
         $field = SortField::fromString('-created-at');
 
@@ -31,7 +31,7 @@ class SortFieldTest extends TestCase
     }
 
     #[Test]
-    public function constructorDefaultsToAscending(): void
+    public function constructor_defaults_to_ascending(): void
     {
         $field = new SortField('name');
 
@@ -40,7 +40,7 @@ class SortFieldTest extends TestCase
     }
 
     #[Test]
-    public function constructorAcceptsExplicitDirection(): void
+    public function constructor_accepts_explicit_direction(): void
     {
         $field = new SortField('price', 'desc');
 

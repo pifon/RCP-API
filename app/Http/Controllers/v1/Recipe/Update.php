@@ -26,8 +26,7 @@ class Update extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -64,14 +63,14 @@ class Update extends Controller
             return $relError;
         }
 
-        $recipe->setUpdatedAt(new DateTime());
+        $recipe->setUpdatedAt(new DateTime);
 
         if (
             array_key_exists('status', $attrs)
             && $attrs['status'] === 'published'
             && $recipe->getPublishedAt() === null
         ) {
-            $recipe->setPublishedAt(new DateTime());
+            $recipe->setPublishedAt(new DateTime);
         }
 
         $this->em->flush();
@@ -82,7 +81,7 @@ class Update extends Controller
     }
 
     /**
-     * @param array<string, mixed> $attrs
+     * @param  array<string, mixed>  $attrs
      */
     private function applyAttributes(array $attrs, \App\Entities\Recipe $recipe): void
     {
@@ -117,7 +116,7 @@ class Update extends Controller
     }
 
     /**
-     * @param array<string, mixed> $relationships
+     * @param  array<string, mixed>  $relationships
      */
     private function applyRelationships(array $relationships, \App\Entities\Recipe $recipe): ?JsonResponse
     {
@@ -135,7 +134,7 @@ class Update extends Controller
             /** @var array{data: array{id: int|string}|null}|null $dtRel */
             $dtRel = $relationships['dish-type'];
             $dtData = $dtRel['data'] ?? null;
-            if (!is_array($dtData)) {
+            if (! is_array($dtData)) {
                 $recipe->setDishType(null);
             } else {
                 $dishType = $this->em->find(DishType::class, (int) $dtData['id']);

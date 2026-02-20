@@ -23,7 +23,7 @@ class TagTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Tag $entity */
-        return '/api/v1/tags/' . $entity->getSlug();
+        return '/api/v1/tags/'.$entity->getSlug();
     }
 
     protected function attributes(object $entity): array

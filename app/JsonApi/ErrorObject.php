@@ -14,8 +14,7 @@ final class ErrorObject
         public readonly ?array $source = null,
         public readonly ?array $meta = null,
         public readonly ?array $links = null,
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {

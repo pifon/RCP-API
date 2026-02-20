@@ -14,7 +14,7 @@ class AuthorTest extends TestCase
     #[Test]
     public function defaults(): void
     {
-        $author = new Author();
+        $author = new Author;
 
         $this->assertSame('free', $author->getTier());
         $this->assertFalse($author->isDeleted());
@@ -22,9 +22,9 @@ class AuthorTest extends TestCase
     }
 
     #[Test]
-    public function nameAndEmail(): void
+    public function name_and_email(): void
     {
-        $author = new Author();
+        $author = new Author;
         $author->setName('John Doe');
         $author->setEmail('john@example.com');
 
@@ -33,17 +33,17 @@ class AuthorTest extends TestCase
     }
 
     #[Test]
-    public function tierSetter(): void
+    public function tier_setter(): void
     {
-        $author = new Author();
+        $author = new Author;
         $author->setTier('pro');
         $this->assertSame('pro', $author->getTier());
     }
 
     #[Test]
-    public function softDeleteAndRestore(): void
+    public function soft_delete_and_restore(): void
     {
-        $author = new Author();
+        $author = new Author;
         $this->assertFalse($author->isDeleted());
 
         $author->softDelete();
@@ -54,17 +54,17 @@ class AuthorTest extends TestCase
     }
 
     #[Test]
-    public function descriptionSetter(): void
+    public function description_setter(): void
     {
-        $author = new Author();
+        $author = new Author;
         $author->setDescription('A passionate chef');
         $this->assertSame('A passionate chef', $author->getDescription());
     }
 
     #[Test]
-    public function userRelation(): void
+    public function user_relation(): void
     {
-        $author = new Author();
+        $author = new Author;
         $user = $this->createMock(User::class);
         $user->method('getUsername')->willReturn('jdoe');
 

@@ -24,7 +24,7 @@ class AuthController extends Controller
             'password.max' => trans('auth.password.max'),
         ]);
 
-        if (!empty(array_diff(array_keys($request->all()), ['username', 'password']))) {
+        if (! empty(array_diff(array_keys($request->all()), ['username', 'password']))) {
             throw new BadRequestException(
                 trans('auth.unexpected_fields.message'),
                 [trans('auth.unexpected_fields.error')],

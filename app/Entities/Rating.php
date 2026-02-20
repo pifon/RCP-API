@@ -35,8 +35,8 @@ class Rating
 
     public function __construct()
     {
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+        $this->createdAt = new DateTime;
+        $this->updatedAt = new DateTime;
     }
 
     public function getId(): int
@@ -72,7 +72,7 @@ class Rating
     public function setRate(int $rate): void
     {
         $this->rate = $rate;
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTime;
     }
 
     public function getCreatedAt(): DateTime

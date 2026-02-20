@@ -23,8 +23,7 @@ class RatingIndex extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly RatingTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {

@@ -21,8 +21,7 @@ class DirectionIndex extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly DirectionTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {

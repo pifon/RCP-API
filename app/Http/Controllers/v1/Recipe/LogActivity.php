@@ -23,8 +23,7 @@ class LogActivity extends Controller
     public function __construct(
         private readonly RecipeRepository $recipeRepository,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -38,7 +37,7 @@ class LogActivity extends Controller
         $attrs = $data['attributes'] ?? [];
 
         $validator = Validator::make($attrs, [
-            'action' => ['required', 'string', 'in:' . implode(',', self::ALLOWED_ACTIONS)],
+            'action' => ['required', 'string', 'in:'.implode(',', self::ALLOWED_ACTIONS)],
         ]);
 
         if ($validator->fails()) {
@@ -48,7 +47,7 @@ class LogActivity extends Controller
         /** @var \App\Entities\User $user */
         $user = auth()->user();
 
-        $activity = new UserRecipeActivity();
+        $activity = new UserRecipeActivity;
         $activity->setUser($user);
         $activity->setRecipe($recipe);
         $activity->setAction($attrs['action']);

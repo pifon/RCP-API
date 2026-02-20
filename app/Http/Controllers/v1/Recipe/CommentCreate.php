@@ -23,8 +23,7 @@ class CommentCreate extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly CommentTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -49,15 +48,15 @@ class CommentCreate extends Controller
         /** @var \App\Entities\User $user */
         $user = auth()->user();
 
-        $comment = new RecipeComment();
+        $comment = new RecipeComment;
         $comment->setRecipe($recipe);
         $comment->setUser($user);
         $comment->setBody($attrs['body']);
 
-        if (!empty($attrs['parent-id'])) {
+        if (! empty($attrs['parent-id'])) {
             $parent = $this->em->find(RecipeComment::class, (int) $attrs['parent-id']);
             if ($parent === null) {
-                throw new NotFoundException("Parent comment not found.");
+                throw new NotFoundException('Parent comment not found.');
             }
             $comment->setParent($parent);
         }

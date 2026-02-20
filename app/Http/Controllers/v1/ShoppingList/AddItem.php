@@ -23,8 +23,7 @@ class AddItem extends Controller
     public function __construct(
         private readonly ShoppingListItemTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, int $listId): JsonResponse
     {
@@ -55,7 +54,7 @@ class AddItem extends Controller
 
         $product = $this->em->find(Product::class, (int) $productRef);
         if ($product === null) {
-            throw new NotFoundException("Product not found.");
+            throw new NotFoundException('Product not found.');
         }
 
         $validator = Validator::make($attrs, [
@@ -66,7 +65,7 @@ class AddItem extends Controller
             throw ValidationErrorException::fromValidationBag($validator->errors());
         }
 
-        $item = new ShoppingListItem();
+        $item = new ShoppingListItem;
         $item->setShoppingList($list);
         $item->setProduct($product);
         $item->setQuantity(number_format((float) ($attrs['quantity'] ?? 1), 3, '.', ''));

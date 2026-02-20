@@ -23,8 +23,7 @@ class Create extends Controller
     public function __construct(
         private readonly PantryItemTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -59,7 +58,7 @@ class Create extends Controller
         /** @var \App\Entities\User $user */
         $user = auth()->user();
 
-        $item = new PantryItem();
+        $item = new PantryItem;
         $item->setUser($user);
         $item->setProduct($product);
         $item->setQuantity(number_format((float) $attrs['quantity'], 3, '.', ''));
@@ -80,7 +79,7 @@ class Create extends Controller
 
         $this->em->persist($item);
 
-        $log = new PantryLog();
+        $log = new PantryLog;
         $log->setUser($user);
         $log->setPantryItem($item);
         $log->setProduct($product);

@@ -17,11 +17,11 @@ class ValidateJsonApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->middleware = new ValidateJsonApi();
+        $this->middleware = new ValidateJsonApi;
     }
 
     #[Test]
-    public function getRequestPassesWithoutContentType(): void
+    public function get_request_passes_without_content_type(): void
     {
         $request = Request::create('/api/v1/recipes', 'GET');
 
@@ -32,7 +32,7 @@ class ValidateJsonApiTest extends TestCase
     }
 
     #[Test]
-    public function postWithCorrectContentTypePasses(): void
+    public function post_with_correct_content_type_passes(): void
     {
         $request = Request::create('/api/v1/recipes', 'POST', [], [], [], [
             'CONTENT_TYPE' => 'application/vnd.api+json',
@@ -44,7 +44,7 @@ class ValidateJsonApiTest extends TestCase
     }
 
     #[Test]
-    public function postWithWrongContentTypeReturns415(): void
+    public function post_with_wrong_content_type_returns415(): void
     {
         $request = Request::create('/api/v1/recipes', 'POST', [], [], [], [
             'CONTENT_TYPE' => 'application/json',
@@ -58,7 +58,7 @@ class ValidateJsonApiTest extends TestCase
     }
 
     #[Test]
-    public function patchWithWrongContentTypeReturns415(): void
+    public function patch_with_wrong_content_type_returns415(): void
     {
         $request = Request::create('/api/v1/me', 'PATCH', [], [], [], [
             'CONTENT_TYPE' => 'text/plain',
@@ -70,7 +70,7 @@ class ValidateJsonApiTest extends TestCase
     }
 
     #[Test]
-    public function deleteRequestPassesWithoutContentType(): void
+    public function delete_request_passes_without_content_type(): void
     {
         $request = Request::create('/api/v1/follows/1', 'DELETE');
 
@@ -80,7 +80,7 @@ class ValidateJsonApiTest extends TestCase
     }
 
     #[Test]
-    public function responseContentTypeIsAlwaysJsonapi(): void
+    public function response_content_type_is_always_jsonapi(): void
     {
         $request = Request::create('/api/v1/recipes', 'GET');
 

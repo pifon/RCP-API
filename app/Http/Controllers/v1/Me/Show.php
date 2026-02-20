@@ -15,8 +15,7 @@ class Show extends Controller
 {
     public function __construct(
         private readonly UserTransformer $transformer,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

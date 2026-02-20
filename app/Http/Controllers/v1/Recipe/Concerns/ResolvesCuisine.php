@@ -21,7 +21,7 @@ trait ResolvesCuisine
      * Returns a JsonResponse with a 422 error (including fuzzy suggestions)
      * if cuisine is missing or invalid, or null on success.
      *
-     * @param array<string, mixed> $relationships
+     * @param  array<string, mixed>  $relationships
      */
     private function applyCuisine(
         array $relationships,
@@ -35,10 +35,12 @@ trait ResolvesCuisine
             $cuisine = $this->findCuisine($cuisineData, $em);
             if ($cuisine === null) {
                 $query = $cuisineData['name'] ?? $cuisineData['slug'] ?? null;
+
                 return $this->cuisineNotFoundResponse($cuisineData, $query, $em);
             }
             $recipe->setCuisine($cuisine);
             $recipe->setCuisineRequest(null);
+
             return null;
         }
 
@@ -48,6 +50,7 @@ trait ResolvesCuisine
                 throw new NotFoundException("Cuisine request #{$requestData['id']} not found.");
             }
             $recipe->setCuisineRequest($cuisineRequest);
+
             return null;
         }
 
@@ -59,7 +62,7 @@ trait ResolvesCuisine
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function findCuisine(array $data, EntityManager $em): ?Cuisine
     {
@@ -103,7 +106,7 @@ trait ResolvesCuisine
         }
 
         $conn = $em->getConnection();
-        $likeTerm = '%' . $query . '%';
+        $likeTerm = '%'.$query.'%';
 
         /** @var list<array{id: int, name: string, slug: string, variant: string|null}> $rows */
         $rows = $conn->fetchAllAssociative(
@@ -141,7 +144,7 @@ trait ResolvesCuisine
             $targets = [strtolower($row['name']), strtolower($row['slug'])];
             if ($row['variant'] !== null) {
                 $targets[] = strtolower($row['variant']);
-                $targets[] = strtolower($row['name'] . ' ' . $row['variant']);
+                $targets[] = strtolower($row['name'].' '.$row['variant']);
             }
 
             $best = PHP_INT_MAX;
@@ -165,7 +168,7 @@ trait ResolvesCuisine
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function cuisineNotFoundResponse(
         array $data,
@@ -178,11 +181,11 @@ trait ResolvesCuisine
         $suggestionLinks = [];
         foreach ($suggestions as $s) {
             $display = $s['variant'] !== null
-                ? $s['name'] . ' - ' . $s['variant']
+                ? $s['name'].' - '.$s['variant']
                 : $s['name'];
 
             $suggestionLinks["cuisine:{$s['slug']}"] = [
-                'href' => '/api/v1/cuisines/' . $s['slug'],
+                'href' => '/api/v1/cuisines/'.$s['slug'],
                 'meta' => [
                     'id' => $s['id'],
                     'name' => $display,
@@ -195,11 +198,11 @@ trait ResolvesCuisine
         if ($suggestions !== []) {
             $names = array_map(
                 fn ($s) => $s['variant'] !== null
-                    ? $s['name'] . ' - ' . $s['variant']
+                    ? $s['name'].' - '.$s['variant']
                     : $s['name'],
                 $suggestions,
             );
-            $detail .= ' Did you mean: ' . implode(', ', $names) . '?';
+            $detail .= ' Did you mean: '.implode(', ', $names).'?';
         }
 
         $links = $suggestionLinks;

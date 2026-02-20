@@ -23,7 +23,7 @@ class CuisineRequestTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var CuisineRequest $entity */
-        return '/api/v1/cuisine-requests/' . $entity->getId();
+        return '/api/v1/cuisine-requests/'.$entity->getId();
     }
 
     protected function attributes(object $entity): array
@@ -56,7 +56,7 @@ class CuisineRequestTransformer extends AbstractTransformer
             $rels['cuisine'] = [
                 'data' => ['type' => 'cuisines', 'id' => $cuisine->getSlug()],
                 'links' => [
-                    'related' => '/api/v1/cuisines/' . $cuisine->getSlug(),
+                    'related' => '/api/v1/cuisines/'.$cuisine->getSlug(),
                 ],
                 'entity' => $cuisine,
                 'transformer' => CuisineTransformer::class,

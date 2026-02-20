@@ -36,14 +36,13 @@ class Import extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
         $payload = $request->all();
 
-        if (!isset($payload['pifon-recipe'])) {
+        if (! isset($payload['pifon-recipe'])) {
             throw new ValidationErrorException(
                 'Invalid recipe file: missing pifon-recipe version header.',
                 ['pifon-recipe' => ['Missing format version.']],
@@ -105,7 +104,7 @@ class Import extends Controller
             $slug = $this->generateUniqueSlug(Str::slug($title));
         }
 
-        $recipe = new Recipe();
+        $recipe = new Recipe;
         $recipe->setTitle($title);
         $recipe->setSlug($slug);
         $recipe->setDescription($def['description'] ?? null);
@@ -169,26 +168,26 @@ class Import extends Controller
                 );
             }
 
-            $serving = new Serving();
+            $serving = new Serving;
             $serving->setProduct($product);
             $serving->setAmount($amount);
             $serving->setMeasure($measure);
             $this->em->persist($serving);
 
-            $ingredient = new Ingredient();
+            $ingredient = new Ingredient;
             $ingredient->setRecipe($recipe);
             $ingredient->setServing($serving);
             $ingredient->setPosition((int) $position);
             $this->em->persist($ingredient);
 
-            if (!empty($def['notes'])) {
+            if (! empty($def['notes'])) {
                 foreach ((array) $def['notes'] as $text) {
-                    $note = new IngredientNote();
+                    $note = new IngredientNote;
                     $this->setPrivateFields($note, [
                         'ingredient' => $ingredient,
                         'note' => $text,
-                        'createdAt' => new \DateTime(),
-                        'updatedAt' => new \DateTime(),
+                        'createdAt' => new \DateTime,
+                        'updatedAt' => new \DateTime,
                     ]);
                     $this->em->persist($note);
                 }
@@ -225,7 +224,7 @@ class Import extends Controller
                     $amount = (float) ($def['amount'] ?? 0);
 
                     if ($measure !== null) {
-                        $serving = new Serving();
+                        $serving = new Serving;
                         $serving->setProduct($product);
                         $serving->setAmount($amount);
                         $serving->setMeasure($measure);
@@ -234,7 +233,7 @@ class Import extends Controller
                 }
             }
 
-            $procedure = new Procedure();
+            $procedure = new Procedure;
             $procedure->setOperation($operation);
             $procedure->setServing($serving);
             $procedure->setDuration(isset($def['duration-minutes']) ? (int) $def['duration-minutes'] : null);
@@ -245,16 +244,16 @@ class Import extends Controller
                 $ingredient = $ingredientMap[(int) $def['ingredient']] ?? null;
             }
 
-            $direction = new Direction();
+            $direction = new Direction;
             $direction->setRecipe($recipe);
             $direction->setProcedure($procedure);
             $direction->setIngredient($ingredient);
             $direction->setSequence((int) $step);
             $this->em->persist($direction);
 
-            if (!empty($def['notes'])) {
+            if (! empty($def['notes'])) {
                 foreach ((array) $def['notes'] as $text) {
-                    $note = new DirectionNote();
+                    $note = new DirectionNote;
                     $note->setDirection($direction);
                     $note->setNote($text);
                     $this->em->persist($note);
@@ -304,7 +303,7 @@ class Import extends Controller
         $op = $this->em->getRepository(Operation::class)->findOneBy(['name' => $name]);
 
         if ($op === null) {
-            $op = new Operation();
+            $op = new Operation;
             $op->setName($name);
             $op->setDescription($name);
             $this->em->persist($op);

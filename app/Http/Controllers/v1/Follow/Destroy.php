@@ -15,8 +15,7 @@ class Destroy extends Controller
 {
     public function __construct(
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(int $id): JsonResponse
     {
@@ -29,7 +28,7 @@ class Destroy extends Controller
         ]);
 
         if ($follow === null) {
-            throw new NotFoundException("Follow not found.");
+            throw new NotFoundException('Follow not found.');
         }
 
         $this->em->remove($follow);

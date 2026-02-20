@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class PublishDocsTest extends TestCase
 {
-    public function testCommandCopiesYamlToStorage(): void
+    public function test_command_copies_yaml_to_storage(): void
     {
         $dest = storage_path('api-docs/api-docs.yaml');
 
@@ -17,17 +17,17 @@ class PublishDocsTest extends TestCase
         }
 
         $this->artisan('docs:publish')
-            ->expectsOutput('Published → ' . $dest)
+            ->expectsOutput('Published → '.$dest)
             ->assertExitCode(0);
 
         $this->assertFileExists($dest);
         $this->assertFileEquals(base_path('app/Documentation/swagger.yaml'), $dest);
     }
 
-    public function testCommandFailsWhenSourceMissing(): void
+    public function test_command_fails_when_source_missing(): void
     {
         $src = base_path('app/Documentation/swagger.yaml');
-        $backup = $src . '.bak';
+        $backup = $src.'.bak';
 
         rename($src, $backup);
 

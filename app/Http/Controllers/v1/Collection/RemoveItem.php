@@ -17,8 +17,7 @@ class RemoveItem extends Controller
     public function __construct(
         private readonly CollectionRepository $collectionRepository,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(int $collectionId, int $itemId): JsonResponse
     {
@@ -27,7 +26,7 @@ class RemoveItem extends Controller
 
         $collection = $this->collectionRepository->findByIdForUser($collectionId, $user);
         if ($collection === null) {
-            throw new NotFoundException("Collection not found.");
+            throw new NotFoundException('Collection not found.');
         }
 
         $item = $this->em->getRepository(CollectionItem::class)->findOneBy([
@@ -36,7 +35,7 @@ class RemoveItem extends Controller
         ]);
 
         if ($item === null) {
-            throw new NotFoundException("Collection item not found.");
+            throw new NotFoundException('Collection item not found.');
         }
 
         $this->em->remove($item);

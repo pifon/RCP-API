@@ -6,7 +6,6 @@ namespace App\Http\Controllers\v1\Me;
 
 use App\Entities\UserPreference;
 use App\Http\Controllers\Controller;
-use App\JsonApi\Document;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,8 +14,7 @@ class Preferences extends Controller
 {
     public function __construct(
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function show(Request $request): JsonResponse
     {
@@ -110,7 +108,7 @@ class Preferences extends Controller
         $pref = $this->em->getRepository(UserPreference::class)->findOneBy(['user' => $user]);
 
         if ($pref === null) {
-            $pref = new UserPreference();
+            $pref = new UserPreference;
             $pref->setUser($user);
             $this->em->persist($pref);
             $this->em->flush();

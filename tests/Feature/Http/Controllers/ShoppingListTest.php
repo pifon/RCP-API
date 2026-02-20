@@ -17,6 +17,7 @@ class ShoppingListTest extends TestCase
     use JsonApiRequests;
 
     private User $user;
+
     private string $token;
 
     protected function setUp(): void
@@ -44,12 +45,12 @@ class ShoppingListTest extends TestCase
         return ['id' => $response->json('data.id'), 'slug' => $response->json('data.id')];
     }
 
-    public function testCreateShoppingList(): void
+    public function test_create_shopping_list(): void
     {
         $response = $this->apiPost('/api/v1/shopping-lists', [
             'data' => [
                 'type' => 'shopping-lists',
-                'attributes' => ['name' => 'Groceries ' . time()],
+                'attributes' => ['name' => 'Groceries '.time()],
             ],
         ]);
 
@@ -57,7 +58,7 @@ class ShoppingListTest extends TestCase
             ->assertJsonPath('data.type', 'shopping-lists');
     }
 
-    public function testListShoppingLists(): void
+    public function test_list_shopping_lists(): void
     {
         $this->createList('List A');
 
@@ -67,7 +68,7 @@ class ShoppingListTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function testShowShoppingList(): void
+    public function test_show_shopping_list(): void
     {
         $list = $this->createList('Show Test');
         $id = $list['id'];
@@ -79,7 +80,7 @@ class ShoppingListTest extends TestCase
             ->assertJsonPath('data.id', $id);
     }
 
-    public function testUpdateShoppingList(): void
+    public function test_update_shopping_list(): void
     {
         $list = $this->createList('Before Update');
         $id = $list['id'];
@@ -95,7 +96,7 @@ class ShoppingListTest extends TestCase
             ->assertJsonPath('data.attributes.name', 'After Update');
     }
 
-    public function testDeleteShoppingList(): void
+    public function test_delete_shopping_list(): void
     {
         $list = $this->createList('To Delete');
         $id = $list['id'];
@@ -105,7 +106,7 @@ class ShoppingListTest extends TestCase
         $response->assertOk();
     }
 
-    public function testAddItemToShoppingList(): void
+    public function test_add_item_to_shopping_list(): void
     {
         $list = $this->createList('Items Test');
         $listId = $list['id'];
@@ -124,7 +125,7 @@ class ShoppingListTest extends TestCase
             ->assertJsonPath('data.type', 'shopping-list-items');
     }
 
-    public function testListItemsInShoppingList(): void
+    public function test_list_items_in_shopping_list(): void
     {
         $list = $this->createList('Items List');
         $listId = $list['id'];

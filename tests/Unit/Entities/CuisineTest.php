@@ -11,9 +11,9 @@ use PHPUnit\Framework\TestCase;
 class CuisineTest extends TestCase
 {
     #[Test]
-    public function fullNameWithoutVariant(): void
+    public function full_name_without_variant(): void
     {
-        $cuisine = new Cuisine();
+        $cuisine = new Cuisine;
         $cuisine->setName('Italian');
         $cuisine->setSlug('italian');
 
@@ -22,9 +22,9 @@ class CuisineTest extends TestCase
     }
 
     #[Test]
-    public function fullNameWithVariant(): void
+    public function full_name_with_variant(): void
     {
-        $cuisine = new Cuisine();
+        $cuisine = new Cuisine;
         $cuisine->setName('Italian');
         $cuisine->setVariant('Apulian');
 
@@ -32,12 +32,12 @@ class CuisineTest extends TestCase
     }
 
     #[Test]
-    public function parentRelation(): void
+    public function parent_relation(): void
     {
-        $parent = new Cuisine();
+        $parent = new Cuisine;
         $parent->setName('European');
 
-        $child = new Cuisine();
+        $child = new Cuisine;
         $child->setName('Italian');
         $child->setParent($parent);
 
@@ -45,9 +45,9 @@ class CuisineTest extends TestCase
     }
 
     #[Test]
-    public function descriptionSetter(): void
+    public function description_setter(): void
     {
-        $cuisine = new Cuisine();
+        $cuisine = new Cuisine;
         $cuisine->setDescription('Rich and diverse');
         $this->assertSame('Rich and diverse', $cuisine->getDescription());
     }

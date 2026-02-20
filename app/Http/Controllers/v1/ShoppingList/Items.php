@@ -21,8 +21,7 @@ class Items extends Controller
     public function __construct(
         private readonly ShoppingListItemTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, int $listId): JsonResponse
     {

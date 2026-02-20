@@ -17,8 +17,7 @@ class RecipeOwner
     public function __construct(
         private readonly RecipeRepository $recipeRepository,
         private readonly AuthorRepository $authorRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request, Closure $next)
     {

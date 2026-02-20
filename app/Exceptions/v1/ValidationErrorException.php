@@ -16,7 +16,7 @@ class ValidationErrorException extends Exception
     protected array $errors;
 
     /**
-     * @param array<string, string[]> $errors
+     * @param  array<string, string[]>  $errors
      */
     public function __construct(string $message, array $errors = [], int $status = 422)
     {

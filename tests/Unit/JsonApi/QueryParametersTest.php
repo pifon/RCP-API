@@ -13,7 +13,7 @@ class QueryParametersTest extends TestCase
     #[Test]
     public function defaults(): void
     {
-        $params = new QueryParameters();
+        $params = new QueryParameters;
 
         $this->assertSame([], $params->filters);
         $this->assertSame([], $params->sort);
@@ -24,7 +24,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function fromArrayParsesFilters(): void
+    public function from_array_parses_filters(): void
     {
         $params = QueryParameters::fromArray([
             'filter' => ['status' => 'published', 'difficulty' => 'easy'],
@@ -40,7 +40,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function fromArrayParsesSort(): void
+    public function from_array_parses_sort(): void
     {
         $params = QueryParameters::fromArray([
             'sort' => '-created-at,title',
@@ -54,7 +54,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function fromArrayParsesInclude(): void
+    public function from_array_parses_include(): void
     {
         $params = QueryParameters::fromArray([
             'include' => 'author,cuisine,dish-type',
@@ -67,7 +67,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function fromArrayParsesSparseFieldsets(): void
+    public function from_array_parses_sparse_fieldsets(): void
     {
         $params = QueryParameters::fromArray([
             'fields' => [
@@ -82,7 +82,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function fromArrayParsesPagination(): void
+    public function from_array_parses_pagination(): void
     {
         $params = QueryParameters::fromArray([
             'page' => ['number' => '3', 'size' => '10'],
@@ -93,7 +93,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function pageSizeClampedToMax100(): void
+    public function page_size_clamped_to_max100(): void
     {
         $params = QueryParameters::fromArray([
             'page' => ['size' => '500'],
@@ -103,7 +103,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function pageNumberMinimumIs1(): void
+    public function page_number_minimum_is1(): void
     {
         $params = QueryParameters::fromArray([
             'page' => ['number' => '-5'],
@@ -113,7 +113,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function pageSizeMinimumIs1(): void
+    public function page_size_minimum_is1(): void
     {
         $params = QueryParameters::fromArray([
             'page' => ['size' => '0'],
@@ -123,7 +123,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function emptyFilterValuesAreExcluded(): void
+    public function empty_filter_values_are_excluded(): void
     {
         $params = QueryParameters::fromArray([
             'filter' => ['status' => 'published', 'empty' => ''],
@@ -134,35 +134,35 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function emptySortStringReturnsEmpty(): void
+    public function empty_sort_string_returns_empty(): void
     {
         $params = QueryParameters::fromArray(['sort' => '']);
         $this->assertSame([], $params->sort);
     }
 
     #[Test]
-    public function emptyIncludeStringReturnsEmpty(): void
+    public function empty_include_string_returns_empty(): void
     {
         $params = QueryParameters::fromArray(['include' => '']);
         $this->assertSame([], $params->include);
     }
 
     #[Test]
-    public function nonArrayFilterReturnsEmpty(): void
+    public function non_array_filter_returns_empty(): void
     {
         $params = QueryParameters::fromArray(['filter' => 'not-an-array']);
         $this->assertSame([], $params->filters);
     }
 
     #[Test]
-    public function nonStringSortReturnsEmpty(): void
+    public function non_string_sort_returns_empty(): void
     {
         $params = QueryParameters::fromArray(['sort' => 123]);
         $this->assertSame([], $params->sort);
     }
 
     #[Test]
-    public function nonArrayPageReturnsDefaults(): void
+    public function non_array_page_returns_defaults(): void
     {
         $params = QueryParameters::fromArray(['page' => 'string']);
         $this->assertSame(1, $params->pageNumber);
@@ -170,7 +170,7 @@ class QueryParametersTest extends TestCase
     }
 
     #[Test]
-    public function nonArrayFieldsReturnsEmpty(): void
+    public function non_array_fields_returns_empty(): void
     {
         $params = QueryParameters::fromArray(['fields' => 'string']);
         $this->assertSame([], $params->fields);

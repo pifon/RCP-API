@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Middleware\ForceJsonResponse;
-use App\Http\Middleware\ValidateJsonApi;
 use App\JsonApi\Document;
 use App\JsonApi\ErrorObject;
 use Illuminate\Auth\AuthenticationException;
@@ -16,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        commands: __DIR__ . '/../routes/console.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -35,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if (! $isApi($request)) {
                 return null;
             }
+
             return response()->json(
                 Document::errors(new ErrorObject(
                     status: '401',
@@ -73,6 +72,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if (! $isApi($request)) {
                 return null;
             }
+
             return response()->json(
                 Document::errors(new ErrorObject(
                     status: '404',
@@ -88,6 +88,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if (! $isApi($request)) {
                 return null;
             }
+
             return response()->json(
                 Document::errors(new ErrorObject(
                     status: '405',

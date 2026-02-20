@@ -48,8 +48,8 @@ class PantryItem
 
     public function __construct()
     {
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+        $this->createdAt = new DateTime;
+        $this->updatedAt = new DateTime;
     }
 
     public function getId(): int
@@ -123,31 +123,31 @@ class PantryItem
     public function setQuantity(string $quantity): void
     {
         $this->quantity = $quantity;
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTime;
     }
 
     public function setMeasure(?Measure $measure): void
     {
         $this->measure = $measure;
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTime;
     }
 
     public function setExpiresAt(?DateTime $date): void
     {
         $this->expiresAt = $date;
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTime;
     }
 
     public function setBestBefore(?DateTime $date): void
     {
         $this->bestBefore = $date;
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTime;
     }
 
     public function setOpenedAt(?DateTime $date): void
     {
         $this->openedAt = $date;
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTime;
     }
 
     public function getCreatedAt(): DateTime
@@ -164,6 +164,6 @@ class PantryItem
     {
         $current = (float) $this->quantity;
         $this->quantity = number_format(max(0, $current + $delta), 3, '.', '');
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTime;
     }
 }

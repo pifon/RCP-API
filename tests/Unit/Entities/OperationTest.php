@@ -11,9 +11,9 @@ use PHPUnit\Framework\TestCase;
 class OperationTest extends TestCase
 {
     #[Test]
-    public function nameAndDescription(): void
+    public function name_and_description(): void
     {
-        $op = new Operation();
+        $op = new Operation;
         $op->setName('sieve');
         $op->setDescription('Pass through a fine mesh');
 
@@ -22,9 +22,9 @@ class OperationTest extends TestCase
     }
 
     #[Test]
-    public function descriptionDefaultsToNull(): void
+    public function description_defaults_to_null(): void
     {
-        $op = new Operation();
+        $op = new Operation;
         $op->setName('mix');
 
         $this->assertNull($op->getDescription());

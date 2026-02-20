@@ -6,7 +6,6 @@ namespace App\Http\Controllers\v1\Follow;
 
 use App\Entities\Follow;
 use App\Http\Controllers\Controller;
-use App\JsonApi\Document;
 use App\JsonApi\Pagination;
 use App\JsonApi\QueryParameters;
 use Doctrine\ORM\EntityManager;
@@ -17,8 +16,7 @@ class Index extends Controller
 {
     public function __construct(
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

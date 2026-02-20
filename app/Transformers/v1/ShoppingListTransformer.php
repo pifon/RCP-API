@@ -23,7 +23,7 @@ class ShoppingListTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var ShoppingList $entity */
-        return '/api/v1/shopping-lists/' . $entity->getId();
+        return '/api/v1/shopping-lists/'.$entity->getId();
     }
 
     protected function attributes(object $entity): array

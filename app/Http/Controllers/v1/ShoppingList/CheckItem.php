@@ -21,8 +21,7 @@ class CheckItem extends Controller
     public function __construct(
         private readonly ShoppingListItemTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, int $listId, int $itemId): JsonResponse
     {
@@ -75,7 +74,7 @@ class CheckItem extends Controller
             $existing->adjustQuantity((float) $item->getQuantity());
             $pantryItem = $existing;
         } else {
-            $pantryItem = new PantryItem();
+            $pantryItem = new PantryItem;
             $pantryItem->setUser($user);
             $pantryItem->setProduct($item->getProduct());
             $pantryItem->setQuantity($item->getQuantity());
@@ -83,7 +82,7 @@ class CheckItem extends Controller
             $this->em->persist($pantryItem);
         }
 
-        $log = new PantryLog();
+        $log = new PantryLog;
         $log->setUser($user);
         $log->setPantryItem($pantryItem);
         $log->setProduct($item->getProduct());

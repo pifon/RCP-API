@@ -111,10 +111,10 @@ class Recipe
 
     public function __construct()
     {
-        $this->ingredients = new ArrayCollection();
-        $this->directions = new ArrayCollection();
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+        $this->ingredients = new ArrayCollection;
+        $this->directions = new ArrayCollection;
+        $this->createdAt = new DateTime;
+        $this->updatedAt = new DateTime;
     }
 
     public function getId(): int
@@ -358,7 +358,7 @@ class Recipe
 
     public function setCreatedAt(?DateTime $dt = null): void
     {
-        $this->createdAt = $dt ?? new DateTime();
+        $this->createdAt = $dt ?? new DateTime;
     }
 
     public function getUpdatedAt(): DateTime
@@ -368,7 +368,7 @@ class Recipe
 
     public function setUpdatedAt(?DateTime $dt = null): void
     {
-        $this->updatedAt = $dt ?? new DateTime();
+        $this->updatedAt = $dt ?? new DateTime;
     }
 
     public function getDeletedAt(): ?DateTime
@@ -378,7 +378,7 @@ class Recipe
 
     public function softDelete(): void
     {
-        $this->deletedAt = new DateTime();
+        $this->deletedAt = new DateTime;
     }
 
     public function restore(): void

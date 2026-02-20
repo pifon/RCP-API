@@ -23,7 +23,7 @@ class EquipmentTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Equipment $entity */
-        return '/api/v1/equipment/' . $entity->getSlug();
+        return '/api/v1/equipment/'.$entity->getSlug();
     }
 
     protected function attributes(object $entity): array

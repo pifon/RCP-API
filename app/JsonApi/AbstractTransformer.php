@@ -79,7 +79,7 @@ abstract class AbstractTransformer
         $rels = $this->relationships($entity);
 
         foreach ($params->include as $name) {
-            if (!isset($rels[$name]['entity'], $rels[$name]['transformer'])) {
+            if (! isset($rels[$name]['entity'], $rels[$name]['transformer'])) {
                 continue;
             }
 

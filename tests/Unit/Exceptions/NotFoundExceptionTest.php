@@ -11,16 +11,16 @@ use Tests\TestCase;
 class NotFoundExceptionTest extends TestCase
 {
     #[Test]
-    public function defaultMessageAndCode(): void
+    public function default_message_and_code(): void
     {
-        $e = new NotFoundException();
+        $e = new NotFoundException;
 
         $this->assertSame('Resource not found', $e->getMessage());
         $this->assertSame(404, $e->getCode());
     }
 
     #[Test]
-    public function customMessage(): void
+    public function custom_message(): void
     {
         $e = new NotFoundException("Recipe 'test' not found");
 
@@ -29,7 +29,7 @@ class NotFoundExceptionTest extends TestCase
     }
 
     #[Test]
-    public function renderReturnsJsonapiError(): void
+    public function render_returns_jsonapi_error(): void
     {
         $e = new NotFoundException('Not here');
         $response = $e->render();

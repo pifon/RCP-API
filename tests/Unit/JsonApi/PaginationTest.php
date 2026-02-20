@@ -11,28 +11,28 @@ use PHPUnit\Framework\TestCase;
 class PaginationTest extends TestCase
 {
     #[Test]
-    public function lastPageCalculatedCorrectly(): void
+    public function last_page_calculated_correctly(): void
     {
         $p = new Pagination(total: 100, currentPage: 1, perPage: 25, baseUrl: '/api/v1/recipes');
         $this->assertSame(4, $p->lastPage());
     }
 
     #[Test]
-    public function lastPageRoundsUp(): void
+    public function last_page_rounds_up(): void
     {
         $p = new Pagination(total: 101, currentPage: 1, perPage: 25, baseUrl: '/');
         $this->assertSame(5, $p->lastPage());
     }
 
     #[Test]
-    public function lastPageMinimumIs1WhenEmpty(): void
+    public function last_page_minimum_is1_when_empty(): void
     {
         $p = new Pagination(total: 0, currentPage: 1, perPage: 25, baseUrl: '/');
         $this->assertSame(1, $p->lastPage());
     }
 
     #[Test]
-    public function fromAndToForFirstPage(): void
+    public function from_and_to_for_first_page(): void
     {
         $p = new Pagination(total: 50, currentPage: 1, perPage: 10, baseUrl: '/');
 
@@ -41,7 +41,7 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function fromAndToForMiddlePage(): void
+    public function from_and_to_for_middle_page(): void
     {
         $p = new Pagination(total: 50, currentPage: 3, perPage: 10, baseUrl: '/');
 
@@ -50,7 +50,7 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function fromAndToForLastPagePartial(): void
+    public function from_and_to_for_last_page_partial(): void
     {
         $p = new Pagination(total: 53, currentPage: 6, perPage: 10, baseUrl: '/');
 
@@ -59,21 +59,21 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function fromIsZeroWhenEmpty(): void
+    public function from_is_zero_when_empty(): void
     {
         $p = new Pagination(total: 0, currentPage: 1, perPage: 10, baseUrl: '/');
         $this->assertSame(0, $p->from());
     }
 
     #[Test]
-    public function offsetCalculation(): void
+    public function offset_calculation(): void
     {
         $p = new Pagination(total: 100, currentPage: 3, perPage: 25, baseUrl: '/');
         $this->assertSame(50, $p->offset());
     }
 
     #[Test]
-    public function toMetaStructure(): void
+    public function to_meta_structure(): void
     {
         $p = new Pagination(total: 50, currentPage: 2, perPage: 10, baseUrl: '/');
         $meta = $p->toMeta();
@@ -88,7 +88,7 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function toLinksFirstPage(): void
+    public function to_links_first_page(): void
     {
         $p = new Pagination(total: 50, currentPage: 1, perPage: 10, baseUrl: '/api/v1/recipes');
         $links = $p->toLinks();
@@ -101,7 +101,7 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function toLinksLastPage(): void
+    public function to_links_last_page(): void
     {
         $p = new Pagination(total: 50, currentPage: 5, perPage: 10, baseUrl: '/api/v1/recipes');
         $links = $p->toLinks();
@@ -112,7 +112,7 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function toLinksMiddlePage(): void
+    public function to_links_middle_page(): void
     {
         $p = new Pagination(total: 50, currentPage: 3, perPage: 10, baseUrl: '/api/v1/recipes');
         $links = $p->toLinks();
@@ -122,7 +122,7 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function toLinksWithQueryStringInBaseUrl(): void
+    public function to_links_with_query_string_in_base_url(): void
     {
         $baseUrl = '/api/v1/recipes?filter[status]=published';
         $p = new Pagination(total: 50, currentPage: 1, perPage: 10, baseUrl: $baseUrl);
@@ -132,7 +132,7 @@ class PaginationTest extends TestCase
     }
 
     #[Test]
-    public function singlePageHasNoPrevOrNext(): void
+    public function single_page_has_no_prev_or_next(): void
     {
         $p = new Pagination(total: 5, currentPage: 1, perPage: 10, baseUrl: '/');
         $links = $p->toLinks();

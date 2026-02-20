@@ -49,9 +49,9 @@ class Author
 
     public function __construct()
     {
-        $this->recipes = new ArrayCollection();
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+        $this->recipes = new ArrayCollection;
+        $this->createdAt = new DateTime;
+        $this->updatedAt = new DateTime;
     }
 
     public function getId(): int
@@ -131,7 +131,7 @@ class Author
 
     public function softDelete(): void
     {
-        $this->deletedAt = new DateTime();
+        $this->deletedAt = new DateTime;
     }
 
     public function restore(): void

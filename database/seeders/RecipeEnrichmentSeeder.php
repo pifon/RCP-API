@@ -218,7 +218,7 @@ class RecipeEnrichmentSeeder extends Seeder
         $ops = ['sieve', 'dissolve', 'combine', 'knead', 'prove', 'shape', 'spread', 'top', 'bake', 'boil', 'drain', 'toss', 'fry', 'stir', 'simmer', 'ladle', 'separate', 'whisk', 'fold', 'dip', 'layer', 'chill', 'dust', 'soak', 'blend', 'squeeze', 'drizzle', 'garnish'];
 
         foreach ($ops as $name) {
-            if (!isset($existing[$name])) {
+            if (! isset($existing[$name])) {
                 DB::table('operations')->insert([
                     'name' => $name, 'description' => $name, 'created_at' => now(), 'updated_at' => now(),
                 ]);

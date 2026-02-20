@@ -23,7 +23,7 @@ class PantryItemTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var PantryItem $entity */
-        return '/api/v1/pantry/' . $entity->getId();
+        return '/api/v1/pantry/'.$entity->getId();
     }
 
     protected function attributes(object $entity): array

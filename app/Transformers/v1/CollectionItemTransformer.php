@@ -48,7 +48,7 @@ class CollectionItemTransformer extends AbstractTransformer
             'recipe' => [
                 'data' => ['type' => 'recipes', 'id' => $recipe->getSlug()],
                 'links' => [
-                    'related' => '/api/v1/recipes/' . $recipe->getSlug(),
+                    'related' => '/api/v1/recipes/'.$recipe->getSlug(),
                 ],
                 'entity' => $recipe,
                 'transformer' => RecipeTransformer::class,

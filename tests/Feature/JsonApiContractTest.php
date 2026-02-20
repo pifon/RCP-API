@@ -18,6 +18,7 @@ class JsonApiContractTest extends TestCase
     private const string CT = 'application/vnd.api+json';
 
     private User $user;
+
     private string $token;
 
     protected function setUp(): void
@@ -77,7 +78,7 @@ class JsonApiContractTest extends TestCase
         ])->deleteJson($uri);
     }
 
-    public function testWelcomeReturnsJsonapiMeta(): void
+    public function test_welcome_returns_jsonapi_meta(): void
     {
         $response = $this->getJson('/api');
 
@@ -86,7 +87,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('jsonapi.version', '1.1');
     }
 
-    public function testUnauthenticatedReturnsJsonapiError(): void
+    public function test_unauthenticated_returns_jsonapi_error(): void
     {
         auth('api')->logout();
 
@@ -104,7 +105,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('errors.0.status', '401');
     }
 
-    public function testGetMeReturnsUserResource(): void
+    public function test_get_me_returns_user_resource(): void
     {
         $response = $this->apiGet('/api/v1/me');
 
@@ -117,7 +118,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('data.id', $this->user->getUsername());
     }
 
-    public function testPatchMeUpdatesProfile(): void
+    public function test_patch_me_updates_profile(): void
     {
         $response = $this->apiPatch('/api/v1/me', [
             'data' => [
@@ -130,7 +131,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('data.attributes.name', 'Test Updated Name');
     }
 
-    public function testRecipesListIsPaginated(): void
+    public function test_recipes_list_is_paginated(): void
     {
         $response = $this->apiGet('/api/v1/recipes?page[size]=2');
 
@@ -144,7 +145,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('meta.page.per-page', 2);
     }
 
-    public function test404ReturnsJsonapiError(): void
+    public function test404_returns_jsonapi_error(): void
     {
         $response = $this->apiGet('/api/v1/recipes/nonexistent-slug-xyz');
 
@@ -153,7 +154,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('errors.0.status', '404');
     }
 
-    public function testPlansListReturnsCatalog(): void
+    public function test_plans_list_returns_catalog(): void
     {
         $response = $this->apiGet('/api/v1/plans');
 
@@ -161,7 +162,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function testMeSubscriptionReturnsValidResponse(): void
+    public function test_me_subscription_returns_valid_response(): void
     {
         $response = $this->apiGet('/api/v1/me/subscription');
 
@@ -178,7 +179,7 @@ class JsonApiContractTest extends TestCase
         );
     }
 
-    public function testPreferencesReturnsDefaults(): void
+    public function test_preferences_returns_defaults(): void
     {
         $response = $this->apiGet('/api/v1/me/preferences');
 
@@ -187,7 +188,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('data.type', 'user-preferences');
     }
 
-    public function testCollectionsCrudLifecycle(): void
+    public function test_collections_crud_lifecycle(): void
     {
         $create = $this->apiPost('/api/v1/collections', [
             'data' => [
@@ -217,7 +218,7 @@ class JsonApiContractTest extends TestCase
         $delete->assertStatus(200)->assertJsonPath('meta.message', 'Collection deleted.');
     }
 
-    public function testFollowsCreateAndList(): void
+    public function test_follows_create_and_list(): void
     {
         $uniqueId = random_int(100000, 999999);
 
@@ -235,9 +236,9 @@ class JsonApiContractTest extends TestCase
         $list->assertStatus(200)->assertJsonStructure(['jsonapi', 'data', 'meta', 'links']);
     }
 
-    public function testRegisterCreatesUser(): void
+    public function test_register_creates_user(): void
     {
-        $username = 'test-register-' . time();
+        $username = 'test-register-'.time();
 
         $response = $this->call(
             'POST',

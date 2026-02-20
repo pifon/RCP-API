@@ -20,8 +20,7 @@ class CookableRecipes extends Controller
     public function __construct(
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -87,7 +86,7 @@ class CookableRecipes extends Controller
         $recipeIds = array_column($pageRows, 'recipe_id');
         $recipes = [];
 
-        if (!empty($recipeIds)) {
+        if (! empty($recipeIds)) {
             $qb = $this->em->createQueryBuilder()
                 ->select('r')
                 ->from(Recipe::class, 'r')

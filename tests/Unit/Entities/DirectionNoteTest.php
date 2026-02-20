@@ -12,10 +12,10 @@ use PHPUnit\Framework\TestCase;
 class DirectionNoteTest extends TestCase
 {
     #[Test]
-    public function settersAndGetters(): void
+    public function setters_and_getters(): void
     {
-        $note = new DirectionNote();
-        $direction = new Direction();
+        $note = new DirectionNote;
+        $direction = new Direction;
 
         $note->setDirection($direction);
         $note->setNote('Season generously');

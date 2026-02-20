@@ -22,8 +22,7 @@ class Create extends Controller
         private readonly CollectionRepository $repository,
         private readonly CollectionTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -52,7 +51,7 @@ class Create extends Controller
             $counter++;
         }
 
-        $collection = new Collection();
+        $collection = new Collection;
         $collection->setUser($user);
         $collection->setName($attrs['name']);
         $collection->setSlug($slug);

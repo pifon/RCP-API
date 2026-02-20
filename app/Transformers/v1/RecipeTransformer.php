@@ -23,7 +23,7 @@ class RecipeTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Recipe $entity */
-        return '/api/v1/recipes/' . $entity->getSlug();
+        return '/api/v1/recipes/'.$entity->getSlug();
     }
 
     protected function attributes(object $entity): array
@@ -97,7 +97,7 @@ class RecipeTransformer extends AbstractTransformer
             $rels['cuisine-request'] = [
                 'data' => ['type' => 'cuisine-requests', 'id' => (string) $cuisineRequest->getId()],
                 'links' => [
-                    'related' => '/api/v1/cuisine-requests/' . $cuisineRequest->getId(),
+                    'related' => '/api/v1/cuisine-requests/'.$cuisineRequest->getId(),
                 ],
                 'entity' => $cuisineRequest,
                 'transformer' => CuisineRequestTransformer::class,

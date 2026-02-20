@@ -9,8 +9,7 @@ final class SortField
     public function __construct(
         public readonly string $field,
         public readonly string $direction = 'asc',
-    ) {
-    }
+    ) {}
 
     public static function fromString(string $value): self
     {

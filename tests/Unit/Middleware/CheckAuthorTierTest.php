@@ -16,7 +16,7 @@ use Tests\TestCase;
 class CheckAuthorTierTest extends TestCase
 {
     #[Test]
-    public function passesWhenNoUser(): void
+    public function passes_when_no_user(): void
     {
         $repo = $this->createMock(AuthorRepository::class);
         $middleware = new CheckAuthorTier($repo);
@@ -28,7 +28,7 @@ class CheckAuthorTierTest extends TestCase
     }
 
     #[Test]
-    public function passesWhenTierSufficient(): void
+    public function passes_when_tier_sufficient(): void
     {
         $user = $this->createMock(User::class);
         $author = $this->createMock(Author::class);
@@ -47,7 +47,7 @@ class CheckAuthorTierTest extends TestCase
     }
 
     #[Test]
-    public function passesWhenTierExceedsMinimum(): void
+    public function passes_when_tier_exceeds_minimum(): void
     {
         $user = $this->createMock(User::class);
         $author = $this->createMock(Author::class);
@@ -66,7 +66,7 @@ class CheckAuthorTierTest extends TestCase
     }
 
     #[Test]
-    public function blocksWhenTierInsufficient(): void
+    public function blocks_when_tier_insufficient(): void
     {
         $user = $this->createMock(User::class);
         $author = $this->createMock(Author::class);
@@ -87,7 +87,7 @@ class CheckAuthorTierTest extends TestCase
     }
 
     #[Test]
-    public function blocksWhenNoAuthorProfile(): void
+    public function blocks_when_no_author_profile(): void
     {
         $user = $this->createMock(User::class);
 

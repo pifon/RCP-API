@@ -13,12 +13,13 @@ use Tests\TestCase;
 
 class CuisineRequestTest extends TestCase
 {
-    use CreatesTestUser;
     use CreatesTestRecipe;
+    use CreatesTestUser;
     use DatabaseTransactions;
     use JsonApiRequests;
 
     private User $user;
+
     private string $token;
 
     protected function setUp(): void
@@ -35,7 +36,7 @@ class CuisineRequestTest extends TestCase
 
     // ── Create Request ─────────────────────────────────────────────
 
-    public function testCreateCuisineRequest(): void
+    public function test_create_cuisine_request(): void
     {
         $response = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
@@ -53,7 +54,7 @@ class CuisineRequestTest extends TestCase
             ->assertJsonPath('data.attributes.status', 'pending');
     }
 
-    public function testCreateCuisineRequestWithVariant(): void
+    public function test_create_cuisine_request_with_variant(): void
     {
         $response = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
@@ -72,7 +73,7 @@ class CuisineRequestTest extends TestCase
             ->assertJsonPath('data.attributes.full-name', 'Indian - Goan');
     }
 
-    public function testCreateCuisineRequestRequiresName(): void
+    public function test_create_cuisine_request_requires_name(): void
     {
         $response = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
@@ -88,12 +89,12 @@ class CuisineRequestTest extends TestCase
 
     // ── List & Show ────────────────────────────────────────────────
 
-    public function testListPendingCuisineRequests(): void
+    public function test_list_pending_cuisine_requests(): void
     {
         $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
-                'attributes' => ['name' => 'TestList ' . time()],
+                'attributes' => ['name' => 'TestList '.time()],
             ],
         ])->assertStatus(201);
 
@@ -110,12 +111,12 @@ class CuisineRequestTest extends TestCase
         $this->assertGreaterThan(0, count($response->json('data')));
     }
 
-    public function testShowCuisineRequest(): void
+    public function test_show_cuisine_request(): void
     {
         $create = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
-                'attributes' => ['name' => 'TestShow ' . time()],
+                'attributes' => ['name' => 'TestShow '.time()],
             ],
         ]);
         $create->assertStatus(201);
@@ -128,7 +129,7 @@ class CuisineRequestTest extends TestCase
             ->assertJsonPath('data.id', $id);
     }
 
-    public function testShowReturns404ForMissing(): void
+    public function test_show_returns404_for_missing(): void
     {
         $response = $this->apiGet('/api/v1/cuisine-requests/999999');
 
@@ -137,13 +138,13 @@ class CuisineRequestTest extends TestCase
 
     // ── Approve ────────────────────────────────────────────────────
 
-    public function testApproveCuisineRequest(): void
+    public function test_approve_cuisine_request(): void
     {
         $create = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
                 'attributes' => [
-                    'name' => 'Approve Test ' . time(),
+                    'name' => 'Approve Test '.time(),
                 ],
             ],
         ]);
@@ -164,12 +165,12 @@ class CuisineRequestTest extends TestCase
         $this->assertNotNull($response->json('data.relationships.cuisine'));
     }
 
-    public function testApproveAlreadyApprovedRejects(): void
+    public function test_approve_already_approved_rejects(): void
     {
         $create = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
-                'attributes' => ['name' => 'Double Approve ' . time()],
+                'attributes' => ['name' => 'Double Approve '.time()],
             ],
         ]);
         $id = $create->json('data.id');
@@ -180,12 +181,12 @@ class CuisineRequestTest extends TestCase
 
     // ── Reject ─────────────────────────────────────────────────────
 
-    public function testRejectCuisineRequest(): void
+    public function test_reject_cuisine_request(): void
     {
         $create = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
-                'attributes' => ['name' => 'Reject Test ' . time()],
+                'attributes' => ['name' => 'Reject Test '.time()],
             ],
         ]);
         $id = $create->json('data.id');
@@ -202,12 +203,12 @@ class CuisineRequestTest extends TestCase
             ->assertJsonPath('data.attributes.admin-notes', 'Already exists as Thai');
     }
 
-    public function testRejectAlreadyRejectedRejects(): void
+    public function test_reject_already_rejected_rejects(): void
     {
         $create = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
-                'attributes' => ['name' => 'Double Reject ' . time()],
+                'attributes' => ['name' => 'Double Reject '.time()],
             ],
         ]);
         $id = $create->json('data.id');
@@ -218,12 +219,12 @@ class CuisineRequestTest extends TestCase
 
     // ── Recipe + Cuisine-Request integration ───────────────────────
 
-    public function testRecipeRequiresCuisine(): void
+    public function test_recipe_requires_cuisine(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'No Cuisine ' . time()],
+                'attributes' => ['title' => 'No Cuisine '.time()],
             ],
         ]);
 
@@ -235,12 +236,12 @@ class CuisineRequestTest extends TestCase
         $this->assertEquals('/api/v1/cuisine-requests', $links['create-cuisine-request']['href']);
     }
 
-    public function testRecipeRejectsNonExistentCuisineById(): void
+    public function test_recipe_rejects_non_existent_cuisine_by_id(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'Bad Cuisine ' . time()],
+                'attributes' => ['title' => 'Bad Cuisine '.time()],
                 'relationships' => [
                     'cuisine' => ['data' => ['type' => 'cuisines', 'id' => 999999]],
                 ],
@@ -253,12 +254,12 @@ class CuisineRequestTest extends TestCase
         $this->assertArrayHasKey('create-cuisine-request', $links);
     }
 
-    public function testRecipeByNameExact(): void
+    public function test_recipe_by_name_exact(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'By Name ' . time()],
+                'attributes' => ['title' => 'By Name '.time()],
                 'relationships' => [
                     'cuisine' => ['data' => ['name' => 'Italian']],
                 ],
@@ -269,12 +270,12 @@ class CuisineRequestTest extends TestCase
             ->assertJsonPath('data.type', 'recipes');
     }
 
-    public function testRecipeBySlug(): void
+    public function test_recipe_by_slug(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'By Slug ' . time()],
+                'attributes' => ['title' => 'By Slug '.time()],
                 'relationships' => [
                     'cuisine' => ['data' => ['slug' => 'italian']],
                 ],
@@ -285,12 +286,12 @@ class CuisineRequestTest extends TestCase
             ->assertJsonPath('data.type', 'recipes');
     }
 
-    public function testMisspelledCuisineSuggestsSimilar(): void
+    public function test_misspelled_cuisine_suggests_similar(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'Typo ' . time()],
+                'attributes' => ['title' => 'Typo '.time()],
                 'relationships' => [
                     'cuisine' => ['data' => ['name' => 'Appulian']],
                 ],
@@ -313,12 +314,12 @@ class CuisineRequestTest extends TestCase
         $this->assertNotEmpty($slugKeys);
     }
 
-    public function testPartialNameSuggestsMatches(): void
+    public function test_partial_name_suggests_matches(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'Partial ' . time()],
+                'attributes' => ['title' => 'Partial '.time()],
                 'relationships' => [
                     'cuisine' => ['data' => ['name' => 'Ital']],
                 ],
@@ -332,12 +333,12 @@ class CuisineRequestTest extends TestCase
         $this->assertStringContainsString('Italian', $detail);
     }
 
-    public function testRecipeCanReferenceCuisineRequest(): void
+    public function test_recipe_can_reference_cuisine_request(): void
     {
         $cr = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
-                'attributes' => ['name' => 'CR Recipe Test ' . time()],
+                'attributes' => ['name' => 'CR Recipe Test '.time()],
             ],
         ]);
         $cr->assertStatus(201);
@@ -346,7 +347,7 @@ class CuisineRequestTest extends TestCase
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'With CR ' . time()],
+                'attributes' => ['title' => 'With CR '.time()],
                 'relationships' => [
                     'cuisine-request' => [
                         'data' => ['type' => 'cuisine-requests', 'id' => $crId],
@@ -359,12 +360,12 @@ class CuisineRequestTest extends TestCase
             ->assertJsonPath('data.type', 'recipes');
     }
 
-    public function testApprovalUpgradesRecipeCuisine(): void
+    public function test_approval_upgrades_recipe_cuisine(): void
     {
         $cr = $this->apiPost('/api/v1/cuisine-requests', [
             'data' => [
                 'type' => 'cuisine-requests',
-                'attributes' => ['name' => 'Upgrade Test ' . time()],
+                'attributes' => ['name' => 'Upgrade Test '.time()],
             ],
         ]);
         $crId = $cr->json('data.id');
@@ -372,7 +373,7 @@ class CuisineRequestTest extends TestCase
         $recipe = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'Upgrade Recipe ' . time()],
+                'attributes' => ['title' => 'Upgrade Recipe '.time()],
                 'relationships' => [
                     'cuisine-request' => [
                         'data' => ['type' => 'cuisine-requests', 'id' => $crId],

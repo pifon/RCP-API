@@ -52,7 +52,7 @@ class DishTypeRepository extends ServiceEntityRepository
 
         $found = $qb->getQuery()->getSingleResult();
         if (! $found) {
-            throw new NoResultException();
+            throw new NoResultException;
         }
 
         return $found;

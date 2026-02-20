@@ -16,9 +16,13 @@ class AuthenticationTest extends TestCase
     use DatabaseTransactions;
 
     private const string API_PROTECTED_ENDPOINT = '/api/v1/cuisines';
+
     private const string API_LOGIN_ENDPOINT = '/api/login';
+
     private const string USERNAME = 'test-user';
+
     private const string PASSWORD = 'Pa$swo[d_1234';
+
     private const string CT = 'application/vnd.api+json';
 
     private User $user;
@@ -45,7 +49,7 @@ class AuthenticationTest extends TestCase
         );
     }
 
-    public function testUserCanLoginWithValidUsernameAndPassword(): void
+    public function test_user_can_login_with_valid_username_and_password(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -59,7 +63,7 @@ class AuthenticationTest extends TestCase
             ]);
     }
 
-    public function testUserCannotLoginWithInvalidCredentials(): void
+    public function test_user_cannot_login_with_invalid_credentials(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -72,7 +76,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.detail', 'Invalid credentials.');
     }
 
-    public function testUserCannotLoginWithoutPasswordField(): void
+    public function test_user_cannot_login_without_password_field(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -83,7 +87,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function testUserCannotLoginWithoutUsernameField(): void
+    public function test_user_cannot_login_without_username_field(): void
     {
         $response = $this->loginPost([
             'password' => self::PASSWORD,
@@ -94,7 +98,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function testUserCannotLoginWithEmptyUsernameField(): void
+    public function test_user_cannot_login_with_empty_username_field(): void
     {
         $response = $this->loginPost([
             'username' => '',
@@ -106,7 +110,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function testUserCannotLoginWithTooLongUsernameField(): void
+    public function test_user_cannot_login_with_too_long_username_field(): void
     {
         $response = $this->loginPost([
             'username' => str_repeat('a', 257),
@@ -117,7 +121,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'errors']);
     }
 
-    public function testUserCannotLoginWithEmptyPasswordField(): void
+    public function test_user_cannot_login_with_empty_password_field(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -128,7 +132,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'errors']);
     }
 
-    public function testUserCannotLoginWithTooLongPasswordField(): void
+    public function test_user_cannot_login_with_too_long_password_field(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -139,7 +143,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'errors']);
     }
 
-    public function testUserCannotLoginWithWildcardPasswordField(): void
+    public function test_user_cannot_login_with_wildcard_password_field(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -150,7 +154,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.detail', 'Invalid credentials.');
     }
 
-    public function testUserCannotLoginWithExtraUnexpectedField(): void
+    public function test_user_cannot_login_with_extra_unexpected_field(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -163,7 +167,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '400');
     }
 
-    public function testAuthenticatedUserCanAccessProtectedRoute(): void
+    public function test_authenticated_user_can_access_protected_route(): void
     {
         $token = auth('api')->login($this->user);
 
@@ -175,7 +179,7 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testBlockFakeBearerAccessToProtectedRoute(): void
+    public function test_block_fake_bearer_access_to_protected_route(): void
     {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer not-real',
@@ -188,7 +192,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.title', 'Unauthorized');
     }
 
-    public function testBlockAccessToProtectedRoute(): void
+    public function test_block_access_to_protected_route(): void
     {
         $response = $this->withHeaders([
             'Accept' => self::CT,

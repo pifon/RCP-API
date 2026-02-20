@@ -17,8 +17,7 @@ class Destroy extends Controller
     public function __construct(
         private readonly RecipeRepository $recipeRepository,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {

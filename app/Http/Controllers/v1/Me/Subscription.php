@@ -23,8 +23,7 @@ class Subscription extends Controller
         private readonly SubscriptionTransformer $transformer,
         private readonly FeatureGate $featureGate,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function show(Request $request): JsonResponse
     {
@@ -84,9 +83,9 @@ class Subscription extends Controller
         }
 
         $cycle = $attrs['billing-cycle'] ?? 'monthly';
-        $now = new \DateTime();
+        $now = new \DateTime;
 
-        $sub = new UserSubscription();
+        $sub = new UserSubscription;
         $sub->setUser($user);
         $sub->setPlan($plan);
         $sub->setBillingCycle($cycle);

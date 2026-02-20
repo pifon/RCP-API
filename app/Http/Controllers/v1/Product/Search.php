@@ -19,8 +19,7 @@ class Search extends Controller
     public function __construct(
         private readonly ProductTransformer $transformer,
         private readonly EntityManager $em,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -34,7 +33,7 @@ class Search extends Controller
         }
 
         $repo = $this->em->getRepository(Product::class);
-        $like = '%' . $query . '%';
+        $like = '%'.$query.'%';
 
         $countQb = $repo->createQueryBuilder('p')
             ->select('COUNT(p.id)')

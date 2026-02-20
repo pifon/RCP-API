@@ -20,14 +20,13 @@ class Show extends Controller
     public function __construct(
         private readonly RecipeRepository $repository,
         private readonly RecipeTransformer $transformer,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
         try {
             $recipe = $this->repository->getRecipe($slug);
-        } catch (NoResultException | NonUniqueResultException) {
+        } catch (NoResultException|NonUniqueResultException) {
             throw new NotFoundException("Recipe '{$slug}' not found");
         }
 

@@ -22,8 +22,7 @@ class Show extends Controller
         private readonly AuthorRepository $repository,
         private readonly UserRepository $userRepository,
         private readonly AuthorTransformer $transformer,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -33,7 +32,7 @@ class Show extends Controller
                 throw new NotFoundException("Author '{$slug}' not found");
             }
             $author = $this->repository->getAuthor($user);
-        } catch (NoResultException | NonUniqueResultException) {
+        } catch (NoResultException|NonUniqueResultException) {
             throw new NotFoundException("Author '{$slug}' not found");
         }
 
