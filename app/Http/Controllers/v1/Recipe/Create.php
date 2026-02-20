@@ -27,7 +27,8 @@ class Create extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -54,7 +55,7 @@ class Create extends Controller
         $title = $attrs['title'];
         $slug = $this->generateUniqueSlug($title);
 
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setTitle($title);
         $recipe->setSlug($slug);
         $recipe->setDescription($attrs['description'] ?? null);

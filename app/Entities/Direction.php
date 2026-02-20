@@ -50,9 +50,9 @@ class Direction
 
     public function __construct()
     {
-        $this->notes = new ArrayCollection;
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->notes = new ArrayCollection();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int

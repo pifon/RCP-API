@@ -51,9 +51,9 @@ class Collection
 
     public function __construct()
     {
-        $this->items = new ArrayCollection;
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->items = new ArrayCollection();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -119,7 +119,7 @@ class Collection
 
     public function softDelete(): void
     {
-        $this->deletedAt = new DateTime;
+        $this->deletedAt = new DateTime();
     }
 
     public function setUser(User $user): void
@@ -130,7 +130,7 @@ class Collection
     public function setName(string $name): void
     {
         $this->name = $name;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function setSlug(string $slug): void
@@ -141,7 +141,7 @@ class Collection
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function setType(string $type): void
@@ -152,7 +152,7 @@ class Collection
     public function setIsPublic(bool $isPublic): void
     {
         $this->isPublic = $isPublic;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function restore(): void

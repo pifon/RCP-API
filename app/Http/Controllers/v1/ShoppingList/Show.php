@@ -19,7 +19,8 @@ class Show extends Controller
     public function __construct(
         private readonly ShoppingListTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, int $id): JsonResponse
     {

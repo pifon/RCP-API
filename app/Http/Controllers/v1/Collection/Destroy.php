@@ -16,7 +16,8 @@ class Destroy extends Controller
     public function __construct(
         private readonly CollectionRepository $repository,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(int $id): JsonResponse
     {

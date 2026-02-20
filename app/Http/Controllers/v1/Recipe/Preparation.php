@@ -24,13 +24,14 @@ class Preparation extends Controller
         private readonly RecipeTransformer $recipeTransformer,
         private readonly IngredientTransformer $ingredientTransformer,
         private readonly DirectionTransformer $directionTransformer,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
         try {
             $recipe = $this->repository->getRecipe($slug);
-        } catch (NoResultException|NonUniqueResultException) {
+        } catch (NoResultException | NonUniqueResultException) {
             throw new NotFoundException("Recipe '{$slug}' not found");
         }
 

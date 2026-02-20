@@ -20,7 +20,7 @@ class ParentStubTransformer extends AbstractTransformer
 
     public function selfLink(object $entity): string
     {
-        return '/parents/'.$entity->id;
+        return '/parents/' . $entity->id;
     }
 
     protected function attributes(object $entity): array

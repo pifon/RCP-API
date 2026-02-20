@@ -34,7 +34,7 @@ class SearchTest extends TestCase
 
     // ── Recipe Search ────────────────────────────────────────────
 
-    public function test_recipe_search_returns_results(): void
+    public function testRecipeSearchReturnsResults(): void
     {
         $response = $this->apiGet('/api/v1/recipes/search?q=pizza');
 
@@ -49,7 +49,7 @@ class SearchTest extends TestCase
         $this->assertGreaterThanOrEqual(1, count($response->json('data')));
     }
 
-    public function test_recipe_search_returns_recipe_type(): void
+    public function testRecipeSearchReturnsRecipeType(): void
     {
         $response = $this->apiGet('/api/v1/recipes/search?q=pizza');
 
@@ -63,7 +63,7 @@ class SearchTest extends TestCase
         }
     }
 
-    public function test_recipe_search_by_ingredient(): void
+    public function testRecipeSearchByIngredient(): void
     {
         $response = $this->apiGet('/api/v1/recipes/search?q=mozzarella');
 
@@ -71,7 +71,7 @@ class SearchTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $response->json('meta.search.total-results'));
     }
 
-    public function test_recipe_search_empty_query_returns_empty(): void
+    public function testRecipeSearchEmptyQueryReturnsEmpty(): void
     {
         $response = $this->apiGet('/api/v1/recipes/search?q=');
 
@@ -79,7 +79,7 @@ class SearchTest extends TestCase
             ->assertJsonCount(0, 'data');
     }
 
-    public function test_recipe_search_no_match_returns_empty(): void
+    public function testRecipeSearchNoMatchReturnsEmpty(): void
     {
         $response = $this->apiGet('/api/v1/recipes/search?q=xyznonexistent99');
 
@@ -88,7 +88,7 @@ class SearchTest extends TestCase
             ->assertJsonPath('meta.search.total-results', 0);
     }
 
-    public function test_recipe_search_respects_pagination(): void
+    public function testRecipeSearchRespectsPagination(): void
     {
         $response = $this->apiGet('/api/v1/recipes/search?q=a&page[size]=3');
 
@@ -96,7 +96,7 @@ class SearchTest extends TestCase
         $this->assertLessThanOrEqual(3, count($response->json('data')));
     }
 
-    public function test_recipe_search_filter_by_difficulty(): void
+    public function testRecipeSearchFilterByDifficulty(): void
     {
         $response = $this->apiGet(
             '/api/v1/recipes/search?q=a&filter[difficulty]=easy'
@@ -108,7 +108,7 @@ class SearchTest extends TestCase
         }
     }
 
-    public function test_recipe_search_filter_by_status(): void
+    public function testRecipeSearchFilterByStatus(): void
     {
         $response = $this->apiGet(
             '/api/v1/recipes/search?q=a&filter[status]=published'
@@ -122,7 +122,7 @@ class SearchTest extends TestCase
 
     // ── Autocomplete ─────────────────────────────────────────────
 
-    public function test_autocomplete_returns_suggestions(): void
+    public function testAutocompleteReturnsSuggestions(): void
     {
         $response = $this->apiGet(
             '/api/v1/recipes/search/autocomplete?q=pi'
@@ -139,7 +139,7 @@ class SearchTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $response->json('meta.count'));
     }
 
-    public function test_autocomplete_returns_recipe_structure(): void
+    public function testAutocompleteReturnsRecipeStructure(): void
     {
         $response = $this->apiGet(
             '/api/v1/recipes/search/autocomplete?q=pa'
@@ -153,7 +153,7 @@ class SearchTest extends TestCase
         }
     }
 
-    public function test_autocomplete_short_query_returns_empty(): void
+    public function testAutocompleteShortQueryReturnsEmpty(): void
     {
         $response = $this->apiGet(
             '/api/v1/recipes/search/autocomplete?q=p'
@@ -163,7 +163,7 @@ class SearchTest extends TestCase
             ->assertJsonCount(0, 'data');
     }
 
-    public function test_autocomplete_respects_limit(): void
+    public function testAutocompleteRespectsLimit(): void
     {
         $response = $this->apiGet(
             '/api/v1/recipes/search/autocomplete?q=pa&limit=2'
@@ -175,7 +175,7 @@ class SearchTest extends TestCase
 
     // ── Product Search ───────────────────────────────────────────
 
-    public function test_product_search_returns_results(): void
+    public function testProductSearchReturnsResults(): void
     {
         $response = $this->apiGet('/api/v1/products/search?q=salt');
 
@@ -190,7 +190,7 @@ class SearchTest extends TestCase
         $this->assertGreaterThanOrEqual(1, count($response->json('data')));
     }
 
-    public function test_product_search_returns_product_type(): void
+    public function testProductSearchReturnsProductType(): void
     {
         $response = $this->apiGet('/api/v1/products/search?q=salt');
 
@@ -202,7 +202,7 @@ class SearchTest extends TestCase
         }
     }
 
-    public function test_product_search_empty_query_returns_empty(): void
+    public function testProductSearchEmptyQueryReturnsEmpty(): void
     {
         $response = $this->apiGet('/api/v1/products/search?q=');
 
@@ -210,7 +210,7 @@ class SearchTest extends TestCase
             ->assertJsonCount(0, 'data');
     }
 
-    public function test_product_search_no_match_returns_empty(): void
+    public function testProductSearchNoMatchReturnsEmpty(): void
     {
         $response = $this->apiGet('/api/v1/products/search?q=xyznonexistent99');
 
@@ -219,7 +219,7 @@ class SearchTest extends TestCase
             ->assertJsonPath('meta.search.total-results', 0);
     }
 
-    public function test_product_search_partial_match(): void
+    public function testProductSearchPartialMatch(): void
     {
         $response = $this->apiGet('/api/v1/products/search?q=oil');
 

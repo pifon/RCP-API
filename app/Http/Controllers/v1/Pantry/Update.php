@@ -21,7 +21,8 @@ class Update extends Controller
     public function __construct(
         private readonly PantryItemTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, int $id): JsonResponse
     {
@@ -58,7 +59,7 @@ class Update extends Controller
 
             $delta = $newQty - $oldQty;
             if (abs($delta) > 0.0005) {
-                $log = new PantryLog;
+                $log = new PantryLog();
                 $log->setUser($user);
                 $log->setPantryItem($item);
                 $log->setProduct($item->getProduct());

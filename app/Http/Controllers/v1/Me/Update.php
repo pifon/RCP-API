@@ -18,7 +18,8 @@ class Update extends Controller
     public function __construct(
         private readonly UserTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -48,7 +49,7 @@ class Update extends Controller
 
         if (isset($attrs['password'])) {
             $user->setPassword($attrs['password']);
-            $user->setPasswordChangedAt(new \DateTime);
+            $user->setPasswordChangedAt(new \DateTime());
         }
 
         $user->setUpdatedAt();

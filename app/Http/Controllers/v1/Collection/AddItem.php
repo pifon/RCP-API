@@ -25,7 +25,8 @@ class AddItem extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly CollectionItemTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, int $collectionId): JsonResponse
     {
@@ -66,7 +67,7 @@ class AddItem extends Controller
             throw ValidationErrorException::fromValidationBag($validator->errors());
         }
 
-        $item = new CollectionItem;
+        $item = new CollectionItem();
         $item->setCollection($collection);
         $item->setRecipe($recipe);
         $item->setPosition((int) ($attrs['position'] ?? 0));

@@ -23,7 +23,7 @@ class ValidateJsonApi
                     Document::errors(new ErrorObject(
                         status: '415',
                         title: 'Unsupported Media Type',
-                        detail: 'Content-Type must be '.self::CONTENT_TYPE,
+                        detail: 'Content-Type must be ' . self::CONTENT_TYPE,
                     )),
                     415,
                     ['Content-Type' => self::CONTENT_TYPE],

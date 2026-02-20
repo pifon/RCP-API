@@ -54,8 +54,8 @@ class CuisineRequest
 
     public function __construct()
     {
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -89,7 +89,7 @@ class CuisineRequest
             return $this->name;
         }
 
-        return $this->name.' - '.$this->variant;
+        return $this->name . ' - ' . $this->variant;
     }
 
     public function getDescription(): ?string
@@ -159,6 +159,6 @@ class CuisineRequest
 
     public function setUpdatedAt(?DateTime $dt = null): void
     {
-        $this->updatedAt = $dt ?? new DateTime;
+        $this->updatedAt = $dt ?? new DateTime();
     }
 }

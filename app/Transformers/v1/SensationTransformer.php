@@ -23,7 +23,7 @@ class SensationTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Sensation $entity */
-        return '/api/v1/sensations/'.$entity->getSlug();
+        return '/api/v1/sensations/' . $entity->getSlug();
     }
 
     protected function attributes(object $entity): array

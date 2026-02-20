@@ -23,7 +23,8 @@ class RatingCreate extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly RatingTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -61,7 +62,7 @@ class RatingCreate extends Controller
             );
         }
 
-        $rating = new Rating;
+        $rating = new Rating();
         $rating->setRecipe($recipe);
         $rating->setUser($user);
         $rating->setRate((int) $attrs['rate']);

@@ -23,7 +23,8 @@ class Approve extends Controller
     public function __construct(
         private readonly CuisineRequestTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, int $id): JsonResponse
     {
@@ -36,15 +37,15 @@ class Approve extends Controller
         if (! $cuisineRequest->isPending()) {
             throw new ValidationErrorException(
                 'Only pending requests can be approved.',
-                ['status' => ['Request has already been '.$cuisineRequest->getStatus().'.']],
+                ['status' => ['Request has already been ' . $cuisineRequest->getStatus() . '.']],
             );
         }
 
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $now = new DateTime;
-            $cuisine = new Cuisine;
+            $now = new DateTime();
+            $cuisine = new Cuisine();
             $cuisine->setName($cuisineRequest->getName());
             $cuisine->setVariant($cuisineRequest->getVariant());
             $cuisine->setSlug(Str::slug($cuisineRequest->getFullName()));
@@ -55,7 +56,7 @@ class Approve extends Controller
             $cuisineRequest->setStatus(CuisineRequest::STATUS_APPROVED);
             $cuisineRequest->setCuisine($cuisine);
             $cuisineRequest->setAdminNotes($request->input('data.attributes.admin-notes'));
-            $cuisineRequest->setUpdatedAt(new DateTime);
+            $cuisineRequest->setUpdatedAt(new DateTime());
 
             $this->em->flush();
 

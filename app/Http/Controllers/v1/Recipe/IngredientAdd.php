@@ -25,7 +25,8 @@ class IngredientAdd extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly IngredientTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -70,7 +71,7 @@ class IngredientAdd extends Controller
             throw new NotFoundException("Measure '{$measureId}' not found.");
         }
 
-        $serving = new Serving;
+        $serving = new Serving();
         $serving->setProduct($product);
         $serving->setAmount((float) $attrs['amount']);
         $serving->setMeasure($measure);
@@ -81,7 +82,7 @@ class IngredientAdd extends Controller
             [$recipe->getId()],
         );
 
-        $ingredient = new Ingredient;
+        $ingredient = new Ingredient();
         $ingredient->setRecipe($recipe);
         $ingredient->setServing($serving);
         $ingredient->setPosition((int) ($attrs['position'] ?? ((int) $maxPos + 1)));
@@ -89,7 +90,7 @@ class IngredientAdd extends Controller
 
         if (! empty($attrs['notes'])) {
             foreach ($attrs['notes'] as $text) {
-                $note = new \App\Entities\IngredientNote;
+                $note = new \App\Entities\IngredientNote();
                 $this->setNoteFields($note, $ingredient, $text);
                 $this->em->persist($note);
             }
@@ -114,9 +115,9 @@ class IngredientAdd extends Controller
         $prop->setValue($note, $text);
 
         $prop = $ref->getProperty('createdAt');
-        $prop->setValue($note, new \DateTime);
+        $prop->setValue($note, new \DateTime());
 
         $prop = $ref->getProperty('updatedAt');
-        $prop->setValue($note, new \DateTime);
+        $prop->setValue($note, new \DateTime());
     }
 }

@@ -22,13 +22,13 @@ trait CreatesTestUser
 
         $user = $userRepo->findOneBy(['username' => 'test-user']);
         if (! $user) {
-            $user = new User;
+            $user = new User();
             $user->setUsername('test-user');
             $user->setEmail(fake()->unique()->safeEmail());
             $user->setName(fake()->name());
             $user->setCreatedAt();
             $user->setUpdatedAt();
-            $user->setPasswordChangedAt(new DateTime);
+            $user->setPasswordChangedAt(new DateTime());
         }
 
         $user->setPassword('Pa$swo[d_1234');
@@ -58,7 +58,7 @@ trait CreatesTestUser
             return;
         }
 
-        $sub = new UserSubscription;
+        $sub = new UserSubscription();
         $sub->setUser($user);
         $sub->setPlan($plan);
         $sub->setBillingCycle('yearly');

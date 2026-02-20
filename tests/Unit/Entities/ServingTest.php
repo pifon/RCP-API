@@ -13,9 +13,9 @@ use PHPUnit\Framework\TestCase;
 class ServingTest extends TestCase
 {
     #[Test]
-    public function setters_and_getters(): void
+    public function settersAndGetters(): void
     {
-        $serving = new Serving;
+        $serving = new Serving();
 
         $product = $this->createMock(Product::class);
         $measure = $this->createMock(Measure::class);

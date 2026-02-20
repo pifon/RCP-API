@@ -21,7 +21,8 @@ class Register extends Controller
         private readonly UserRepository $userRepository,
         private readonly UserTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -47,14 +48,14 @@ class Register extends Controller
             );
         }
 
-        $user = new User;
+        $user = new User();
         $user->setUsername($attrs['username']);
         $user->setName($attrs['name']);
         $user->setEmail($attrs['email']);
         $user->setPassword($attrs['password']);
         $user->setCreatedAt();
         $user->setUpdatedAt();
-        $user->setPasswordChangedAt(new \DateTime);
+        $user->setPasswordChangedAt(new \DateTime());
 
         $this->em->persist($user);
         $this->em->flush();

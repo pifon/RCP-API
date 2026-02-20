@@ -13,9 +13,9 @@ use PHPUnit\Framework\TestCase;
 class IngredientTest extends TestCase
 {
     #[Test]
-    public function constructor_defaults(): void
+    public function constructorDefaults(): void
     {
-        $ingredient = new Ingredient;
+        $ingredient = new Ingredient();
 
         $this->assertSame(0, $ingredient->getPosition());
         $this->assertCount(0, $ingredient->getNotes());
@@ -24,10 +24,10 @@ class IngredientTest extends TestCase
     }
 
     #[Test]
-    public function recipe_relation(): void
+    public function recipeRelation(): void
     {
-        $ingredient = new Ingredient;
-        $recipe = new Recipe;
+        $ingredient = new Ingredient();
+        $recipe = new Recipe();
         $recipe->setTitle('Test');
         $recipe->setSlug('test');
 
@@ -36,18 +36,18 @@ class IngredientTest extends TestCase
     }
 
     #[Test]
-    public function position_setter(): void
+    public function positionSetter(): void
     {
-        $ingredient = new Ingredient;
+        $ingredient = new Ingredient();
         $ingredient->setPosition(3);
         $this->assertSame(3, $ingredient->getPosition());
     }
 
     #[Test]
-    public function serving_relation(): void
+    public function servingRelation(): void
     {
-        $ingredient = new Ingredient;
-        $serving = new Serving;
+        $ingredient = new Ingredient();
+        $serving = new Serving();
 
         $ingredient->setServing($serving);
         $this->assertSame($serving, $ingredient->getServing());

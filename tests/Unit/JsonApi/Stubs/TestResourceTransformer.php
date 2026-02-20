@@ -20,7 +20,7 @@ class TestResourceTransformer extends AbstractTransformer
 
     public function selfLink(object $entity): string
     {
-        return '/test/'.$entity->id;
+        return '/test/' . $entity->id;
     }
 
     protected function attributes(object $entity): array

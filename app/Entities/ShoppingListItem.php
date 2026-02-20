@@ -58,8 +58,8 @@ class ShoppingListItem
 
     public function __construct()
     {
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -95,7 +95,7 @@ class ShoppingListItem
     public function setQuantity(string $quantity): void
     {
         $this->quantity = $quantity;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function getMeasure(): ?Measure
@@ -126,7 +126,7 @@ class ShoppingListItem
     public function setChecked(bool $checked): void
     {
         $this->checked = $checked;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function getCreatedAt(): DateTime

@@ -18,7 +18,8 @@ class Show extends Controller
     public function __construct(
         private readonly DishTypeRepository $repository,
         private readonly DishTypeTransformer $transformer,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {

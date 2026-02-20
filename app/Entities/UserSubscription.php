@@ -53,8 +53,8 @@ class UserSubscription
 
     public function __construct()
     {
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -100,7 +100,7 @@ class UserSubscription
     public function setStatus(string $status): void
     {
         $this->status = $status;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function getExternalId(): ?string
@@ -150,21 +150,21 @@ class UserSubscription
 
     public function cancel(): void
     {
-        $this->cancelledAt = new DateTime;
+        $this->cancelledAt = new DateTime();
         $this->status = 'cancelled';
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function isActive(): bool
     {
         return in_array($this->status, ['active', 'trialing'], true)
-            && $this->currentPeriodEnd >= new DateTime;
+            && $this->currentPeriodEnd >= new DateTime();
     }
 
     public function isTrialing(): bool
     {
         return $this->status === 'trialing'
             && $this->trialEndsAt !== null
-            && $this->trialEndsAt >= new DateTime;
+            && $this->trialEndsAt >= new DateTime();
     }
 }

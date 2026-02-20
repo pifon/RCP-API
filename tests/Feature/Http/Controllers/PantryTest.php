@@ -48,7 +48,7 @@ class PantryTest extends TestCase
         return $response->json('data.id');
     }
 
-    public function test_create_pantry_item(): void
+    public function testCreatePantryItem(): void
     {
         $response = $this->apiPost('/api/v1/pantry', [
             'data' => [
@@ -64,7 +64,7 @@ class PantryTest extends TestCase
             ->assertJsonPath('data.type', 'pantry-items');
     }
 
-    public function test_list_pantry_items(): void
+    public function testListPantryItems(): void
     {
         $this->addPantryItem();
 
@@ -74,7 +74,7 @@ class PantryTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function test_show_pantry_item(): void
+    public function testShowPantryItem(): void
     {
         $id = $this->addPantryItem();
 
@@ -85,7 +85,7 @@ class PantryTest extends TestCase
             ->assertJsonPath('data.id', $id);
     }
 
-    public function test_update_pantry_item(): void
+    public function testUpdatePantryItem(): void
     {
         $id = $this->addPantryItem(1, 500);
 
@@ -99,7 +99,7 @@ class PantryTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_delete_pantry_item(): void
+    public function testDeletePantryItem(): void
     {
         $id = $this->addPantryItem();
 
@@ -108,7 +108,7 @@ class PantryTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_consume_pantry_item(): void
+    public function testConsumePantryItem(): void
     {
         $id = $this->addPantryItem(1, 1000);
 
@@ -122,7 +122,7 @@ class PantryTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_cookable_recipes(): void
+    public function testCookableRecipes(): void
     {
         $response = $this->apiGet('/api/v1/pantry/cookable');
 

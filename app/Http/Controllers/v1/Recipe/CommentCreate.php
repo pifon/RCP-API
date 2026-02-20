@@ -23,7 +23,8 @@ class CommentCreate extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly CommentTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -48,7 +49,7 @@ class CommentCreate extends Controller
         /** @var \App\Entities\User $user */
         $user = auth()->user();
 
-        $comment = new RecipeComment;
+        $comment = new RecipeComment();
         $comment->setRecipe($recipe);
         $comment->setUser($user);
         $comment->setBody($attrs['body']);

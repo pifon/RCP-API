@@ -18,7 +18,8 @@ class Index extends Controller
     public function __construct(
         private readonly RecipeRepository $repository,
         private readonly RecipeTransformer $transformer,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {

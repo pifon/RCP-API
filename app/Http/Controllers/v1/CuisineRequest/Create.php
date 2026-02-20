@@ -21,7 +21,8 @@ class Create extends Controller
         private readonly AuthorRepository $authorRepository,
         private readonly CuisineRequestTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -40,7 +41,7 @@ class Create extends Controller
         $user = auth()->user();
         $author = $this->authorRepository->getAuthor($user);
 
-        $cuisineRequest = new CuisineRequest;
+        $cuisineRequest = new CuisineRequest();
         $cuisineRequest->setName($attrs['name']);
         $cuisineRequest->setVariant($attrs['variant'] ?? null);
         $cuisineRequest->setDescription($attrs['description'] ?? null);

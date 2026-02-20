@@ -106,7 +106,7 @@ trait ResolvesCuisine
         }
 
         $conn = $em->getConnection();
-        $likeTerm = '%'.$query.'%';
+        $likeTerm = '%' . $query . '%';
 
         /** @var list<array{id: int, name: string, slug: string, variant: string|null}> $rows */
         $rows = $conn->fetchAllAssociative(
@@ -144,7 +144,7 @@ trait ResolvesCuisine
             $targets = [strtolower($row['name']), strtolower($row['slug'])];
             if ($row['variant'] !== null) {
                 $targets[] = strtolower($row['variant']);
-                $targets[] = strtolower($row['name'].' '.$row['variant']);
+                $targets[] = strtolower($row['name'] . ' ' . $row['variant']);
             }
 
             $best = PHP_INT_MAX;
@@ -181,11 +181,11 @@ trait ResolvesCuisine
         $suggestionLinks = [];
         foreach ($suggestions as $s) {
             $display = $s['variant'] !== null
-                ? $s['name'].' - '.$s['variant']
+                ? $s['name'] . ' - ' . $s['variant']
                 : $s['name'];
 
             $suggestionLinks["cuisine:{$s['slug']}"] = [
-                'href' => '/api/v1/cuisines/'.$s['slug'],
+                'href' => '/api/v1/cuisines/' . $s['slug'],
                 'meta' => [
                     'id' => $s['id'],
                     'name' => $display,
@@ -198,11 +198,11 @@ trait ResolvesCuisine
         if ($suggestions !== []) {
             $names = array_map(
                 fn ($s) => $s['variant'] !== null
-                    ? $s['name'].' - '.$s['variant']
+                    ? $s['name'] . ' - ' . $s['variant']
                     : $s['name'],
                 $suggestions,
             );
-            $detail .= ' Did you mean: '.implode(', ', $names).'?';
+            $detail .= ' Did you mean: ' . implode(', ', $names) . '?';
         }
 
         $links = $suggestionLinks;

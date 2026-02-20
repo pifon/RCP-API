@@ -16,7 +16,8 @@ class Destroy extends Controller
 {
     public function __construct(
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(int $id): JsonResponse
     {
@@ -32,11 +33,11 @@ class Destroy extends Controller
             throw new NotFoundException('Pantry item not found.');
         }
 
-        $log = new PantryLog;
+        $log = new PantryLog();
         $log->setUser($user);
         $log->setProduct($item->getProduct());
         $log->setAction('expired');
-        $log->setQuantityChange('-'.$item->getQuantity());
+        $log->setQuantityChange('-' . $item->getQuantity());
         $log->setNote('Item removed from pantry.');
         $this->em->persist($log);
 

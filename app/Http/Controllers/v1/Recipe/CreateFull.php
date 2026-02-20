@@ -37,7 +37,8 @@ class CreateFull extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -62,7 +63,7 @@ class CreateFull extends Controller
             throw ValidationErrorException::fromValidationBag($validator->errors());
         }
 
-        $tempRecipe = new Recipe;
+        $tempRecipe = new Recipe();
         $cuisineError = $this->applyCuisine($rels, $tempRecipe, $this->em);
         if ($cuisineError !== null) {
             return $cuisineError;
@@ -168,13 +169,13 @@ class CreateFull extends Controller
                 );
             }
 
-            $serving = new Serving;
+            $serving = new Serving();
             $serving->setProduct($product);
             $serving->setAmount($amount);
             $serving->setMeasure($measure);
             $this->em->persist($serving);
 
-            $ingredient = new Ingredient;
+            $ingredient = new Ingredient();
             $ingredient->setRecipe($recipe);
             $ingredient->setServing($serving);
             $ingredient->setPosition($position);
@@ -182,12 +183,12 @@ class CreateFull extends Controller
 
             if (! empty($def['notes'])) {
                 foreach ((array) $def['notes'] as $text) {
-                    $note = new IngredientNote;
+                    $note = new IngredientNote();
                     $this->setPrivateFields($note, [
                         'ingredient' => $ingredient,
                         'note' => $text,
-                        'createdAt' => new \DateTime,
-                        'updatedAt' => new \DateTime,
+                        'createdAt' => new \DateTime(),
+                        'updatedAt' => new \DateTime(),
                     ]);
                     $this->em->persist($note);
                 }
@@ -220,14 +221,14 @@ class CreateFull extends Controller
                 $measure = $this->resolveMeasure($def);
                 $amount = (float) ($def['amount'] ?? 0);
 
-                $serving = new Serving;
+                $serving = new Serving();
                 $serving->setProduct($product);
                 $serving->setAmount($amount);
                 $serving->setMeasure($measure);
                 $this->em->persist($serving);
             }
 
-            $procedure = new Procedure;
+            $procedure = new Procedure();
             $procedure->setOperation($operation);
             $procedure->setServing($serving);
             $procedure->setDuration(isset($def['duration-minutes']) ? (int) $def['duration-minutes'] : null);
@@ -239,7 +240,7 @@ class CreateFull extends Controller
                 $ingredient = $ingredientMap[$ref] ?? null;
             }
 
-            $direction = new Direction;
+            $direction = new Direction();
             $direction->setRecipe($recipe);
             $direction->setProcedure($procedure);
             $direction->setIngredient($ingredient);
@@ -248,7 +249,7 @@ class CreateFull extends Controller
 
             if (! empty($def['notes'])) {
                 foreach ((array) $def['notes'] as $text) {
-                    $note = new DirectionNote;
+                    $note = new DirectionNote();
                     $note->setDirection($direction);
                     $note->setNote($text);
                     $this->em->persist($note);
@@ -292,7 +293,7 @@ class CreateFull extends Controller
         $op = $this->em->getRepository(Operation::class)->findOneBy(['name' => $name]);
 
         if ($op === null) {
-            $op = new Operation;
+            $op = new Operation();
             $op->setName($name);
             $op->setDescription($name);
             $this->em->persist($op);

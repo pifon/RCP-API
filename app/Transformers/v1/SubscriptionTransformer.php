@@ -52,7 +52,7 @@ class SubscriptionTransformer extends AbstractTransformer
                     'id' => $plan->getSlug(),
                 ],
                 'links' => [
-                    'related' => '/api/v1/plans/'.$plan->getSlug(),
+                    'related' => '/api/v1/plans/' . $plan->getSlug(),
                 ],
             ],
         ];

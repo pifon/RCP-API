@@ -23,7 +23,7 @@ class ProductTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Product $entity */
-        return '/api/v1/products/'.$entity->getSlug();
+        return '/api/v1/products/' . $entity->getSlug();
     }
 
     protected function attributes(object $entity): array

@@ -35,7 +35,7 @@ class UpdateDeleteTest extends TestCase
 
     private function createDraftRecipe(string $suffix = ''): string
     {
-        $title = 'Update Test Recipe '.time().$suffix;
+        $title = 'Update Test Recipe ' . time() . $suffix;
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
@@ -50,7 +50,7 @@ class UpdateDeleteTest extends TestCase
 
     // ── Update ─────────────────────────────────────────────────────
 
-    public function test_update_title(): void
+    public function testUpdateTitle(): void
     {
         $slug = $this->createDraftRecipe('-title');
 
@@ -67,7 +67,7 @@ class UpdateDeleteTest extends TestCase
             ->assertJsonPath('data.attributes.title', 'Updated Title');
     }
 
-    public function test_update_description(): void
+    public function testUpdateDescription(): void
     {
         $slug = $this->createDraftRecipe('-desc');
 
@@ -83,7 +83,7 @@ class UpdateDeleteTest extends TestCase
             ->assertJsonPath('data.attributes.description', 'New description');
     }
 
-    public function test_update_multiple_fields(): void
+    public function testUpdateMultipleFields(): void
     {
         $slug = $this->createDraftRecipe('-multi');
 
@@ -108,7 +108,7 @@ class UpdateDeleteTest extends TestCase
             ->assertJsonPath('data.attributes.total-time-minutes', 65);
     }
 
-    public function test_publish_sets_published_at(): void
+    public function testPublishSetsPublishedAt(): void
     {
         $slug = $this->createDraftRecipe('-pub');
 
@@ -126,7 +126,7 @@ class UpdateDeleteTest extends TestCase
         $this->assertNotNull($response->json('data.attributes.published-at'));
     }
 
-    public function test_update_idempotent(): void
+    public function testUpdateIdempotent(): void
     {
         $slug = $this->createDraftRecipe('-idem');
 
@@ -154,7 +154,7 @@ class UpdateDeleteTest extends TestCase
         );
     }
 
-    public function test_update_rejects_invalid_difficulty(): void
+    public function testUpdateRejectsInvalidDifficulty(): void
     {
         $slug = $this->createDraftRecipe('-inv');
 
@@ -169,7 +169,7 @@ class UpdateDeleteTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_update_rejects_invalid_status(): void
+    public function testUpdateRejectsInvalidStatus(): void
     {
         $slug = $this->createDraftRecipe('-stat');
 
@@ -184,7 +184,7 @@ class UpdateDeleteTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_update_rejects_negative_prep_time(): void
+    public function testUpdateRejectsNegativePrepTime(): void
     {
         $slug = $this->createDraftRecipe('-neg');
 
@@ -199,7 +199,7 @@ class UpdateDeleteTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_update_non_existent_recipe(): void
+    public function testUpdateNonExistentRecipe(): void
     {
         $response = $this->apiPatch('/api/v1/recipes/does-not-exist-xyz', [
             'data' => [
@@ -212,7 +212,7 @@ class UpdateDeleteTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_update_clear_nullable_field(): void
+    public function testUpdateClearNullableField(): void
     {
         $slug = $this->createDraftRecipe('-null');
 
@@ -236,7 +236,7 @@ class UpdateDeleteTest extends TestCase
             ->assertJsonPath('data.attributes.description', null);
     }
 
-    public function test_update_preserves_unchanged_fields(): void
+    public function testUpdatePreservesUnchangedFields(): void
     {
         $slug = $this->createDraftRecipe('-preserve');
 
@@ -266,7 +266,7 @@ class UpdateDeleteTest extends TestCase
 
     // ── Delete ─────────────────────────────────────────────────────
 
-    public function test_delete_recipe(): void
+    public function testDeleteRecipe(): void
     {
         $slug = $this->createDraftRecipe('-del');
 
@@ -278,14 +278,14 @@ class UpdateDeleteTest extends TestCase
         $this->apiGet("/api/v1/recipes/{$slug}")->assertNotFound();
     }
 
-    public function test_delete_non_existent_recipe(): void
+    public function testDeleteNonExistentRecipe(): void
     {
         $response = $this->apiDelete('/api/v1/recipes/does-not-exist-xyz');
 
         $response->assertNotFound();
     }
 
-    public function test_delete_is_idempotent(): void
+    public function testDeleteIsIdempotent(): void
     {
         $slug = $this->createDraftRecipe('-del2');
 
@@ -295,7 +295,7 @@ class UpdateDeleteTest extends TestCase
 
     // ── Step-by-step workflow ──────────────────────────────────────
 
-    public function test_step_by_step_workflow(): void
+    public function testStepByStepWorkflow(): void
     {
         $slug = $this->createDraftRecipe('-flow');
 

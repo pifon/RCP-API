@@ -46,7 +46,7 @@ class Cuisine
 
     public function __construct()
     {
-        $this->children = new ArrayCollection;
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): int
@@ -105,7 +105,7 @@ class Cuisine
             return $this->name;
         }
 
-        return $this->name.' - '.$this->variant;
+        return $this->name . ' - ' . $this->variant;
     }
 
     public function getDescription(): ?string

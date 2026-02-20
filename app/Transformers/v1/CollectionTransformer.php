@@ -23,7 +23,7 @@ class CollectionTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Collection $entity */
-        return '/api/v1/collections/'.$entity->getId();
+        return '/api/v1/collections/' . $entity->getId();
     }
 
     protected function attributes(object $entity): array

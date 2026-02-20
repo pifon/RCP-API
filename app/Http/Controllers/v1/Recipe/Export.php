@@ -19,7 +19,8 @@ class Export extends Controller
 
     public function __construct(
         private readonly RecipeRepository $recipeRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -31,7 +32,7 @@ class Export extends Controller
 
         $export = [
             'pifon-recipe' => self::FORMAT_VERSION,
-            'exported-at' => (new \DateTime)->format('c'),
+            'exported-at' => (new \DateTime())->format('c'),
             'recipe' => $this->buildRecipeSection($recipe),
             'ingredients' => $this->buildIngredientsSection($recipe),
             'directions' => $this->buildDirectionsSection($recipe),

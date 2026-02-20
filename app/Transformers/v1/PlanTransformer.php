@@ -23,7 +23,7 @@ class PlanTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Plan $entity */
-        return '/api/v1/plans/'.$entity->getSlug();
+        return '/api/v1/plans/' . $entity->getSlug();
     }
 
     protected function attributes(object $entity): array

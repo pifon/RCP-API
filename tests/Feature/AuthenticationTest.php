@@ -49,7 +49,7 @@ class AuthenticationTest extends TestCase
         );
     }
 
-    public function test_user_can_login_with_valid_username_and_password(): void
+    public function testUserCanLoginWithValidUsernameAndPassword(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -63,7 +63,7 @@ class AuthenticationTest extends TestCase
             ]);
     }
 
-    public function test_user_cannot_login_with_invalid_credentials(): void
+    public function testUserCannotLoginWithInvalidCredentials(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -76,7 +76,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.detail', 'Invalid credentials.');
     }
 
-    public function test_user_cannot_login_without_password_field(): void
+    public function testUserCannotLoginWithoutPasswordField(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -87,7 +87,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function test_user_cannot_login_without_username_field(): void
+    public function testUserCannotLoginWithoutUsernameField(): void
     {
         $response = $this->loginPost([
             'password' => self::PASSWORD,
@@ -98,7 +98,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function test_user_cannot_login_with_empty_username_field(): void
+    public function testUserCannotLoginWithEmptyUsernameField(): void
     {
         $response = $this->loginPost([
             'username' => '',
@@ -110,7 +110,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function test_user_cannot_login_with_too_long_username_field(): void
+    public function testUserCannotLoginWithTooLongUsernameField(): void
     {
         $response = $this->loginPost([
             'username' => str_repeat('a', 257),
@@ -121,7 +121,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'errors']);
     }
 
-    public function test_user_cannot_login_with_empty_password_field(): void
+    public function testUserCannotLoginWithEmptyPasswordField(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -132,7 +132,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'errors']);
     }
 
-    public function test_user_cannot_login_with_too_long_password_field(): void
+    public function testUserCannotLoginWithTooLongPasswordField(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -143,7 +143,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'errors']);
     }
 
-    public function test_user_cannot_login_with_wildcard_password_field(): void
+    public function testUserCannotLoginWithWildcardPasswordField(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -154,7 +154,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.detail', 'Invalid credentials.');
     }
 
-    public function test_user_cannot_login_with_extra_unexpected_field(): void
+    public function testUserCannotLoginWithExtraUnexpectedField(): void
     {
         $response = $this->loginPost([
             'username' => self::USERNAME,
@@ -167,7 +167,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.status', '400');
     }
 
-    public function test_authenticated_user_can_access_protected_route(): void
+    public function testAuthenticatedUserCanAccessProtectedRoute(): void
     {
         $token = auth('api')->login($this->user);
 
@@ -179,7 +179,7 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_block_fake_bearer_access_to_protected_route(): void
+    public function testBlockFakeBearerAccessToProtectedRoute(): void
     {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer not-real',
@@ -192,7 +192,7 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('errors.0.title', 'Unauthorized');
     }
 
-    public function test_block_access_to_protected_route(): void
+    public function testBlockAccessToProtectedRoute(): void
     {
         $response = $this->withHeaders([
             'Accept' => self::CT,

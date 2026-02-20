@@ -78,7 +78,7 @@ class JsonApiContractTest extends TestCase
         ])->deleteJson($uri);
     }
 
-    public function test_welcome_returns_jsonapi_meta(): void
+    public function testWelcomeReturnsJsonapiMeta(): void
     {
         $response = $this->getJson('/api');
 
@@ -87,7 +87,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('jsonapi.version', '1.1');
     }
 
-    public function test_unauthenticated_returns_jsonapi_error(): void
+    public function testUnauthenticatedReturnsJsonapiError(): void
     {
         auth('api')->logout();
 
@@ -105,7 +105,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('errors.0.status', '401');
     }
 
-    public function test_get_me_returns_user_resource(): void
+    public function testGetMeReturnsUserResource(): void
     {
         $response = $this->apiGet('/api/v1/me');
 
@@ -118,7 +118,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('data.id', $this->user->getUsername());
     }
 
-    public function test_patch_me_updates_profile(): void
+    public function testPatchMeUpdatesProfile(): void
     {
         $response = $this->apiPatch('/api/v1/me', [
             'data' => [
@@ -131,7 +131,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('data.attributes.name', 'Test Updated Name');
     }
 
-    public function test_recipes_list_is_paginated(): void
+    public function testRecipesListIsPaginated(): void
     {
         $response = $this->apiGet('/api/v1/recipes?page[size]=2');
 
@@ -145,7 +145,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('meta.page.per-page', 2);
     }
 
-    public function test404_returns_jsonapi_error(): void
+    public function test404ReturnsJsonapiError(): void
     {
         $response = $this->apiGet('/api/v1/recipes/nonexistent-slug-xyz');
 
@@ -154,7 +154,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('errors.0.status', '404');
     }
 
-    public function test_plans_list_returns_catalog(): void
+    public function testPlansListReturnsCatalog(): void
     {
         $response = $this->apiGet('/api/v1/plans');
 
@@ -162,7 +162,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function test_me_subscription_returns_valid_response(): void
+    public function testMeSubscriptionReturnsValidResponse(): void
     {
         $response = $this->apiGet('/api/v1/me/subscription');
 
@@ -179,7 +179,7 @@ class JsonApiContractTest extends TestCase
         );
     }
 
-    public function test_preferences_returns_defaults(): void
+    public function testPreferencesReturnsDefaults(): void
     {
         $response = $this->apiGet('/api/v1/me/preferences');
 
@@ -188,7 +188,7 @@ class JsonApiContractTest extends TestCase
             ->assertJsonPath('data.type', 'user-preferences');
     }
 
-    public function test_collections_crud_lifecycle(): void
+    public function testCollectionsCrudLifecycle(): void
     {
         $create = $this->apiPost('/api/v1/collections', [
             'data' => [
@@ -218,7 +218,7 @@ class JsonApiContractTest extends TestCase
         $delete->assertStatus(200)->assertJsonPath('meta.message', 'Collection deleted.');
     }
 
-    public function test_follows_create_and_list(): void
+    public function testFollowsCreateAndList(): void
     {
         $uniqueId = random_int(100000, 999999);
 
@@ -236,9 +236,9 @@ class JsonApiContractTest extends TestCase
         $list->assertStatus(200)->assertJsonStructure(['jsonapi', 'data', 'meta', 'links']);
     }
 
-    public function test_register_creates_user(): void
+    public function testRegisterCreatesUser(): void
     {
-        $username = 'test-register-'.time();
+        $username = 'test-register-' . time();
 
         $response = $this->call(
             'POST',

@@ -18,7 +18,7 @@ final class Document
         object $entity,
         ?QueryParameters $params = null,
     ): array {
-        $params ??= new QueryParameters;
+        $params ??= new QueryParameters();
 
         $doc = [
             'jsonapi' => ['version' => self::VERSION],
@@ -45,7 +45,7 @@ final class Document
         ?QueryParameters $params = null,
         ?Pagination $pagination = null,
     ): array {
-        $params ??= new QueryParameters;
+        $params ??= new QueryParameters();
 
         $data = array_map(
             fn (object $e) => $transformer->toResource($e, $params),
@@ -112,7 +112,7 @@ final class Document
         $unique = [];
 
         foreach ($included as $resource) {
-            $key = $resource['type'].':'.$resource['id'];
+            $key = $resource['type'] . ':' . $resource['id'];
             if (isset($seen[$key])) {
                 continue;
             }

@@ -38,7 +38,7 @@ class StepByStepTest extends TestCase
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
-                'attributes' => ['title' => 'Step Test '.time().'-'.random_int(1000, 9999)],
+                'attributes' => ['title' => 'Step Test ' . time() . '-' . random_int(1000, 9999)],
                 'relationships' => $this->cuisineRelationship(),
             ],
         ]);
@@ -49,7 +49,7 @@ class StepByStepTest extends TestCase
 
     // ── Ingredients ──────────────────────────────────────────────
 
-    public function test_add_ingredient_to_recipe(): void
+    public function testAddIngredientToRecipe(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -68,7 +68,7 @@ class StepByStepTest extends TestCase
             ->assertJsonPath('data.type', 'ingredients');
     }
 
-    public function test_list_ingredients_for_recipe(): void
+    public function testListIngredientsForRecipe(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -90,7 +90,7 @@ class StepByStepTest extends TestCase
             ->assertJsonCount(1, 'data');
     }
 
-    public function test_add_ingredient_requires_amount(): void
+    public function testAddIngredientRequiresAmount(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -108,7 +108,7 @@ class StepByStepTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_add_ingredient_requires_product_and_measure(): void
+    public function testAddIngredientRequiresProductAndMeasure(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -122,7 +122,7 @@ class StepByStepTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_remove_ingredient_from_recipe(): void
+    public function testRemoveIngredientFromRecipe(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -148,7 +148,7 @@ class StepByStepTest extends TestCase
 
     // ── Directions ───────────────────────────────────────────────
 
-    public function test_add_direction_to_recipe(): void
+    public function testAddDirectionToRecipe(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -166,7 +166,7 @@ class StepByStepTest extends TestCase
             ->assertJsonPath('data.type', 'directions');
     }
 
-    public function test_add_direction_auto_creates_ingredient(): void
+    public function testAddDirectionAutoCreatesIngredient(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -192,7 +192,7 @@ class StepByStepTest extends TestCase
         $ingredients->assertOk()->assertJsonCount(1, 'data');
     }
 
-    public function test_add_direction_accumulates_ingredient_amount(): void
+    public function testAddDirectionAccumulatesIngredientAmount(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -229,7 +229,7 @@ class StepByStepTest extends TestCase
         $ingredients->assertOk()->assertJsonCount(1, 'data');
     }
 
-    public function test_add_direction_recalculates_prep_time(): void
+    public function testAddDirectionRecalculatesPrepTime(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -251,7 +251,7 @@ class StepByStepTest extends TestCase
             ->assertJsonPath('meta.prep-time-minutes', 15);
     }
 
-    public function test_list_directions_for_recipe(): void
+    public function testListDirectionsForRecipe(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -270,7 +270,7 @@ class StepByStepTest extends TestCase
             ->assertJsonCount(2, 'data');
     }
 
-    public function test_add_direction_requires_action(): void
+    public function testAddDirectionRequiresAction(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -284,7 +284,7 @@ class StepByStepTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_insert_direction_at_specific_step(): void
+    public function testInsertDirectionAtSpecificStep(): void
     {
         $slug = $this->createEmptyRecipe();
 
@@ -314,7 +314,7 @@ class StepByStepTest extends TestCase
         $this->assertEquals('third', $actions[2]);
     }
 
-    public function test_remove_direction_from_recipe(): void
+    public function testRemoveDirectionFromRecipe(): void
     {
         $slug = $this->createEmptyRecipe();
 

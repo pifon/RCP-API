@@ -13,7 +13,8 @@ class Autocomplete extends Controller
 {
     public function __construct(
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -29,15 +30,15 @@ class Autocomplete extends Controller
         }
 
         $conn = $this->em->getConnection();
-        $like = $query.'%';
+        $like = $query . '%';
 
         $rows = $conn->fetchAllAssociative(
             'SELECT DISTINCT r.slug, r.title, r.difficulty, r.status'
-            .' FROM recipes r'
-            .' WHERE r.deleted_at IS NULL'
-            .' AND r.title LIKE :q'
-            .' ORDER BY r.title ASC'
-            .' LIMIT :lim',
+            . ' FROM recipes r'
+            . ' WHERE r.deleted_at IS NULL'
+            . ' AND r.title LIKE :q'
+            . ' ORDER BY r.title ASC'
+            . ' LIMIT :lim',
             ['q' => $like, 'lim' => $limit],
             ['q' => \Doctrine\DBAL\ParameterType::STRING, 'lim' => \Doctrine\DBAL\ParameterType::INTEGER],
         );

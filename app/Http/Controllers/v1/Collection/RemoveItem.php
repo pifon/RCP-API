@@ -17,7 +17,8 @@ class RemoveItem extends Controller
     public function __construct(
         private readonly CollectionRepository $collectionRepository,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(int $collectionId, int $itemId): JsonResponse
     {

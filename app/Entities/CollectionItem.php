@@ -44,8 +44,8 @@ class CollectionItem
 
     public function __construct()
     {
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -96,25 +96,25 @@ class CollectionItem
     public function setPosition(int $position): void
     {
         $this->position = $position;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function setScheduledDate(?DateTime $date): void
     {
         $this->scheduledDate = $date;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function setMealSlot(?string $slot): void
     {
         $this->mealSlot = $slot;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function setNote(?string $note): void
     {
         $this->note = $note;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function getCreatedAt(): DateTime

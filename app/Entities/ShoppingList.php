@@ -44,9 +44,9 @@ class ShoppingList
 
     public function __construct()
     {
-        $this->items = new ArrayCollection;
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->items = new ArrayCollection();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -82,7 +82,7 @@ class ShoppingList
     public function setName(string $name): void
     {
         $this->name = $name;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function getStatus(): string
@@ -93,7 +93,7 @@ class ShoppingList
     public function setStatus(string $status): void
     {
         $this->status = $status;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 
     public function getCreatedAt(): DateTime

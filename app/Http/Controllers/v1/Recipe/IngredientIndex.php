@@ -21,7 +21,8 @@ class IngredientIndex extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly IngredientTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {

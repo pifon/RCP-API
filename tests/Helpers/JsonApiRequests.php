@@ -15,7 +15,7 @@ trait JsonApiRequests
     protected function apiGet(string $uri): TestResponse
     {
         return $this->withHeaders([
-            'Authorization' => 'Bearer '.$this->getAuthToken(),
+            'Authorization' => 'Bearer ' . $this->getAuthToken(),
             'Accept' => self::JSONAPI_CT,
         ])->getJson($uri);
     }
@@ -29,7 +29,7 @@ trait JsonApiRequests
             [],
             [],
             [
-                'HTTP_AUTHORIZATION' => 'Bearer '.$this->getAuthToken(),
+                'HTTP_AUTHORIZATION' => 'Bearer ' . $this->getAuthToken(),
                 'CONTENT_TYPE' => self::JSONAPI_CT,
                 'HTTP_ACCEPT' => self::JSONAPI_CT,
             ],
@@ -46,7 +46,7 @@ trait JsonApiRequests
             [],
             [],
             [
-                'HTTP_AUTHORIZATION' => 'Bearer '.$this->getAuthToken(),
+                'HTTP_AUTHORIZATION' => 'Bearer ' . $this->getAuthToken(),
                 'CONTENT_TYPE' => self::JSONAPI_CT,
                 'HTTP_ACCEPT' => self::JSONAPI_CT,
             ],
@@ -57,7 +57,7 @@ trait JsonApiRequests
     protected function apiDelete(string $uri): TestResponse
     {
         return $this->withHeaders([
-            'Authorization' => 'Bearer '.$this->getAuthToken(),
+            'Authorization' => 'Bearer ' . $this->getAuthToken(),
             'Accept' => self::JSONAPI_CT,
         ])->deleteJson($uri);
     }

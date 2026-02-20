@@ -19,7 +19,8 @@ class Create extends Controller
     public function __construct(
         private readonly ShoppingListTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -38,7 +39,7 @@ class Create extends Controller
         /** @var \App\Entities\User $user */
         $user = auth()->user();
 
-        $list = new ShoppingList;
+        $list = new ShoppingList();
         $list->setUser($user);
         $list->setName($attrs['name']);
 

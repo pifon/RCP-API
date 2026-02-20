@@ -28,7 +28,8 @@ class Fork extends Controller
         private readonly AuthorRepository $authorRepository,
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -73,7 +74,7 @@ class Fork extends Controller
 
     private function cloneRecipe(Recipe $source, \App\Entities\Author $newAuthor): Recipe
     {
-        $fork = new Recipe;
+        $fork = new Recipe();
         $fork->setTitle($source->getTitle());
         $fork->setSlug($this->generateUniqueSlug($source->getSlug()));
         $fork->setDescription($source->getDescription());
@@ -108,25 +109,25 @@ class Fork extends Controller
         foreach ($source->getIngredients() as $original) {
             $srcServing = $original->getServing();
 
-            $newServing = new Serving;
+            $newServing = new Serving();
             $newServing->setProduct($srcServing->getProduct());
             $newServing->setAmount($srcServing->getAmount());
             $newServing->setMeasure($srcServing->getMeasure());
             $this->em->persist($newServing);
 
-            $newIngredient = new Ingredient;
+            $newIngredient = new Ingredient();
             $newIngredient->setRecipe($fork);
             $newIngredient->setServing($newServing);
             $newIngredient->setPosition($original->getPosition());
             $this->em->persist($newIngredient);
 
             foreach ($original->getNotes() as $srcNote) {
-                $note = new IngredientNote;
+                $note = new IngredientNote();
                 $this->setPrivateFields($note, [
                     'ingredient' => $newIngredient,
                     'note' => $srcNote->getNote(),
-                    'createdAt' => new \DateTime,
-                    'updatedAt' => new \DateTime,
+                    'createdAt' => new \DateTime(),
+                    'updatedAt' => new \DateTime(),
                 ]);
                 $this->em->persist($note);
             }
@@ -146,14 +147,14 @@ class Fork extends Controller
             $newProcServing = null;
             if ($srcProcedure->getServing() !== null) {
                 $s = $srcProcedure->getServing();
-                $newProcServing = new Serving;
+                $newProcServing = new Serving();
                 $newProcServing->setProduct($s->getProduct());
                 $newProcServing->setAmount($s->getAmount());
                 $newProcServing->setMeasure($s->getMeasure());
                 $this->em->persist($newProcServing);
             }
 
-            $newProcedure = new Procedure;
+            $newProcedure = new Procedure();
             $newProcedure->setOperation($srcProcedure->getOperation());
             $newProcedure->setServing($newProcServing);
             $newProcedure->setDuration($srcProcedure->getDuration());
@@ -165,7 +166,7 @@ class Fork extends Controller
                 $linkedIngredient = $ingredientMap[$srcIngredient->getId()] ?? null;
             }
 
-            $newDirection = new Direction;
+            $newDirection = new Direction();
             $newDirection->setRecipe($fork);
             $newDirection->setProcedure($newProcedure);
             $newDirection->setIngredient($linkedIngredient);
@@ -173,7 +174,7 @@ class Fork extends Controller
             $this->em->persist($newDirection);
 
             foreach ($original->getNotes() as $srcNote) {
-                $note = new DirectionNote;
+                $note = new DirectionNote();
                 $note->setDirection($newDirection);
                 $note->setNote($srcNote->getNote());
                 $this->em->persist($note);
@@ -183,7 +184,7 @@ class Fork extends Controller
 
     private function generateUniqueSlug(string $base): string
     {
-        $slug = $base.'-fork';
+        $slug = $base . '-fork';
         $original = $slug;
         $counter = 1;
 

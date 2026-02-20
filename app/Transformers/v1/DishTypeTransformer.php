@@ -23,7 +23,7 @@ class DishTypeTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var DishType $entity */
-        return '/api/v1/dish-types/'.$entity->getIdentifier();
+        return '/api/v1/dish-types/' . $entity->getIdentifier();
     }
 
     protected function attributes(object $entity): array

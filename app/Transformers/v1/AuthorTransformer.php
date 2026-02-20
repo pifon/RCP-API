@@ -23,7 +23,7 @@ class AuthorTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Author $entity */
-        return '/api/v1/authors/'.$entity->getIdentifier();
+        return '/api/v1/authors/' . $entity->getIdentifier();
     }
 
     protected function attributes(object $entity): array

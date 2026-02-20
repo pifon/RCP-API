@@ -35,7 +35,7 @@ class ImportExportTest extends TestCase
 
     private function createRecipeWithIngredients(): string
     {
-        $title = 'Export Test '.time().'-'.random_int(1000, 9999);
+        $title = 'Export Test ' . time() . '-' . random_int(1000, 9999);
 
         $response = $this->apiPost('/api/v1/recipes/full', [
             'data' => [
@@ -66,7 +66,7 @@ class ImportExportTest extends TestCase
 
     // ── Export ────────────────────────────────────────────────────
 
-    public function test_export_returns_recipe_json(): void
+    public function testExportReturnsRecipeJson(): void
     {
         $slug = $this->createRecipeWithIngredients();
 
@@ -85,7 +85,7 @@ class ImportExportTest extends TestCase
         $this->assertEquals($slug, $response->json('recipe.slug'));
     }
 
-    public function test_export_includes_ingredient_data(): void
+    public function testExportIncludesIngredientData(): void
     {
         $slug = $this->createRecipeWithIngredients();
 
@@ -99,7 +99,7 @@ class ImportExportTest extends TestCase
         $this->assertArrayHasKey('product-name', $ingredients[0]);
     }
 
-    public function test_export_includes_direction_data(): void
+    public function testExportIncludesDirectionData(): void
     {
         $slug = $this->createRecipeWithIngredients();
 
@@ -113,7 +113,7 @@ class ImportExportTest extends TestCase
         $this->assertEquals('mix', $directions[1]['action']);
     }
 
-    public function test_export_returns404_for_missing_recipe(): void
+    public function testExportReturns404ForMissingRecipe(): void
     {
         $response = $this->apiGet('/api/v1/recipes/nonexistent-recipe-xyz/export');
 
@@ -122,9 +122,9 @@ class ImportExportTest extends TestCase
 
     // ── Import ───────────────────────────────────────────────────
 
-    public function test_import_creates_new_recipe(): void
+    public function testImportCreatesNewRecipe(): void
     {
-        $title = 'Imported Cake '.time();
+        $title = 'Imported Cake ' . time();
 
         $response = $this->apiPost('/api/v1/recipes/import', [
             'pifon-recipe' => '1.0',
@@ -153,7 +153,7 @@ class ImportExportTest extends TestCase
             ->assertJsonPath('meta.directions-created', 2);
     }
 
-    public function test_import_rejects_missing_version_header(): void
+    public function testImportRejectsMissingVersionHeader(): void
     {
         $response = $this->apiPost('/api/v1/recipes/import', [
             'recipe' => ['title' => 'No version'],
@@ -164,7 +164,7 @@ class ImportExportTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_import_rejects_missing_title(): void
+    public function testImportRejectsMissingTitle(): void
     {
         $response = $this->apiPost('/api/v1/recipes/import', [
             'pifon-recipe' => '1.0',
@@ -176,7 +176,7 @@ class ImportExportTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_export_then_import_round_trip(): void
+    public function testExportThenImportRoundTrip(): void
     {
         $slug = $this->createRecipeWithIngredients();
 
@@ -196,7 +196,7 @@ class ImportExportTest extends TestCase
 
     // ── Fork ─────────────────────────────────────────────────────
 
-    public function test_fork_creates_deep_copy(): void
+    public function testForkCreatesDeepCopy(): void
     {
         $slug = $this->createRecipeWithIngredients();
 
@@ -214,7 +214,7 @@ class ImportExportTest extends TestCase
         $this->assertStringContainsString('fork', $forkedSlug);
     }
 
-    public function test_fork_preserves_ingredient_count(): void
+    public function testForkPreservesIngredientCount(): void
     {
         $slug = $this->createRecipeWithIngredients();
 
@@ -225,14 +225,14 @@ class ImportExportTest extends TestCase
             ->assertJsonPath('meta.directions-cloned', 2);
     }
 
-    public function test_fork_returns404_for_missing_recipe(): void
+    public function testForkReturns404ForMissingRecipe(): void
     {
         $response = $this->apiPost('/api/v1/recipes/nonexistent-slug-xyz/fork');
 
         $response->assertNotFound();
     }
 
-    public function test_forked_recipe_is_independent(): void
+    public function testForkedRecipeIsIndependent(): void
     {
         $slug = $this->createRecipeWithIngredients();
 

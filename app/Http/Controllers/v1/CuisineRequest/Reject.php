@@ -20,7 +20,8 @@ class Reject extends Controller
     public function __construct(
         private readonly CuisineRequestTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, int $id): JsonResponse
     {
@@ -33,13 +34,13 @@ class Reject extends Controller
         if (! $cuisineRequest->isPending()) {
             throw new ValidationErrorException(
                 'Only pending requests can be rejected.',
-                ['status' => ['Request has already been '.$cuisineRequest->getStatus().'.']],
+                ['status' => ['Request has already been ' . $cuisineRequest->getStatus() . '.']],
             );
         }
 
         $cuisineRequest->setStatus(CuisineRequest::STATUS_REJECTED);
         $cuisineRequest->setAdminNotes($request->input('data.attributes.admin-notes'));
-        $cuisineRequest->setUpdatedAt(new DateTime);
+        $cuisineRequest->setUpdatedAt(new DateTime());
 
         $this->em->flush();
 

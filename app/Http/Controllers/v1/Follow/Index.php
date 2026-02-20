@@ -16,7 +16,8 @@ class Index extends Controller
 {
     public function __construct(
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {

@@ -32,7 +32,7 @@ class PlansTest extends TestCase
         return $this->token;
     }
 
-    public function test_list_plans(): void
+    public function testListPlans(): void
     {
         $response = $this->apiGet('/api/v1/plans');
 
@@ -40,7 +40,7 @@ class PlansTest extends TestCase
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function test_show_plan_by_slug(): void
+    public function testShowPlanBySlug(): void
     {
         $list = $this->apiGet('/api/v1/plans');
         $list->assertOk();
@@ -58,14 +58,14 @@ class PlansTest extends TestCase
             ->assertJsonPath('data.id', $slug);
     }
 
-    public function test_show_plan_returns404_for_missing(): void
+    public function testShowPlanReturns404ForMissing(): void
     {
         $response = $this->apiGet('/api/v1/plans/nonexistent-plan-xyz');
 
         $response->assertNotFound();
     }
 
-    public function test_me_subscription_returns_valid_response(): void
+    public function testMeSubscriptionReturnsValidResponse(): void
     {
         $response = $this->apiGet('/api/v1/me/subscription');
 

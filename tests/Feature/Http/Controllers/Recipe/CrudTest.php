@@ -35,7 +35,7 @@ class CrudTest extends TestCase
 
     // ── Index ────────────────────────────────────────────────────
 
-    public function test_index_returns_json_api_collection(): void
+    public function testIndexReturnsJsonApiCollection(): void
     {
         $response = $this->apiGet('/api/v1/recipes');
 
@@ -49,7 +49,7 @@ class CrudTest extends TestCase
             ->assertJsonPath('jsonapi.version', '1.1');
     }
 
-    public function test_index_respects_page_size(): void
+    public function testIndexRespectsPageSize(): void
     {
         $response = $this->apiGet('/api/v1/recipes?page[size]=3');
 
@@ -59,7 +59,7 @@ class CrudTest extends TestCase
         $this->assertLessThanOrEqual(3, count($response->json('data')));
     }
 
-    public function test_index_data_items_have_recipe_structure(): void
+    public function testIndexDataItemsHaveRecipeStructure(): void
     {
         $response = $this->apiGet('/api/v1/recipes?page[size]=1');
 
@@ -75,7 +75,7 @@ class CrudTest extends TestCase
         }
     }
 
-    public function test_index_sort_by_title(): void
+    public function testIndexSortByTitle(): void
     {
         $response = $this->apiGet('/api/v1/recipes?sort=title&page[size]=5');
 
@@ -91,7 +91,7 @@ class CrudTest extends TestCase
 
     // ── Show ─────────────────────────────────────────────────────
 
-    public function test_show_returns_recipe_by_slug(): void
+    public function testShowReturnsRecipeBySlug(): void
     {
         $response = $this->apiGet('/api/v1/recipes/pizza');
 
@@ -104,7 +104,7 @@ class CrudTest extends TestCase
             ->assertJsonPath('data.id', 'pizza');
     }
 
-    public function test_show_returns404_for_missing_recipe(): void
+    public function testShowReturns404ForMissingRecipe(): void
     {
         $response = $this->apiGet('/api/v1/recipes/does-not-exist-xyz');
 
@@ -114,13 +114,13 @@ class CrudTest extends TestCase
 
     // ── Create ───────────────────────────────────────────────────
 
-    public function test_create_recipe_minimal_fields(): void
+    public function testCreateRecipeMinimalFields(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
                 'type' => 'recipes',
                 'attributes' => [
-                    'title' => 'CI Test Recipe '.time(),
+                    'title' => 'CI Test Recipe ' . time(),
                 ],
                 'relationships' => $this->cuisineRelationship(),
             ],
@@ -133,9 +133,9 @@ class CrudTest extends TestCase
             ]);
     }
 
-    public function test_create_recipe_all_optional_fields(): void
+    public function testCreateRecipeAllOptionalFields(): void
     {
-        $title = 'Full Recipe '.time();
+        $title = 'Full Recipe ' . time();
 
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
@@ -158,7 +158,7 @@ class CrudTest extends TestCase
             ->assertJsonPath('data.attributes.difficulty', 'medium');
     }
 
-    public function test_create_recipe_requires_title(): void
+    public function testCreateRecipeRequiresTitle(): void
     {
         $response = $this->apiPost('/api/v1/recipes', [
             'data' => [
@@ -173,9 +173,9 @@ class CrudTest extends TestCase
             ->assertJsonPath('errors.0.status', '422');
     }
 
-    public function test_create_recipe_generates_unique_slug(): void
+    public function testCreateRecipeGeneratesUniqueSlug(): void
     {
-        $title = 'Duplicate Slug Test '.time();
+        $title = 'Duplicate Slug Test ' . time();
         $rels = $this->cuisineRelationship();
 
         $first = $this->apiPost('/api/v1/recipes', [
@@ -196,9 +196,9 @@ class CrudTest extends TestCase
 
     // ── Create Full ──────────────────────────────────────────────
 
-    public function test_create_full_recipe_with_ingredients_and_directions(): void
+    public function testCreateFullRecipeWithIngredientsAndDirections(): void
     {
-        $title = 'Full Pancakes '.time();
+        $title = 'Full Pancakes ' . time();
 
         $response = $this->apiPost('/api/v1/recipes/full', [
             'data' => [
@@ -228,7 +228,7 @@ class CrudTest extends TestCase
             ->assertJsonPath('meta.directions-created', 1);
     }
 
-    public function test_create_full_recipe_validation_requires_title(): void
+    public function testCreateFullRecipeValidationRequiresTitle(): void
     {
         $response = $this->apiPost('/api/v1/recipes/full', [
             'data' => [

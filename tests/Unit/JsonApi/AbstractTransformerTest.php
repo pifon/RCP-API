@@ -13,10 +13,10 @@ use Tests\Unit\JsonApi\Stubs\TestResourceWithRelsTransformer;
 class AbstractTransformerTest extends TestCase
 {
     #[Test]
-    public function to_resource_basic_structure(): void
+    public function toResourceBasicStructure(): void
     {
         $entity = (object) ['id' => '5', 'title' => 'Test', 'status' => 'draft'];
-        $transformer = new TestResourceTransformer;
+        $transformer = new TestResourceTransformer();
 
         $resource = $transformer->toResource($entity);
 
@@ -28,34 +28,34 @@ class AbstractTransformerTest extends TestCase
     }
 
     #[Test]
-    public function sparse_fieldsets_filters_attributes(): void
+    public function sparseFieldsetsFiltersAttributes(): void
     {
         $entity = (object) ['id' => '1', 'title' => 'Hello', 'status' => 'published'];
         $params = new QueryParameters(fields: ['test-resources' => ['title']]);
 
-        $resource = (new TestResourceTransformer)->toResource($entity, $params);
+        $resource = (new TestResourceTransformer())->toResource($entity, $params);
 
         $this->assertArrayHasKey('title', $resource['attributes']);
         $this->assertArrayNotHasKey('status', $resource['attributes']);
     }
 
     #[Test]
-    public function no_fieldsets_returns_all_attributes(): void
+    public function noFieldsetsReturnsAllAttributes(): void
     {
         $entity = (object) ['id' => '1', 'title' => 'Hi', 'status' => 'draft'];
-        $params = new QueryParameters;
+        $params = new QueryParameters();
 
-        $resource = (new TestResourceTransformer)->toResource($entity, $params);
+        $resource = (new TestResourceTransformer())->toResource($entity, $params);
 
         $this->assertArrayHasKey('title', $resource['attributes']);
         $this->assertArrayHasKey('status', $resource['attributes']);
     }
 
     #[Test]
-    public function relationships_appear_in_resource(): void
+    public function relationshipsAppearInResource(): void
     {
         $entity = (object) ['id' => '1', 'title' => 'X', 'status' => 'draft'];
-        $transformer = new TestResourceWithRelsTransformer;
+        $transformer = new TestResourceWithRelsTransformer();
 
         $resource = $transformer->toResource($entity);
 
@@ -68,21 +68,21 @@ class AbstractTransformerTest extends TestCase
     }
 
     #[Test]
-    public function collect_includes_returns_empty_without_matches(): void
+    public function collectIncludesReturnsEmptyWithoutMatches(): void
     {
         $entity = (object) ['id' => '1', 'title' => 'X', 'status' => 'draft'];
         $params = new QueryParameters(include: ['nonexistent']);
 
-        $includes = (new TestResourceTransformer)->collectIncludes($entity, $params);
+        $includes = (new TestResourceTransformer())->collectIncludes($entity, $params);
 
         $this->assertSame([], $includes);
     }
 
     #[Test]
-    public function empty_relationships_omits_key(): void
+    public function emptyRelationshipsOmitsKey(): void
     {
         $entity = (object) ['id' => '1', 'title' => 'X', 'status' => 'draft'];
-        $resource = (new TestResourceTransformer)->toResource($entity);
+        $resource = (new TestResourceTransformer())->toResource($entity);
 
         $this->assertArrayNotHasKey('relationships', $resource);
     }

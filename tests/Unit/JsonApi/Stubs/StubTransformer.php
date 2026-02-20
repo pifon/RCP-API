@@ -20,7 +20,7 @@ class StubTransformer extends AbstractTransformer
 
     public function selfLink(object $entity): string
     {
-        return '/stubs/'.$entity->id;
+        return '/stubs/' . $entity->id;
     }
 
     protected function attributes(object $entity): array

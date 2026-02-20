@@ -21,7 +21,8 @@ class Update extends Controller
         private readonly CollectionRepository $repository,
         private readonly CollectionTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, int $id): JsonResponse
     {

@@ -19,7 +19,8 @@ class Create extends Controller
 
     public function __construct(
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -27,7 +28,7 @@ class Create extends Controller
         $attrs = $data['attributes'] ?? [];
 
         $validator = Validator::make($attrs, [
-            'followable-type' => ['required', 'string', 'in:'.implode(',', self::ALLOWED_TYPES)],
+            'followable-type' => ['required', 'string', 'in:' . implode(',', self::ALLOWED_TYPES)],
             'followable-id' => ['required', 'integer', 'min:1'],
         ]);
 
@@ -53,7 +54,7 @@ class Create extends Controller
             );
         }
 
-        $follow = new Follow;
+        $follow = new Follow();
         $follow->setFollower($user);
         $follow->setFollowableType($attrs['followable-type']);
         $follow->setFollowableId((int) $attrs['followable-id']);

@@ -12,7 +12,7 @@ use Tests\TestCase;
 class ValidationErrorExceptionTest extends TestCase
 {
     #[Test]
-    public function render_with_field_errors(): void
+    public function renderWithFieldErrors(): void
     {
         $e = new ValidationErrorException('Validation failed', [
             'title' => ['Title is required.'],
@@ -32,7 +32,7 @@ class ValidationErrorExceptionTest extends TestCase
     }
 
     #[Test]
-    public function render_with_empty_errors_uses_message(): void
+    public function renderWithEmptyErrorsUsesMessage(): void
     {
         $e = new ValidationErrorException('Something is wrong');
 
@@ -44,7 +44,7 @@ class ValidationErrorExceptionTest extends TestCase
     }
 
     #[Test]
-    public function from_validation_bag(): void
+    public function fromValidationBag(): void
     {
         $bag = new MessageBag([
             'email' => ['Must be a valid email.'],
@@ -61,7 +61,7 @@ class ValidationErrorExceptionTest extends TestCase
     }
 
     #[Test]
-    public function custom_status_code(): void
+    public function customStatusCode(): void
     {
         $e = new ValidationErrorException('Conflict', ['field' => ['Duplicate.']], 409);
 

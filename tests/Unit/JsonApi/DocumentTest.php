@@ -15,13 +15,13 @@ use Tests\Unit\JsonApi\Stubs\StubTransformer;
 class DocumentTest extends TestCase
 {
     #[Test]
-    public function single_document_structure(): void
+    public function singleDocumentStructure(): void
     {
-        $entity = new \stdClass;
+        $entity = new \stdClass();
         $entity->id = '1';
         $entity->name = 'Test';
 
-        $transformer = new StubTransformer;
+        $transformer = new StubTransformer();
         $doc = Document::single($transformer, $entity);
 
         $this->assertArrayHasKey('jsonapi', $doc);
@@ -33,14 +33,14 @@ class DocumentTest extends TestCase
     }
 
     #[Test]
-    public function single_document_with_sparse_fieldsets(): void
+    public function singleDocumentWithSparseFieldsets(): void
     {
-        $entity = new \stdClass;
+        $entity = new \stdClass();
         $entity->id = '1';
         $entity->name = 'Test';
 
         $params = new QueryParameters(fields: ['stubs' => ['name']]);
-        $transformer = new StubTransformer;
+        $transformer = new StubTransformer();
         $doc = Document::single($transformer, $entity, $params);
 
         $this->assertArrayHasKey('name', $doc['data']['attributes']);
@@ -48,17 +48,17 @@ class DocumentTest extends TestCase
     }
 
     #[Test]
-    public function collection_document_structure(): void
+    public function collectionDocumentStructure(): void
     {
-        $e1 = new \stdClass;
+        $e1 = new \stdClass();
         $e1->id = '1';
         $e1->name = 'First';
 
-        $e2 = new \stdClass;
+        $e2 = new \stdClass();
         $e2->id = '2';
         $e2->name = 'Second';
 
-        $transformer = new StubTransformer;
+        $transformer = new StubTransformer();
         $doc = Document::collection($transformer, [$e1, $e2]);
 
         $this->assertSame('1.1', $doc['jsonapi']['version']);
@@ -68,14 +68,14 @@ class DocumentTest extends TestCase
     }
 
     #[Test]
-    public function collection_document_with_pagination(): void
+    public function collectionDocumentWithPagination(): void
     {
-        $e1 = new \stdClass;
+        $e1 = new \stdClass();
         $e1->id = '1';
         $e1->name = 'Only';
 
         $pagination = new Pagination(total: 50, currentPage: 2, perPage: 10, baseUrl: '/api/v1/stubs');
-        $doc = Document::collection(new StubTransformer, [$e1], pagination: $pagination);
+        $doc = Document::collection(new StubTransformer(), [$e1], pagination: $pagination);
 
         $this->assertArrayHasKey('meta', $doc);
         $this->assertSame(50, $doc['meta']['page']['total']);
@@ -84,7 +84,7 @@ class DocumentTest extends TestCase
     }
 
     #[Test]
-    public function errors_document_structure(): void
+    public function errorsDocumentStructure(): void
     {
         $doc = Document::errors(
             new ErrorObject('404', 'Not Found', 'Resource missing'),
@@ -98,7 +98,7 @@ class DocumentTest extends TestCase
     }
 
     #[Test]
-    public function meta_document_structure(): void
+    public function metaDocumentStructure(): void
     {
         $doc = Document::meta(['message' => 'Deleted', 'count' => 5]);
 
@@ -109,21 +109,21 @@ class DocumentTest extends TestCase
     }
 
     #[Test]
-    public function collection_empty_array(): void
+    public function collectionEmptyArray(): void
     {
-        $doc = Document::collection(new StubTransformer, []);
+        $doc = Document::collection(new StubTransformer(), []);
 
         $this->assertSame([], $doc['data']);
     }
 
     #[Test]
-    public function single_document_has_links(): void
+    public function singleDocumentHasLinks(): void
     {
-        $entity = new \stdClass;
+        $entity = new \stdClass();
         $entity->id = '42';
         $entity->name = 'Linked';
 
-        $doc = Document::single(new StubTransformer, $entity);
+        $doc = Document::single(new StubTransformer(), $entity);
 
         $this->assertArrayHasKey('links', $doc['data']);
         $this->assertSame('/stubs/42', $doc['data']['links']['self']);

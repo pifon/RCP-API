@@ -23,7 +23,8 @@ final class QueryParameters
         public readonly array $fields = [],
         public readonly int $pageNumber = 1,
         public readonly int $pageSize = self::DEFAULT_PAGE_SIZE,
-    ) {}
+    ) {
+    }
 
     /**
      * @param  array<string, mixed>  $query  Raw query parameters ($_GET or similar)

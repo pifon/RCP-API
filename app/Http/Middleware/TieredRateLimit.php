@@ -16,16 +16,17 @@ class TieredRateLimit
     public function __construct(
         private readonly FeatureGate $featureGate,
         private readonly RateLimiter $limiter,
-    ) {}
+    ) {
+    }
 
     public function handle(Request $request, Closure $next): mixed
     {
         $user = $request->user();
         if ($user === null) {
-            $key = 'rate:ip:'.$request->ip();
+            $key = 'rate:ip:' . $request->ip();
             $maxAttempts = 30;
         } else {
-            $key = 'rate:user:'.$user->getId();
+            $key = 'rate:user:' . $user->getId();
             $maxAttempts = $this->featureGate->apiRateLimit($user);
         }
 

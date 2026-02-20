@@ -15,7 +15,8 @@ class FeatureGate
 
     public function __construct(
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function activeSubscription(User $user): ?UserSubscription
     {
@@ -26,7 +27,7 @@ class FeatureGate
             ->andWhere('s.currentPeriodEnd >= :now')
             ->setParameter('user', $user)
             ->setParameter('statuses', ['active', 'trialing'])
-            ->setParameter('now', new \DateTime)
+            ->setParameter('now', new \DateTime())
             ->orderBy('s.createdAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()

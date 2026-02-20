@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class ErrorObjectTest extends TestCase
 {
     #[Test]
-    public function to_array_minimal(): void
+    public function toArrayMinimal(): void
     {
         $error = new ErrorObject('404', 'Not Found');
 
@@ -22,7 +22,7 @@ class ErrorObjectTest extends TestCase
     }
 
     #[Test]
-    public function to_array_with_all_fields(): void
+    public function toArrayWithAllFields(): void
     {
         $error = new ErrorObject(
             status: '422',
@@ -44,7 +44,7 @@ class ErrorObjectTest extends TestCase
     }
 
     #[Test]
-    public function to_array_omits_null_fields(): void
+    public function toArrayOmitsNullFields(): void
     {
         $error = new ErrorObject('500', 'Internal Server Error', 'Something broke');
 
@@ -57,7 +57,7 @@ class ErrorObjectTest extends TestCase
     }
 
     #[Test]
-    public function from_exception(): void
+    public function fromException(): void
     {
         $exception = new \RuntimeException('Database timeout');
         $error = ErrorObject::fromException($exception, '503');
@@ -68,7 +68,7 @@ class ErrorObjectTest extends TestCase
     }
 
     #[Test]
-    public function from_exception_with_known_status(): void
+    public function fromExceptionWithKnownStatus(): void
     {
         $exception = new \RuntimeException('Not allowed');
         $error = ErrorObject::fromException($exception, '403');
@@ -77,7 +77,7 @@ class ErrorObjectTest extends TestCase
     }
 
     #[Test]
-    public function from_exception_with_empty_message(): void
+    public function fromExceptionWithEmptyMessage(): void
     {
         $exception = new \RuntimeException('');
         $error = ErrorObject::fromException($exception);
@@ -88,7 +88,7 @@ class ErrorObjectTest extends TestCase
     }
 
     #[Test]
-    public function validation_factory(): void
+    public function validationFactory(): void
     {
         $error = ErrorObject::validation('email', 'Must be a valid email.');
 

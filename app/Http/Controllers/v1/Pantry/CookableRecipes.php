@@ -20,7 +20,8 @@ class CookableRecipes extends Controller
     public function __construct(
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): JsonResponse
     {

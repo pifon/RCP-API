@@ -23,7 +23,8 @@ class CommentIndex extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly CommentTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {

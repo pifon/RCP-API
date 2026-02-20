@@ -26,7 +26,8 @@ class Update extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly RecipeTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -63,14 +64,14 @@ class Update extends Controller
             return $relError;
         }
 
-        $recipe->setUpdatedAt(new DateTime);
+        $recipe->setUpdatedAt(new DateTime());
 
         if (
             array_key_exists('status', $attrs)
             && $attrs['status'] === 'published'
             && $recipe->getPublishedAt() === null
         ) {
-            $recipe->setPublishedAt(new DateTime);
+            $recipe->setPublishedAt(new DateTime());
         }
 
         $this->em->flush();

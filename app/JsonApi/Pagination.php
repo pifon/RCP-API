@@ -11,7 +11,8 @@ final class Pagination
         public readonly int $currentPage,
         public readonly int $perPage,
         public readonly string $baseUrl,
-    ) {}
+    ) {
+    }
 
     public function lastPage(): int
     {

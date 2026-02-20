@@ -21,7 +21,8 @@ class Consume extends Controller
     public function __construct(
         private readonly PantryItemTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, int $id): JsonResponse
     {
@@ -52,7 +53,7 @@ class Consume extends Controller
         $consumeQty = (float) $attrs['quantity'];
         $item->adjustQuantity(-$consumeQty);
 
-        $log = new PantryLog;
+        $log = new PantryLog();
         $log->setUser($user);
         $log->setPantryItem($item);
         $log->setProduct($item->getProduct());

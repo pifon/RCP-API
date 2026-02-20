@@ -13,9 +13,9 @@ use PHPUnit\Framework\TestCase;
 class RecipeTest extends TestCase
 {
     #[Test]
-    public function constructor_sets_defaults(): void
+    public function constructorSetsDefaults(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
 
         $this->assertSame('draft', $recipe->getStatus());
         $this->assertNull($recipe->getPrepTimeMinutes());
@@ -37,9 +37,9 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function title_and_slug(): void
+    public function titleAndSlug(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setTitle('Pasta Carbonara');
         $recipe->setSlug('pasta-carbonara');
 
@@ -50,9 +50,9 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function total_time_both_set(): void
+    public function totalTimeBothSet(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setPrepTimeMinutes(15);
         $recipe->setCookTimeMinutes(30);
 
@@ -60,25 +60,25 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function total_time_only_prep(): void
+    public function totalTimeOnlyPrep(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setPrepTimeMinutes(10);
 
         $this->assertSame(10, $recipe->getTotalTimeMinutes());
     }
 
     #[Test]
-    public function total_time_null_when_both_null(): void
+    public function totalTimeNullWhenBothNull(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $this->assertNull($recipe->getTotalTimeMinutes());
     }
 
     #[Test]
-    public function is_free_based_on_price(): void
+    public function isFreeBasedOnPrice(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $this->assertTrue($recipe->isFree());
 
         $recipe->setPrice('9.99');
@@ -89,9 +89,9 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function soft_delete_and_restore(): void
+    public function softDeleteAndRestore(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $this->assertFalse($recipe->isDeleted());
 
         $recipe->softDelete();
@@ -104,9 +104,9 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function status_workflow(): void
+    public function statusWorkflow(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $this->assertSame('draft', $recipe->getStatus());
 
         $recipe->setStatus('published');
@@ -114,20 +114,20 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function difficulty_setter(): void
+    public function difficultySetter(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setDifficulty('hard');
         $this->assertSame('hard', $recipe->getDifficulty());
     }
 
     #[Test]
-    public function cuisine_relation(): void
+    public function cuisineRelation(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $this->assertNull($recipe->getCuisine());
 
-        $cuisine = new Cuisine;
+        $cuisine = new Cuisine();
         $cuisine->setName('Italian');
         $recipe->setCuisine($cuisine);
         $this->assertSame($cuisine, $recipe->getCuisine());
@@ -137,9 +137,9 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function dish_type_relation(): void
+    public function dishTypeRelation(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $this->assertNull($recipe->getDishType());
 
         $dishType = new DishType('Main Course');
@@ -148,12 +148,12 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function forked_from_relation(): void
+    public function forkedFromRelation(): void
     {
-        $original = new Recipe;
+        $original = new Recipe();
         $original->setTitle('Original');
 
-        $fork = new Recipe;
+        $fork = new Recipe();
         $fork->setForkedFrom($original);
         $this->assertSame($original, $fork->getForkedFrom());
 
@@ -162,18 +162,18 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function variant_relation(): void
+    public function variantRelation(): void
     {
-        $base = new Recipe;
-        $variant = new Recipe;
+        $base = new Recipe();
+        $variant = new Recipe();
         $variant->setVariant($base);
         $this->assertSame($base, $variant->getVariant());
     }
 
     #[Test]
-    public function source_fields(): void
+    public function sourceFields(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setSourceUrl('https://example.com/recipe');
         $recipe->setSourceDescription('Found online');
 
@@ -182,9 +182,9 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function currency_and_fork_revenue(): void
+    public function currencyAndForkRevenue(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->setCurrency('GBP');
         $recipe->setForkRevenuePercent(15);
 
@@ -193,9 +193,9 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function timestamps_can_be_set(): void
+    public function timestampsCanBeSet(): void
     {
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $dt = new \DateTime('2025-01-01');
         $recipe->setCreatedAt($dt);
         $recipe->setUpdatedAt($dt);
@@ -205,12 +205,12 @@ class RecipeTest extends TestCase
     }
 
     #[Test]
-    public function set_created_at_defaults_to_now(): void
+    public function setCreatedAtDefaultsToNow(): void
     {
-        $recipe = new Recipe;
-        $before = new \DateTime;
+        $recipe = new Recipe();
+        $before = new \DateTime();
         $recipe->setCreatedAt();
-        $after = new \DateTime;
+        $after = new \DateTime();
 
         $this->assertGreaterThanOrEqual($before, $recipe->getCreatedAt());
         $this->assertLessThanOrEqual($after, $recipe->getCreatedAt());

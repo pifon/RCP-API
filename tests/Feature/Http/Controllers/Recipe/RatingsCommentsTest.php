@@ -36,17 +36,17 @@ class RatingsCommentsTest extends TestCase
 
     // ── Ratings ──────────────────────────────────────────────────
 
-    public function test_list_ratings_for_recipe(): void
+    public function testListRatingsForRecipe(): void
     {
-        $response = $this->apiGet('/api/v1/recipes/'.self::RECIPE_SLUG.'/ratings');
+        $response = $this->apiGet('/api/v1/recipes/' . self::RECIPE_SLUG . '/ratings');
 
         $response->assertOk()
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function test_create_or_update_rating(): void
+    public function testCreateOrUpdateRating(): void
     {
-        $response = $this->apiPost('/api/v1/recipes/'.self::RECIPE_SLUG.'/ratings', [
+        $response = $this->apiPost('/api/v1/recipes/' . self::RECIPE_SLUG . '/ratings', [
             'data' => [
                 'type' => 'ratings',
                 'attributes' => ['rate' => 4],
@@ -59,17 +59,17 @@ class RatingsCommentsTest extends TestCase
 
     // ── Comments ─────────────────────────────────────────────────
 
-    public function test_list_comments_for_recipe(): void
+    public function testListCommentsForRecipe(): void
     {
-        $response = $this->apiGet('/api/v1/recipes/'.self::RECIPE_SLUG.'/comments');
+        $response = $this->apiGet('/api/v1/recipes/' . self::RECIPE_SLUG . '/comments');
 
         $response->assertOk()
             ->assertJsonStructure(['jsonapi', 'data']);
     }
 
-    public function test_create_comment(): void
+    public function testCreateComment(): void
     {
-        $response = $this->apiPost('/api/v1/recipes/'.self::RECIPE_SLUG.'/comments', [
+        $response = $this->apiPost('/api/v1/recipes/' . self::RECIPE_SLUG . '/comments', [
             'data' => [
                 'type' => 'comments',
                 'attributes' => ['body' => 'Great recipe, loved it!'],
@@ -82,9 +82,9 @@ class RatingsCommentsTest extends TestCase
 
     // ── Activity ─────────────────────────────────────────────────
 
-    public function test_log_activity(): void
+    public function testLogActivity(): void
     {
-        $response = $this->apiPost('/api/v1/recipes/'.self::RECIPE_SLUG.'/activity', [
+        $response = $this->apiPost('/api/v1/recipes/' . self::RECIPE_SLUG . '/activity', [
             'data' => [
                 'type' => 'activities',
                 'attributes' => ['action' => 'cooked'],

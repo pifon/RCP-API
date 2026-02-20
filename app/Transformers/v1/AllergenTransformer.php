@@ -23,7 +23,7 @@ class AllergenTransformer extends AbstractTransformer
     public function selfLink(object $entity): string
     {
         /** @var Allergen $entity */
-        return '/api/v1/allergens/'.$entity->getSlug();
+        return '/api/v1/allergens/' . $entity->getSlug();
     }
 
     protected function attributes(object $entity): array

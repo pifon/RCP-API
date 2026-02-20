@@ -47,9 +47,9 @@ class RecipeComment
 
     public function __construct()
     {
-        $this->replies = new ArrayCollection;
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->replies = new ArrayCollection();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -104,7 +104,7 @@ class RecipeComment
 
     public function softDelete(): void
     {
-        $this->deletedAt = new DateTime;
+        $this->deletedAt = new DateTime();
     }
 
     public function setRecipe(Recipe $recipe): void

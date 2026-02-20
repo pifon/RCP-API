@@ -17,7 +17,8 @@ class CheckPaidRecipe
     public function __construct(
         private readonly FeatureGate $featureGate,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function handle(Request $request, Closure $next): mixed
     {

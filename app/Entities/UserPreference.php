@@ -36,8 +36,8 @@ class UserPreference
 
     public function __construct()
     {
-        $this->createdAt = new DateTime;
-        $this->updatedAt = new DateTime;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int
@@ -63,6 +63,6 @@ class UserPreference
     public function setSpiceTolerance(int $value): void
     {
         $this->spiceTolerance = $value;
-        $this->updatedAt = new DateTime;
+        $this->updatedAt = new DateTime();
     }
 }

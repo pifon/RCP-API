@@ -29,7 +29,8 @@ class DirectionAdd extends Controller
         private readonly RecipeRepository $recipeRepository,
         private readonly DirectionTransformer $transformer,
         private readonly EntityManager $em,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $slug): JsonResponse
     {
@@ -64,7 +65,7 @@ class DirectionAdd extends Controller
         $actionName = $attrs['action'];
         $operation = $this->em->getRepository(Operation::class)->findOneBy(['name' => $actionName]);
         if ($operation === null) {
-            $operation = new Operation;
+            $operation = new Operation();
             $operation->setName($actionName);
             $operation->setDescription($actionName);
             $this->em->persist($operation);
@@ -90,7 +91,7 @@ class DirectionAdd extends Controller
 
             $amount = (float) ($attrs['amount'] ?? 0);
 
-            $serving = new Serving;
+            $serving = new Serving();
             $serving->setProduct($product);
             $serving->setAmount($amount);
             $serving->setMeasure($measure);
@@ -106,7 +107,7 @@ class DirectionAdd extends Controller
             }
         }
 
-        $procedure = new Procedure;
+        $procedure = new Procedure();
         $procedure->setOperation($operation);
         $procedure->setServing($serving);
         $procedure->setDuration(isset($attrs['duration-minutes']) ? (int) $attrs['duration-minutes'] : null);
@@ -126,7 +127,7 @@ class DirectionAdd extends Controller
             );
         }
 
-        $direction = new Direction;
+        $direction = new Direction();
         $direction->setRecipe($recipe);
         $direction->setProcedure($procedure);
         $direction->setIngredient($ingredient);
@@ -135,7 +136,7 @@ class DirectionAdd extends Controller
 
         if (! empty($attrs['notes'])) {
             foreach ($attrs['notes'] as $text) {
-                $note = new DirectionNote;
+                $note = new DirectionNote();
                 $note->setDirection($direction);
                 $note->setNote($text);
                 $this->em->persist($note);
@@ -210,13 +211,13 @@ class DirectionAdd extends Controller
             [$recipe->getId()],
         );
 
-        $ingredientServing = new Serving;
+        $ingredientServing = new Serving();
         $ingredientServing->setProduct($product);
         $ingredientServing->setAmount($amount);
         $ingredientServing->setMeasure($measure);
         $this->em->persist($ingredientServing);
 
-        $ingredient = new Ingredient;
+        $ingredient = new Ingredient();
         $ingredient->setRecipe($recipe);
         $ingredient->setServing($ingredientServing);
         $ingredient->setPosition($maxPos + 1);

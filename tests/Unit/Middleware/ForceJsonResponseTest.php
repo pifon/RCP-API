@@ -13,9 +13,9 @@ use PHPUnit\Framework\TestCase;
 class ForceJsonResponseTest extends TestCase
 {
     #[Test]
-    public function sets_accept_header(): void
+    public function setsAcceptHeader(): void
     {
-        $middleware = new ForceJsonResponse;
+        $middleware = new ForceJsonResponse();
         $request = Request::create('/api/v1/recipes', 'GET');
 
         $middleware->handle($request, function (Request $r) {
