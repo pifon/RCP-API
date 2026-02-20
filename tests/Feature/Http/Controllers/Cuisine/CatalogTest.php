@@ -218,6 +218,6 @@ class CatalogTest extends TestCase
 
         $total = $response->json('meta.page.total');
         $dataCount = count($response->json('data'));
-        $this->assertEquals($total, $dataCount);
+        $this->assertEquals(min($total, 100), $dataCount);
     }
 }

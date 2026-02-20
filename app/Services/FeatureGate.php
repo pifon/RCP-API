@@ -41,7 +41,7 @@ class FeatureGate
         return $sub !== null ? $sub->getPlan()->getSlug() : self::DEFAULT_PLAN_SLUG;
     }
 
-    public function featureValue(User $user, string $feature): string
+    public function featureValue(User $user, string $feature): ?string
     {
         $planSlug = $this->currentPlanSlug($user);
 
@@ -57,14 +57,17 @@ class FeatureGate
             ->getQuery()
             ->getOneOrNullResult();
 
-        return $result['value'] ?? '0';
+        return $result['value'] ?? null;
     }
 
+    /**
+     * Returns the numeric limit for a feature, or null when unlimited / not configured.
+     */
     public function featureLimit(User $user, string $feature): ?int
     {
         $value = $this->featureValue($user, $feature);
 
-        if ($value === 'unlimited') {
+        if ($value === null || $value === 'unlimited') {
             return null;
         }
 
@@ -80,6 +83,10 @@ class FeatureGate
     {
         $value = $this->featureValue($user, 'api_rate_limit');
 
-        return $value === 'unlimited' ? 10000 : (int) $value;
+        if ($value === null || $value === 'unlimited') {
+            return 10000;
+        }
+
+        return (int) $value;
     }
 }

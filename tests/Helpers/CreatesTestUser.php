@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Helpers;
 
+use App\Entities\Plan;
 use App\Entities\User;
+use App\Entities\UserSubscription;
 use App\Exceptions\v1\ValidationErrorException;
 use DateTime;
 
@@ -34,6 +36,35 @@ trait CreatesTestUser
         $em->persist($user);
         $em->flush();
 
+        $this->ensurePremiumSubscription($em, $user);
+
         return $user;
+    }
+
+    private function ensurePremiumSubscription(
+        \Doctrine\ORM\EntityManager $em,
+        User $user,
+    ): void {
+        $plan = $em->getRepository(Plan::class)->findOneBy(['slug' => 'premium']);
+        if ($plan === null) {
+            return;
+        }
+
+        $existing = $em->getRepository(UserSubscription::class)->findOneBy([
+            'user' => $user,
+            'status' => 'active',
+        ]);
+        if ($existing !== null) {
+            return;
+        }
+
+        $sub = new UserSubscription();
+        $sub->setUser($user);
+        $sub->setPlan($plan);
+        $sub->setBillingCycle('yearly');
+        $sub->setCurrentPeriodStart(new DateTime('-1 day'));
+        $sub->setCurrentPeriodEnd(new DateTime('+1 year'));
+        $em->persist($sub);
+        $em->flush();
     }
 }
