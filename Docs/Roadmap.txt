@@ -1,0 +1,76 @@
+RCP-API Development Roadmap
+============================
+
+Completed
+---------
+
+#1  Search & Discovery
+    - Full-text recipe search across title, description, ingredients
+    - Filter by status, difficulty, cuisine, dish-type
+    - Autocomplete endpoint for recipe titles
+    - Product search by name/slug
+    Status: DONE
+
+#7  Testing & Quality
+    - GitHub Actions CI pipeline (phpunit, phpstan, phpcs)
+    - 241 tests / 819 assertions — all passing
+    - Feature tests covering: recipe CRUD, import/export/fork,
+      step-by-step building, shopping lists, pantry, plans,
+      ratings/comments, search
+    Status: DONE
+
+
+Remaining (priority order)
+--------------------------
+
+#3  Meal Planning
+    - Weekly/daily meal plan entity with slots (breakfast, lunch, dinner)
+    - Auto-generate shopping list from a meal plan
+    - Nutritional summary per day/week
+    Why next: Builds directly on existing recipe, shopping list,
+              and pantry infrastructure. High user value.
+
+#2  Media & Images
+    - Recipe image upload (S3 or local storage)
+    - Image resizing/thumbnails via queue jobs
+    - Multiple images per recipe with ordering
+    Why next: Rounds out the core recipe experience. Very visible
+              to end users.
+
+#4  Social Features
+    - Activity feed (followed authors' new recipes, comments, ratings)
+    - Recipe sharing (public links, embed codes)
+    - Author profiles with stats (recipe count, avg rating, followers)
+
+#5  Notifications
+    - Notification entity and endpoints (new follower, comment, rating)
+    - Mark-read / mark-all-read
+    - Webhook or push notification integration point
+
+#6  Performance & Infrastructure
+    - Redis caching layer for hot endpoints (recipe catalog, cuisine list)
+    - Database index audit based on slow-query analysis
+    - Queue-based jobs for heavy operations (export, fork, shopping list gen)
+    - API versioning strategy for v2
+
+#8  Admin & Moderation
+    - Admin role and middleware
+    - Recipe approval/moderation workflow (draft -> pending -> published)
+    - User management (ban, suspend)
+    - Dashboard stats endpoint (total users, recipes, activity)
+
+#9  Management System
+    - Promote user to author (admin or self-service endpoint)
+    - Block or suspend user accounts
+    - Admin-only recipe status 'disabled' (only admin can revoke)
+    - Soft-delete recipes via admin action
+    - Create/assign admin role for system management
+
+
+Standing rules for all future work
+-----------------------------------
+For every change, update:
+  - README.md
+  - Postman collection (tests/Postman/Pifon.postman_collection.json)
+  - OpenAPI documentation (app/Documentation/swagger.yaml)
+  - Unit and feature tests (high coverage)
