@@ -5,8 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('element_sub_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique('name');
+            $table->string('name')->unique('element_sub_types_name_unique');
             $table->foreignId('type')->constrained('element_types', 'id');
             $table->text('description')->nullable();
             $table->string('ref')->nullable();

@@ -54,20 +54,20 @@ class CookableRecipes extends Controller
          * Chain: recipes -> ingredients -> servings -> products
          */
         $sql = <<<'SQL'
-            SELECT
-                r.id AS recipe_id,
-                COUNT(DISTINCT s.product_id) AS total_ingredients,
-                COUNT(DISTINCT CASE WHEN s.product_id IN (%s) THEN s.product_id END) AS matched
-            FROM recipes r
-            INNER JOIN ingredients i ON i.recipe_id = r.id
-            INNER JOIN servings s ON s.id = i.serving_id
-            WHERE r.deleted_at IS NULL
-              AND r.status = 'published'
-            GROUP BY r.id
-            HAVING (COUNT(DISTINCT s.product_id)
-                - COUNT(DISTINCT CASE WHEN s.product_id IN (%s) THEN s.product_id END)) <= ?
-            ORDER BY matched DESC, total_ingredients ASC
-        SQL;
+                SELECT
+                    r.id AS recipe_id,
+                    COUNT(DISTINCT s.product_id) AS total_ingredients,
+                    COUNT(DISTINCT CASE WHEN s.product_id IN (%s) THEN s.product_id END) AS matched
+                FROM recipes r
+                INNER JOIN ingredients i ON i.recipe_id = r.id
+                INNER JOIN servings s ON s.id = i.serving_id
+                WHERE r.deleted_at IS NULL
+                  AND r.status = 'published'
+                GROUP BY r.id
+                HAVING (COUNT(DISTINCT s.product_id)
+                    - COUNT(DISTINCT CASE WHEN s.product_id IN (%s) THEN s.product_id END)) <= ?
+                ORDER BY matched DESC, total_ingredients ASC
+            SQL;
 
         $placeholders = implode(',', array_fill(0, count($pantryProductIds), '?'));
         $sql = sprintf($sql, $placeholders, $placeholders);

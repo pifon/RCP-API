@@ -48,6 +48,7 @@ supervisord.pid
 # Testing
 .phpunit.result.cache
 .phpunit.cache/
+database/testing.sqlite
 
 # Static analysis
 psalm.xml

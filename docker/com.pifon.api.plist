@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.pifon.api</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/sh</string>
+        <string>ABSOLUTE_PATH_TO_REPO/docker/start-at-boot.sh</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>ABSOLUTE_PATH_TO_REPO</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/com.pifon.api.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/com.pifon.api.err</string>
+</dict>
+</plist>

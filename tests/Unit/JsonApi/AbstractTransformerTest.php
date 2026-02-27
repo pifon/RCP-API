@@ -33,7 +33,7 @@ class AbstractTransformerTest extends TestCase
         $entity = (object) ['id' => '1', 'title' => 'Hello', 'status' => 'published'];
         $params = new QueryParameters(fields: ['test-resources' => ['title']]);
 
-        $resource = (new TestResourceTransformer())->toResource($entity, $params);
+        $resource = new TestResourceTransformer()->toResource($entity, $params);
 
         $this->assertArrayHasKey('title', $resource['attributes']);
         $this->assertArrayNotHasKey('status', $resource['attributes']);
@@ -45,7 +45,7 @@ class AbstractTransformerTest extends TestCase
         $entity = (object) ['id' => '1', 'title' => 'Hi', 'status' => 'draft'];
         $params = new QueryParameters();
 
-        $resource = (new TestResourceTransformer())->toResource($entity, $params);
+        $resource = new TestResourceTransformer()->toResource($entity, $params);
 
         $this->assertArrayHasKey('title', $resource['attributes']);
         $this->assertArrayHasKey('status', $resource['attributes']);
@@ -73,7 +73,7 @@ class AbstractTransformerTest extends TestCase
         $entity = (object) ['id' => '1', 'title' => 'X', 'status' => 'draft'];
         $params = new QueryParameters(include: ['nonexistent']);
 
-        $includes = (new TestResourceTransformer())->collectIncludes($entity, $params);
+        $includes = new TestResourceTransformer()->collectIncludes($entity, $params);
 
         $this->assertSame([], $includes);
     }
@@ -82,7 +82,7 @@ class AbstractTransformerTest extends TestCase
     public function emptyRelationshipsOmitsKey(): void
     {
         $entity = (object) ['id' => '1', 'title' => 'X', 'status' => 'draft'];
-        $resource = (new TestResourceTransformer())->toResource($entity);
+        $resource = new TestResourceTransformer()->toResource($entity);
 
         $this->assertArrayNotHasKey('relationships', $resource);
     }
