@@ -63,6 +63,8 @@ Route::prefix('recipes')->name('recipes.')->group(function () {
 
     Route::get('/{slug}/directions', \App\Http\Controllers\v1\Recipe\DirectionIndex::class)
         ->name('directions.index');
+    Route::post('/{slug}/directions/from-text', \App\Http\Controllers\v1\Recipe\DirectionAddFromText::class)
+        ->name('directions.add-from-text');
     Route::post('/{slug}/directions', \App\Http\Controllers\v1\Recipe\DirectionAdd::class)
         ->name('directions.add');
     Route::delete('/{slug}/directions/{directionId}', \App\Http\Controllers\v1\Recipe\DirectionRemove::class)
@@ -153,6 +155,11 @@ Route::prefix('cuisine-requests')->name('cuisine-requests.')->group(function () 
 // ─── Products ────────────────────────────────────────────────
 Route::prefix('products')->name('products.')->group(function () {
     Route::get('/search', \App\Http\Controllers\v1\Product\Search::class)->name('search');
+    Route::get('/slug-replacements', \App\Http\Controllers\v1\Product\SlugReplacementsIndex::class)
+        ->name('slug-replacements.index');
+    Route::post('/slug-replacements', \App\Http\Controllers\v1\Product\SlugReplacementStore::class)
+        ->name('slug-replacements.store');
+    Route::post('/', \App\Http\Controllers\v1\Product\Create::class)->name('create');
 });
 
 // ─── Authors ─────────────────────────────────────────────────

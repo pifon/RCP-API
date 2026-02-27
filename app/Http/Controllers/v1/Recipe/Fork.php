@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\v1\Recipe;
 
 use App\Entities\Direction;
+use App\Entities\DirectionIngredient;
 use App\Entities\DirectionNote;
 use App\Entities\Ingredient;
 use App\Entities\IngredientNote;
+use App\Entities\Product;
+use App\Entities\Measure;
 use App\Entities\Procedure;
 use App\Entities\Recipe;
 use App\Entities\Serving;
@@ -119,6 +122,7 @@ class Fork extends Controller
             $newIngredient->setRecipe($fork);
             $newIngredient->setServing($newServing);
             $newIngredient->setPosition($original->getPosition());
+            $newIngredient->setOptional($original->isOptional());
             $this->em->persist($newIngredient);
 
             foreach ($original->getNotes() as $srcNote) {
@@ -145,13 +149,20 @@ class Fork extends Controller
             $srcProcedure = $original->getProcedure();
 
             $newProcServing = null;
-            if ($srcProcedure->getServing() !== null) {
-                $s = $srcProcedure->getServing();
-                $newProcServing = new Serving();
-                $newProcServing->setProduct($s->getProduct());
-                $newProcServing->setAmount($s->getAmount());
-                $newProcServing->setMeasure($s->getMeasure());
-                $this->em->persist($newProcServing);
+            $directionIngredients = $original->getDirectionIngredients()->toArray();
+            $firstStepServing = null;
+            foreach ($directionIngredients as $srcDi) {
+                $stepServing = $srcDi->getServing();
+                if ($firstStepServing === null && $stepServing !== null) {
+                    $firstStepServing = $stepServing;
+                }
+            }
+            if ($firstStepServing !== null) {
+                $newProcServing = $this->findOrCreateServing(
+                    $firstStepServing->getProduct(),
+                    $firstStepServing->getMeasure(),
+                    $firstStepServing->getAmount(),
+                );
             }
 
             $newProcedure = new Procedure();
@@ -160,18 +171,30 @@ class Fork extends Controller
             $newProcedure->setDuration($srcProcedure->getDuration());
             $this->em->persist($newProcedure);
 
-            $linkedIngredient = null;
-            $srcIngredient = $original->getIngredient();
-            if ($srcIngredient !== null) {
-                $linkedIngredient = $ingredientMap[$srcIngredient->getId()] ?? null;
-            }
-
             $newDirection = new Direction();
             $newDirection->setRecipe($fork);
             $newDirection->setProcedure($newProcedure);
-            $newDirection->setIngredient($linkedIngredient);
             $newDirection->setSequence($original->getSequence());
             $this->em->persist($newDirection);
+
+            foreach ($directionIngredients as $srcDi) {
+                $linkedIngredient = $ingredientMap[$srcDi->getIngredient()->getId()] ?? null;
+                if ($linkedIngredient === null) {
+                    continue;
+                }
+                $stepServing = $srcDi->getServing();
+                $newStepServing = $this->findOrCreateServing(
+                    $stepServing->getProduct(),
+                    $stepServing->getMeasure(),
+                    $stepServing->getAmount(),
+                );
+                $di = new DirectionIngredient();
+                $di->setDirection($newDirection);
+                $di->setIngredient($linkedIngredient);
+                $di->setServing($newStepServing);
+                $newDirection->getDirectionIngredients()->add($di);
+                $this->em->persist($di);
+            }
 
             foreach ($original->getNotes() as $srcNote) {
                 $note = new DirectionNote();
@@ -180,6 +203,25 @@ class Fork extends Controller
                 $this->em->persist($note);
             }
         }
+    }
+
+    private function findOrCreateServing(Product $product, Measure $measure, float $amount): Serving
+    {
+        $existing = $this->em->getRepository(Serving::class)->findOneBy([
+            'product' => $product,
+            'measure' => $measure,
+            'amount' => $amount,
+        ]);
+        if ($existing !== null) {
+            return $existing;
+        }
+        $serving = new Serving();
+        $serving->setProduct($product);
+        $serving->setMeasure($measure);
+        $serving->setAmount($amount);
+        $this->em->persist($serving);
+
+        return $serving;
     }
 
     private function generateUniqueSlug(string $base): string

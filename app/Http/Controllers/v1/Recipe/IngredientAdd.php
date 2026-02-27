@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\Recipe;
 
+use App\Http\Controllers\v1\Recipe\Concerns\ResolvesProductAndMeasure;
 use App\Entities\Ingredient;
 use App\Entities\Measure;
 use App\Entities\Product;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Validator;
 
 class IngredientAdd extends Controller
 {
+    use ResolvesProductAndMeasure;
+
     public function __construct(
         private readonly RecipeRepository $recipeRepository,
         private readonly IngredientTransformer $transformer,
@@ -51,25 +54,22 @@ class IngredientAdd extends Controller
             throw ValidationErrorException::fromValidationBag($validator->errors());
         }
 
-        $productId = $rels['product']['data']['id'] ?? null;
-        $measureId = $rels['measure']['data']['id'] ?? null;
+        $productRef = $rels['product']['data']['id'] ?? null;
+        $measureRef = $rels['measure']['data']['id'] ?? null;
 
-        if ($productId === null || $measureId === null) {
+        if ($productRef === null || $measureRef === null) {
             throw new ValidationErrorException(
                 'Product and measure are required.',
-                ['relationships' => ['Provide relationships.product and relationships.measure.']],
+                ['relationships' => ['Provide relationships.product and relationships.measure (id or slug).']],
             );
         }
 
-        $product = $this->em->find(Product::class, (int) $productId);
-        if ($product === null) {
-            throw new NotFoundException("Product '{$productId}' not found.");
-        }
-
-        $measure = $this->em->find(Measure::class, (int) $measureId);
-        if ($measure === null) {
-            throw new NotFoundException("Measure '{$measureId}' not found.");
-        }
+        $context = [
+            'amount' => (float) $attrs['amount'],
+            'measure-slug' => (string) $measureRef,
+        ];
+        $product = $this->resolveProductByIdOrSlug($this->em, $productRef, $context);
+        $measure = $this->resolveMeasureByIdOrSlug($this->em, $measureRef);
 
         $serving = new Serving();
         $serving->setProduct($product);

@@ -330,4 +330,75 @@ class StepByStepTest extends TestCase
         $list = $this->apiGet("/api/v1/recipes/{$slug}/directions");
         $list->assertOk()->assertJsonCount(0, 'data');
     }
+
+    public function testRemoveDirectionReEvaluatesIngredientAmount(): void
+    {
+        $slug = $this->createEmptyRecipe();
+
+        $this->apiPost("/api/v1/recipes/{$slug}/directions", [
+            'data' => [
+                'type' => 'directions',
+                'attributes' => [
+                    'action' => 'boil',
+                    'duration-minutes' => 10,
+                    'product-id' => 1,
+                    'amount' => 300,
+                    'measure-id' => 1,
+                ],
+            ],
+        ])->assertStatus(201);
+
+        $second = $this->apiPost("/api/v1/recipes/{$slug}/directions", [
+            'data' => [
+                'type' => 'directions',
+                'attributes' => [
+                    'action' => 'drain',
+                    'duration-minutes' => 2,
+                    'product-id' => 1,
+                    'amount' => 200,
+                    'measure-id' => 1,
+                ],
+            ],
+        ]);
+        $second->assertStatus(201);
+        $directionIdToRemove = $second->json('data.id');
+
+        $ingredientsBefore = $this->apiGet("/api/v1/recipes/{$slug}/ingredients");
+        $ingredientsBefore->assertOk()->assertJsonCount(1, 'data');
+        $this->assertEquals(500.0, $ingredientsBefore->json('data.0.attributes.amount'));
+
+        $this->apiDelete("/api/v1/recipes/{$slug}/directions/{$directionIdToRemove}")->assertOk();
+
+        $ingredientsAfter = $this->apiGet("/api/v1/recipes/{$slug}/ingredients");
+        $ingredientsAfter->assertOk()->assertJsonCount(1, 'data');
+        $this->assertEquals(300.0, $ingredientsAfter->json('data.0.attributes.amount'));
+    }
+
+    public function testRemoveDirectionRemovesIngredientWhenAmountBecomesZero(): void
+    {
+        $slug = $this->createEmptyRecipe();
+
+        $add = $this->apiPost("/api/v1/recipes/{$slug}/directions", [
+            'data' => [
+                'type' => 'directions',
+                'attributes' => [
+                    'action' => 'add mustard',
+                    'duration-minutes' => 1,
+                    'product-id' => 1,
+                    'amount' => 2,
+                    'measure-id' => 1,
+                ],
+            ],
+        ]);
+        $add->assertStatus(201);
+        $directionId = $add->json('data.id');
+
+        $ingredientsBefore = $this->apiGet("/api/v1/recipes/{$slug}/ingredients");
+        $ingredientsBefore->assertOk()->assertJsonCount(1, 'data');
+
+        $this->apiDelete("/api/v1/recipes/{$slug}/directions/{$directionId}")->assertOk();
+
+        $ingredientsAfter = $this->apiGet("/api/v1/recipes/{$slug}/ingredients");
+        $ingredientsAfter->assertOk()->assertJsonCount(0, 'data');
+    }
 }

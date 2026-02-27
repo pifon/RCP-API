@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\Recipe;
 
+use App\Entities\DishType;
 use App\Entities\Recipe;
 use App\Exceptions\v1\ValidationErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\v1\Recipe\Concerns\ResolvesCuisine;
 use App\JsonApi\Document;
+use App\JsonApi\ErrorObject;
 use App\Repositories\v1\AuthorRepository;
+use Doctrine\ORM\NoResultException;
 use App\Repositories\v1\RecipeRepository;
 use App\Transformers\v1\RecipeTransformer;
 use Doctrine\ORM\EntityManager;
@@ -50,7 +53,19 @@ class Create extends Controller
         }
 
         $user = auth()->user();
-        $author = $this->authorRepository->getAuthor($user);
+        try {
+            $author = $this->authorRepository->getAuthor($user);
+        } catch (NoResultException) {
+            return response()->json(
+                Document::errors(new ErrorObject(
+                    status: '403',
+                    title: 'Author Required',
+                    detail: 'You must have an author profile to perform this action.',
+                )),
+                403,
+                ['Content-Type' => 'application/vnd.api+json'],
+            );
+        }
 
         $title = $attrs['title'];
         $slug = $this->generateUniqueSlug($title);
@@ -68,6 +83,14 @@ class Create extends Controller
         $cuisineError = $this->applyCuisine($rels, $recipe, $this->em);
         if ($cuisineError !== null) {
             return $cuisineError;
+        }
+
+        $dishTypeId = $rels['dish-type']['data']['id'] ?? null;
+        if ($dishTypeId !== null) {
+            $dishType = $this->em->find(DishType::class, (int) $dishTypeId);
+            if ($dishType !== null) {
+                $recipe->setDishType($dishType);
+            }
         }
 
         $this->em->persist($recipe);

@@ -23,6 +23,9 @@ class DirectionNote
     #[ORM\Column(name: 'note', type: 'text', nullable: false)]
     private string $note;
 
+    #[ORM\Column(name: 'creator_only', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $creatorOnly = false;
+
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private DateTime $createdAt;
 
@@ -58,5 +61,15 @@ class DirectionNote
     public function setNote(string $note): void
     {
         $this->note = $note;
+    }
+
+    public function isCreatorOnly(): bool
+    {
+        return $this->creatorOnly;
+    }
+
+    public function setCreatorOnly(bool $creatorOnly): void
+    {
+        $this->creatorOnly = $creatorOnly;
     }
 }

@@ -12,19 +12,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN rm -f /etc/nginx/sites-enabled/default
-RUN mkdir -p /run/nginx /var/www/html/certbot
+RUN mkdir -p /run/nginx /var/www/html/certbot /etc/letsencrypt/live
 
 WORKDIR /var/www/html
 
-COPY docker/nginx/ssl-redirect.conf /etc/nginx/conf.d/default.conf
-COPY docker/certbot-renew.sh /usr/local/bin/certbot-renew.sh
+# Copy nginx config and entrypoint
+COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/nginx/default.conf.template /etc/nginx/conf.d/default.conf.template
+COPY docker/nginx/generated.conf /etc/nginx/conf.d/generated.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY docker/certbot-cron /etc/cron.d/certbot-cron
 COPY docker/supervisord.conf /etc/supervisord.conf
 
-RUN chmod +x /usr/local/bin/certbot-renew.sh /usr/local/bin/entrypoint.sh \
-    && chmod 0644 /etc/cron.d/certbot-cron \
-    && crontab /etc/cron.d/certbot-cron
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80 443
 

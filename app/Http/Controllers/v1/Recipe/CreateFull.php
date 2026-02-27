@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\Recipe;
 
+use App\Entities\Author;
 use App\Entities\Direction;
+use App\Entities\DirectionIngredient;
 use App\Entities\DirectionNote;
 use App\Entities\DishType;
 use App\Entities\Ingredient;
@@ -19,10 +21,12 @@ use App\Exceptions\v1\NotFoundException;
 use App\Exceptions\v1\ValidationErrorException;
 use App\Http\Controllers\Controller;
 use App\JsonApi\Document;
+use App\JsonApi\ErrorObject;
 use App\Repositories\v1\AuthorRepository;
 use App\Repositories\v1\RecipeRepository;
 use App\Transformers\v1\RecipeTransformer;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NoResultException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -31,6 +35,7 @@ use Illuminate\Support\Str;
 class CreateFull extends Controller
 {
     use Concerns\ResolvesCuisine;
+    use Concerns\ResolvesProductAndMeasure;
 
     public function __construct(
         private readonly AuthorRepository $authorRepository,
@@ -69,10 +74,25 @@ class CreateFull extends Controller
             return $cuisineError;
         }
 
+        $user = auth()->user();
+        try {
+            $author = $this->authorRepository->getAuthor($user);
+        } catch (NoResultException) {
+            return response()->json(
+                Document::errors(new ErrorObject(
+                    status: '403',
+                    title: 'Author Required',
+                    detail: 'You must have an author profile to perform this action.',
+                )),
+                403,
+                ['Content-Type' => 'application/vnd.api+json'],
+            );
+        }
+
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $recipe = $this->buildRecipe($attrs, $rels, $tempRecipe);
+            $recipe = $this->buildRecipe($attrs, $rels, $tempRecipe, $author);
 
             $this->em->persist($recipe);
             $this->em->flush();
@@ -102,11 +122,8 @@ class CreateFull extends Controller
         return response()->json($doc, 201);
     }
 
-    private function buildRecipe(array $attrs, array $rels, Recipe $recipe): Recipe
+    private function buildRecipe(array $attrs, array $rels, Recipe $recipe, Author $author): Recipe
     {
-        $user = auth()->user();
-        $author = $this->authorRepository->getAuthor($user);
-
         $title = $attrs['title'];
         $slug = $attrs['slug'] ?? null;
 
@@ -179,6 +196,7 @@ class CreateFull extends Controller
             $ingredient->setRecipe($recipe);
             $ingredient->setServing($serving);
             $ingredient->setPosition($position);
+            $ingredient->setOptional((bool) ($def['optional'] ?? false));
             $this->em->persist($ingredient);
 
             if (! empty($def['notes'])) {
@@ -216,11 +234,16 @@ class CreateFull extends Controller
             $operation = $this->resolveOperation($actionName);
 
             $serving = null;
-            if (isset($def['product-id'])) {
+            if (isset($def['product-id']) || isset($def['product-slug'])) {
                 $product = $this->resolveProduct($def);
                 $measure = $this->resolveMeasure($def);
                 $amount = (float) ($def['amount'] ?? 0);
-
+                if ($amount <= 0) {
+                    throw new ValidationErrorException(
+                        "Direction step #{$step}: amount must be greater than zero.",
+                        ['directions' => ["Step #{$step} has invalid amount."]],
+                    );
+                }
                 $serving = new Serving();
                 $serving->setProduct($product);
                 $serving->setAmount($amount);
@@ -234,18 +257,27 @@ class CreateFull extends Controller
             $procedure->setDuration(isset($def['duration-minutes']) ? (int) $def['duration-minutes'] : null);
             $this->em->persist($procedure);
 
-            $ingredient = null;
-            if (isset($def['ingredient'])) {
-                $ref = (int) $def['ingredient'];
-                $ingredient = $ingredientMap[$ref] ?? null;
-            }
-
             $direction = new Direction();
             $direction->setRecipe($recipe);
             $direction->setProcedure($procedure);
-            $direction->setIngredient($ingredient);
             $direction->setSequence($step);
             $this->em->persist($direction);
+
+            $ingredientRefs = isset($def['ingredients']) && is_array($def['ingredients'])
+                ? $def['ingredients']
+                : (isset($def['ingredient']) ? [$def['ingredient']] : []);
+            $stepServing = $procedure->getServing();
+            foreach ($ingredientRefs as $ref) {
+                $ingredient = $ingredientMap[(int) $ref] ?? null;
+                if ($ingredient !== null && $stepServing !== null) {
+                    $di = new DirectionIngredient();
+                    $di->setDirection($direction);
+                    $di->setIngredient($ingredient);
+                    $di->setServing($stepServing);
+                    $direction->getDirectionIngredients()->add($di);
+                    $this->em->persist($di);
+                }
+            }
 
             if (! empty($def['notes'])) {
                 foreach ((array) $def['notes'] as $text) {
@@ -260,32 +292,34 @@ class CreateFull extends Controller
 
     private function resolveProduct(array $def): Product
     {
-        $id = $def['product-id'] ?? null;
-        if ($id === null) {
-            throw new ValidationErrorException('product-id is required.', ['product-id' => ['Missing product-id.']]);
+        $ref = $def['product-slug'] ?? $def['product-id'] ?? null;
+        if ($ref === null || $ref === '') {
+            throw new ValidationErrorException(
+                'Product is required. Provide product-id or product-slug.',
+                ['product-id' => ['Missing product-id or product-slug.']],
+            );
         }
 
-        $product = $this->em->find(Product::class, (int) $id);
-        if ($product === null) {
-            throw new NotFoundException("Product #{$id} not found.");
+        $context = null;
+        if (isset($def['amount'], $def['measure-slug'])) {
+            $context = ['amount' => (float) $def['amount'], 'measure-slug' => (string) $def['measure-slug']];
+        } elseif (isset($def['amount'], $def['measure-id'])) {
+            $context = ['amount' => (float) $def['amount'], 'measure-slug' => (string) $def['measure-id']];
         }
-
-        return $product;
+        return $this->resolveProductByIdOrSlug($this->em, $ref, $context);
     }
 
     private function resolveMeasure(array $def): Measure
     {
-        $id = $def['measure-id'] ?? null;
-        if ($id === null) {
-            throw new ValidationErrorException('measure-id is required.', ['measure-id' => ['Missing measure-id.']]);
+        $ref = $def['measure-slug'] ?? $def['measure-id'] ?? null;
+        if ($ref === null || $ref === '') {
+            throw new ValidationErrorException(
+                'Measure is required. Provide measure-id or measure-slug.',
+                ['measure-id' => ['Missing measure-id or measure-slug.']],
+            );
         }
 
-        $measure = $this->em->find(Measure::class, (int) $id);
-        if ($measure === null) {
-            throw new NotFoundException("Measure #{$id} not found.");
-        }
-
-        return $measure;
+        return $this->resolveMeasureByIdOrSlug($this->em, $ref);
     }
 
     private function resolveOperation(string $name): Operation

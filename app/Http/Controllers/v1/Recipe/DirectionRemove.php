@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\v1\Recipe;
 
 use App\Entities\Direction;
+use App\Entities\DirectionIngredient;
+use App\Entities\Serving;
 use App\Exceptions\v1\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\JsonApi\Document;
@@ -30,6 +32,10 @@ class DirectionRemove extends Controller
         $recipe = $direction->getRecipe();
         $recipeId = $recipe->getId();
         $removedSeq = $direction->getSequence();
+
+        // Re-evaluate each direction_ingredient (update or remove recipe ingredients), then remove each di.
+        // Removing the direction also cascade-deletes any direction_ingredients (Direction has orphanRemoval).
+        $this->reEvaluateIngredientForRemovedDirection($direction);
 
         $this->em->remove($direction);
         $this->em->flush();
@@ -59,5 +65,64 @@ class DirectionRemove extends Controller
                 'prep-time-minutes' => $recipe->getPrepTimeMinutes(),
             ]),
         );
+    }
+
+    /**
+     * Re-evaluate all ingredients linked to this direction: for each direction_ingredient,
+     * subtract this step's amount from the ingredient's serving; remove ingredient if
+     * new amount <= 0, otherwise update its serving.
+     */
+    private function reEvaluateIngredientForRemovedDirection(Direction $direction): void
+    {
+        $directionIngredients = $direction->getDirectionIngredients()->toArray();
+        foreach ($directionIngredients as $di) {
+            $this->reEvaluateOneIngredientForRemovedDirection($direction, $di);
+        }
+    }
+
+    private function reEvaluateOneIngredientForRemovedDirection(Direction $direction, DirectionIngredient $di): void
+    {
+        $stepServing = $di->getServing();
+        $ingredient = $di->getIngredient();
+        $currentServing = $ingredient->getServing();
+        $product = $currentServing->getProduct();
+        $measure = $currentServing->getMeasure();
+
+        if (
+            $stepServing->getProduct()->getId() !== $product->getId()
+            || $stepServing->getMeasure()->getId() !== $measure->getId()
+        ) {
+            return;
+        }
+
+        $stepAmount = (float) $stepServing->getAmount();
+        $currentAmount = (float) $currentServing->getAmount();
+        $newAmount = max(0.0, $currentAmount - $stepAmount);
+
+        $direction->getDirectionIngredients()->removeElement($di);
+        $this->em->remove($di);
+        $this->em->flush();
+
+        if ($newAmount <= 0) {
+            $this->em->remove($ingredient);
+            return;
+        }
+
+        $newServing = $this->em->getRepository(Serving::class)->findOneBy([
+            'product' => $product,
+            'measure' => $measure,
+            'amount' => $newAmount,
+        ]);
+
+        if ($newServing === null) {
+            $newServing = new Serving();
+            $newServing->setProduct($product);
+            $newServing->setMeasure($measure);
+            $newServing->setAmount($newAmount);
+            $this->em->persist($newServing);
+        }
+
+        $ingredient->setServing($newServing);
+        $this->em->persist($ingredient);
     }
 }

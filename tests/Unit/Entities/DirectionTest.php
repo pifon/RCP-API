@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Entities;
 
 use App\Entities\Direction;
+use App\Entities\DirectionIngredient;
 use App\Entities\Ingredient;
 use App\Entities\Procedure;
 use App\Entities\Recipe;
@@ -19,6 +20,7 @@ class DirectionTest extends TestCase
         $direction = new Direction();
 
         $this->assertCount(0, $direction->getNotes());
+        $this->assertCount(0, $direction->getDirectionIngredients());
         $this->assertInstanceOf(\DateTime::class, $direction->getCreatedAt ?? null ?: new \DateTime());
     }
 
@@ -49,12 +51,19 @@ class DirectionTest extends TestCase
     {
         $direction = new Direction();
         $this->assertNull($direction->getIngredient());
+        $this->assertCount(0, $direction->getDirectionIngredients());
+        $this->assertSame([], $direction->getIngredients());
 
-        $ingredient = new Ingredient();
-        $direction->setIngredient($ingredient);
+        $ingredient = $this->createMock(Ingredient::class);
+        $di = $this->createMock(DirectionIngredient::class);
+        $di->method('getIngredient')->willReturn($ingredient);
+        $direction->getDirectionIngredients()->add($di);
+
         $this->assertSame($ingredient, $direction->getIngredient());
+        $this->assertCount(1, $direction->getDirectionIngredients());
+        $this->assertSame([$ingredient], $direction->getIngredients());
 
-        $direction->setIngredient(null);
+        $direction->getDirectionIngredients()->clear();
         $this->assertNull($direction->getIngredient());
     }
 

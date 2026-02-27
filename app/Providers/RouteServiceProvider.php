@@ -13,6 +13,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->middleware([
+                \App\Http\Middleware\LogRequestResponse::class,
                 'api',
                 \App\Http\Middleware\ForceJsonResponse::class,
                 \App\Http\Middleware\ValidateJsonApi::class,
@@ -21,6 +22,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::prefix('api/v1')
             ->middleware([
+                \App\Http\Middleware\LogRequestResponse::class,
                 'auth:api',
                 \App\Http\Middleware\ForceJsonResponse::class,
                 \App\Http\Middleware\ValidateJsonApi::class,

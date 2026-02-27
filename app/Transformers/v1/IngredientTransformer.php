@@ -42,6 +42,7 @@ class IngredientTransformer extends AbstractTransformer
 
         return [
             'position' => $entity->getPosition(),
+            'optional' => $entity->isOptional(),
             'product-name' => $product->getName(),
             'product-slug' => $product->getSlug(),
             'amount' => $serving->getAmount(),

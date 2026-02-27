@@ -60,6 +60,9 @@ class Serving
 
     public function setAmount(float $amount): void
     {
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Serving amount must be greater than 0.');
+        }
         $this->amount = $amount;
     }
 

@@ -35,6 +35,16 @@ class AuthorsSeeder extends Seeder
                 'created_at' => '2025-07-09 13:41:59',
                 'updated_at' => '2025-07-09 13:41:59',
             ],
+            [
+                'id' => 3,
+                'user_id' => 5,
+                'name' => 'Pifon',
+                'email' => 'pifon@example.com',
+                'description' => null,
+                'tier' => 'free',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s'),
+            ],
         ]);
     }
 }

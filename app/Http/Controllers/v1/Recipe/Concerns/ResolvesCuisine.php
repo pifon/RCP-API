@@ -62,18 +62,21 @@ trait ResolvesCuisine
     }
 
     /**
+     * Resolve cuisine from relationship data. Expects slug (e.g. data.slug).
+     * Also supports id and name for backward compatibility.
+     *
      * @param  array<string, mixed>  $data
      */
     private function findCuisine(array $data, EntityManager $em): ?Cuisine
     {
-        if (isset($data['id'])) {
-            return $em->find(Cuisine::class, (int) $data['id']);
-        }
-
         $repo = $em->getRepository(Cuisine::class);
 
-        if (isset($data['slug'])) {
+        if (isset($data['slug']) && $data['slug'] !== '') {
             return $repo->findOneBy(['slug' => $data['slug']]);
+        }
+
+        if (isset($data['id'])) {
+            return $em->find(Cuisine::class, (int) $data['id']);
         }
 
         if (isset($data['name'])) {

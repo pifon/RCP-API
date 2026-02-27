@@ -25,10 +25,10 @@ class Product
 
     #[ORM\ManyToOne(targetEntity: Measure::class)]
     #[ORM\JoinColumn(name: 'measure_id', referencedColumnName: 'id', nullable: true)]
-    private ?Measure $measure;
+    private ?Measure $measure = null;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private ?string $description;
+    private ?string $description = null;
 
     #[ORM\Column(name: 'vegan', type: 'boolean', nullable: false)]
     private bool $vegan = false;

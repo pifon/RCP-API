@@ -42,6 +42,9 @@ class Ingredient
     #[ORM\Column(name: 'position', type: 'integer', nullable: false, options: ['default' => 0])]
     private int $position = 0;
 
+    #[ORM\Column(name: 'optional', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $optional = false;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
@@ -82,6 +85,16 @@ class Ingredient
     public function setPosition(int $position): void
     {
         $this->position = $position;
+    }
+
+    public function isOptional(): bool
+    {
+        return $this->optional;
+    }
+
+    public function setOptional(bool $optional): void
+    {
+        $this->optional = $optional;
     }
 
     public function getNotes(): Collection

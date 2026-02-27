@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 class UsersSeeder extends Seeder
@@ -64,6 +65,18 @@ class UsersSeeder extends Seeder
                 'token' => null,
                 'created_at' => '2025-07-09 13:52:58',
                 'updated_at' => '2025-07-09 13:52:58',
+            ],
+            [
+                'id' => 5,
+                'username' => 'pifon',
+                'name' => 'Pifon',
+                'email' => 'pifon@example.com',
+                'email_verified_at' => null,
+                'password' => Hash::make('password'),
+                'password_changed_at' => now()->format('Y-m-d H:i:s'),
+                'token' => null,
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s'),
             ],
         ]);
     }

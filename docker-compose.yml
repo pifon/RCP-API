@@ -6,24 +6,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - .env
     ports:
-      - "80:80"
-      - "443:443"
+      - "127.0.0.2:80:80"
+      - "127.0.0.2:443:443"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/var/www/html
-      - /etc/letsencrypt:/etc/letsencrypt
-      - ../foodbook.uk/docker/nginx/foodbook-proxy.conf:/etc/nginx/conf.d/foodbook.conf:ro
+      - letsencrypt:/etc/letsencrypt
     networks:
       - laravel-network
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-fsk", "https://localhost/api/"]
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 40s
 
   database:
     image: mariadb:lts
@@ -35,11 +38,17 @@ services:
     env_file:
       - .env
     ports:
-      - "3306:3306"
+      - "127.0.0.2:3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
       - laravel-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 networks:
   laravel-network:
@@ -47,3 +56,4 @@ networks:
 
 volumes:
   mariadb_data:
+  letsencrypt:

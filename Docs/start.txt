@@ -1,0 +1,16 @@
+cd /Users/przemyslaw.wolski/Pifon/RCP-API
+
+# Stop and clean up old containers
+docker-compose down -v
+
+# Rebuild the image
+docker-compose build --no-cache
+
+# Start the containers
+docker-compose up -d
+
+# Check if nginx is running
+docker logs api | grep -E "(nginx|Supervisor|INFO|WARN)" | tail -20
+
+# Test if API is accessible
+curl -k https://pifon/api

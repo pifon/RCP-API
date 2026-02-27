@@ -92,10 +92,12 @@ class Export extends Controller
 
             $entry = [
                 'position' => $ingredient->getPosition(),
+                'optional' => $ingredient->isOptional(),
+                'product-slug' => $product->getSlug(),
                 'product-id' => $product->getId(),
                 'product-name' => $product->getName(),
-                'product-slug' => $product->getSlug(),
                 'amount' => $serving->getAmount(),
+                'measure-slug' => $measure->getSlug(),
                 'measure-id' => $measure->getId(),
                 'measure-name' => $measure->getName(),
                 'measure-symbol' => $measure->getSlug(),
@@ -135,29 +137,70 @@ class Export extends Controller
 
             $procServing = $procedure->getServing();
             if ($procServing !== null) {
+                $entry['product-slug'] = $procServing->getProduct()->getSlug();
                 $entry['product-id'] = $procServing->getProduct()->getId();
                 $entry['product-name'] = $procServing->getProduct()->getName();
                 $entry['amount'] = $procServing->getAmount();
+                $entry['measure-slug'] = $procServing->getMeasure()->getSlug();
                 $entry['measure-id'] = $procServing->getMeasure()->getId();
                 $entry['measure-name'] = $procServing->getMeasure()->getName();
             }
 
-            $linkedIngredient = $direction->getIngredient();
-            if ($linkedIngredient !== null) {
-                $entry['ingredient'] = $linkedIngredient->getPosition();
+            $linkedPositions = [];
+            $ingredientsWithAmounts = [];
+            foreach ($direction->getDirectionIngredients() as $di) {
+                $ing = $di->getIngredient();
+                $linkedPositions[] = $ing->getPosition();
+                $stepServing = $di->getServing();
+                $ingredientsWithAmounts[] = [
+                    'position' => $ing->getPosition(),
+                    'product-slug' => $stepServing->getProduct()->getSlug(),
+                    'product-id' => $stepServing->getProduct()->getId(),
+                    'amount' => $stepServing->getAmount(),
+                    'measure-slug' => $stepServing->getMeasure()->getSlug(),
+                    'measure-id' => $stepServing->getMeasure()->getId(),
+                ];
+            }
+            if ($linkedPositions !== []) {
+                $entry['ingredients'] = $linkedPositions;
+                $entry['ingredient'] = $linkedPositions[0];
+            }
+            if (count($ingredientsWithAmounts) > 1) {
+                $entry['ingredients-with-amounts'] = $ingredientsWithAmounts;
             }
 
             $notes = [];
+            $originalText = null;
+            $isCreator = $this->isRecipeCreator($recipe);
             foreach ($direction->getNotes() as $n) {
+                if ($n->isCreatorOnly()) {
+                    if ($isCreator) {
+                        $originalText = $n->getNote();
+                    }
+                    continue;
+                }
                 $notes[] = $n->getNote();
             }
             if ($notes !== []) {
                 $entry['notes'] = $notes;
+            }
+            if ($originalText !== null) {
+                $entry['original-text'] = $originalText;
             }
 
             $steps[] = $entry;
         }
 
         return $steps;
+    }
+
+    private function isRecipeCreator(Recipe $recipe): bool
+    {
+        $userId = auth()->id();
+        if ($userId === null) {
+            return false;
+        }
+
+        return $recipe->getAuthor()->getUser()->getId() === $userId;
     }
 }

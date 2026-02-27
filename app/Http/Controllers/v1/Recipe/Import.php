@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\v1\Recipe;
 
 use App\Entities\Direction;
+use App\Entities\DirectionIngredient;
 use App\Entities\DirectionNote;
 use App\Entities\DishType;
 use App\Entities\Ingredient;
@@ -30,6 +31,7 @@ use Illuminate\Support\Str;
 class Import extends Controller
 {
     use Concerns\ResolvesCuisine;
+    use Concerns\ResolvesProductAndMeasure;
 
     public function __construct(
         private readonly AuthorRepository $authorRepository,
@@ -179,6 +181,7 @@ class Import extends Controller
             $ingredient->setRecipe($recipe);
             $ingredient->setServing($serving);
             $ingredient->setPosition((int) $position);
+            $ingredient->setOptional((bool) ($def['optional'] ?? false));
             $this->em->persist($ingredient);
 
             if (! empty($def['notes'])) {
@@ -215,42 +218,97 @@ class Import extends Controller
 
             $operation = $this->resolveOperation($actionName);
 
-            $serving = null;
-            if (isset($def['product-id'])) {
-                $product = $this->em->find(Product::class, (int) $def['product-id']);
-                if ($product !== null) {
-                    $measure = isset($def['measure-id'])
-                        ? $this->em->find(Measure::class, (int) $def['measure-id'])
-                        : null;
+            $procedureServing = null;
+            $ingredientsWithAmounts = $def['ingredients-with-amounts'] ?? null;
+            if (is_array($ingredientsWithAmounts) && $ingredientsWithAmounts !== []) {
+                // Multi-ingredient step: procedure has no serving; each direction_ingredient has its own.
+            } else {
+                $productRef = $def['product-slug'] ?? $def['product-id'] ?? null;
+                $measureRef = $def['measure-slug'] ?? $def['measure-id'] ?? null;
+                if ($productRef !== null && $measureRef !== null) {
+                    $product = $this->resolveProductByIdOrSlug($this->em, $productRef);
+                    $measure = $this->resolveMeasureByIdOrSlug($this->em, $measureRef);
                     $amount = (float) ($def['amount'] ?? 0);
-
-                    if ($measure !== null) {
-                        $serving = new Serving();
-                        $serving->setProduct($product);
-                        $serving->setAmount($amount);
-                        $serving->setMeasure($measure);
-                        $this->em->persist($serving);
+                    if ($amount <= 0) {
+                        throw new ValidationErrorException(
+                            "Direction step #{$step}: amount must be greater than zero.",
+                            ['directions' => ["Step #{$step} has invalid amount."]],
+                        );
                     }
+                    $procedureServing = new Serving();
+                    $procedureServing->setProduct($product);
+                    $procedureServing->setAmount($amount);
+                    $procedureServing->setMeasure($measure);
+                    $this->em->persist($procedureServing);
                 }
             }
 
             $procedure = new Procedure();
             $procedure->setOperation($operation);
-            $procedure->setServing($serving);
+            $procedure->setServing($procedureServing);
             $procedure->setDuration(isset($def['duration-minutes']) ? (int) $def['duration-minutes'] : null);
             $this->em->persist($procedure);
-
-            $ingredient = null;
-            if (isset($def['ingredient'])) {
-                $ingredient = $ingredientMap[(int) $def['ingredient']] ?? null;
-            }
 
             $direction = new Direction();
             $direction->setRecipe($recipe);
             $direction->setProcedure($procedure);
-            $direction->setIngredient($ingredient);
             $direction->setSequence((int) $step);
             $this->em->persist($direction);
+
+            if (is_array($ingredientsWithAmounts) && $ingredientsWithAmounts !== []) {
+                foreach ($ingredientsWithAmounts as $item) {
+                    $position = (int) ($item['position'] ?? 0);
+                    $ingredient = $ingredientMap[$position] ?? null;
+                    if ($ingredient === null) {
+                        continue;
+                    }
+                    $productRef = $item['product-slug'] ?? $item['product-id'] ?? null;
+                    $measureRef = $item['measure-slug'] ?? $item['measure-id'] ?? null;
+                    if ($productRef === null || $measureRef === null) {
+                        continue;
+                    }
+                    $amount = (float) ($item['amount'] ?? 0);
+                    if ($amount <= 0) {
+                        continue;
+                    }
+                    $product = $this->resolveProductByIdOrSlug($this->em, $productRef);
+                    $measure = $this->resolveMeasureByIdOrSlug($this->em, $measureRef);
+                    $stepServing = $this->em->getRepository(Serving::class)->findOneBy([
+                        'product' => $product,
+                        'measure' => $measure,
+                        'amount' => $amount,
+                    ]);
+                    if ($stepServing === null) {
+                        $stepServing = new Serving();
+                        $stepServing->setProduct($product);
+                        $stepServing->setMeasure($measure);
+                        $stepServing->setAmount($amount);
+                        $this->em->persist($stepServing);
+                    }
+                    $di = new DirectionIngredient();
+                    $di->setDirection($direction);
+                    $di->setIngredient($ingredient);
+                    $di->setServing($stepServing);
+                    $direction->getDirectionIngredients()->add($di);
+                    $this->em->persist($di);
+                }
+            } else {
+                $ingredientRefs = isset($def['ingredients']) && is_array($def['ingredients'])
+                    ? $def['ingredients']
+                    : (isset($def['ingredient']) ? [$def['ingredient']] : []);
+                $stepServing = $procedure->getServing();
+                foreach ($ingredientRefs as $ref) {
+                    $ingredient = $ingredientMap[(int) $ref] ?? null;
+                    if ($ingredient !== null && $stepServing !== null) {
+                        $di = new DirectionIngredient();
+                        $di->setDirection($direction);
+                        $di->setIngredient($ingredient);
+                        $di->setServing($stepServing);
+                        $direction->getDirectionIngredients()->add($di);
+                        $this->em->persist($di);
+                    }
+                }
+            }
 
             if (! empty($def['notes'])) {
                 foreach ((array) $def['notes'] as $text) {
@@ -260,43 +318,54 @@ class Import extends Controller
                     $this->em->persist($note);
                 }
             }
+            if (! empty($def['original-text'])) {
+                $creatorNote = new DirectionNote();
+                $creatorNote->setDirection($direction);
+                $creatorNote->setNote($def['original-text']);
+                $creatorNote->setCreatorOnly(true);
+                $this->em->persist($creatorNote);
+            }
         }
     }
 
     private function resolveProduct(array $def, int $position): Product
     {
-        $id = $def['product-id'] ?? null;
-        if ($id === null) {
+        $ref = $def['product-slug'] ?? $def['product-id'] ?? null;
+        if ($ref === null || $ref === '') {
             throw new ValidationErrorException(
-                "Ingredient #{$position}: product-id is required.",
-                ['ingredients' => ["Item #{$position} missing product-id."]],
+                "Ingredient #{$position}: product-id or product-slug is required.",
+                ['ingredients' => ["Item #{$position} missing product-id or product-slug."]],
             );
         }
 
-        $product = $this->em->find(Product::class, (int) $id);
-        if ($product === null) {
-            throw new NotFoundException("Product #{$id} not found (ingredient #{$position}).");
+        $context = null;
+        if (isset($def['amount'], $def['measure-slug'])) {
+            $context = ['amount' => (float) $def['amount'], 'measure-slug' => (string) $def['measure-slug']];
+        } elseif (isset($def['amount'], $def['measure-id'])) {
+            $context = ['amount' => (float) $def['amount'], 'measure-slug' => (string) $def['measure-id']];
         }
-
-        return $product;
+        try {
+            return $this->resolveProductByIdOrSlug($this->em, $ref, $context);
+        } catch (NotFoundException $e) {
+            throw new NotFoundException("Product '{$ref}' not found (ingredient #{$position}).");
+        }
     }
 
     private function resolveMeasure(array $def, int $position): Measure
     {
-        $id = $def['measure-id'] ?? null;
-        if ($id === null) {
+        $ref = $def['measure-slug'] ?? $def['measure-id'] ?? null;
+        if ($ref === null || $ref === '') {
             throw new ValidationErrorException(
-                "Ingredient #{$position}: measure-id is required.",
-                ['ingredients' => ["Item #{$position} missing measure-id."]],
+                "Ingredient #{$position}: measure-id or measure-slug is required.",
+                ['ingredients' => ["Item #{$position} missing measure-id or measure-slug."]],
             );
         }
 
-        $measure = $this->em->find(Measure::class, (int) $id);
-        if ($measure === null) {
-            throw new NotFoundException("Measure #{$id} not found (ingredient #{$position}).");
+        try {
+            return $this->resolveMeasureByIdOrSlug($this->em, $ref);
+        } catch (NotFoundException $e) {
+            throw new NotFoundException("Measure '{$ref}' not found (ingredient #{$position}).");
         }
-
-        return $measure;
     }
 
     private function resolveOperation(string $name): Operation

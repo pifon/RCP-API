@@ -26,9 +26,14 @@ class Direction
     #[ORM\JoinColumn(name: 'procedure_id', referencedColumnName: 'id', nullable: false)]
     private Procedure $procedure;
 
-    #[ORM\ManyToOne(targetEntity: Ingredient::class)]
-    #[ORM\JoinColumn(name: 'ingredient_id', referencedColumnName: 'id', nullable: true)]
-    private ?Ingredient $ingredient = null;
+    #[ORM\OneToMany(
+        mappedBy: 'direction',
+        targetEntity: DirectionIngredient::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    #[ORM\OrderBy(['id' => 'ASC'])]
+    private Collection $directionIngredients;
 
     #[ORM\Column(name: 'sequence', type: 'integer', nullable: false)]
     private int $sequence;
@@ -51,6 +56,7 @@ class Direction
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->directionIngredients = new ArrayCollection();
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
     }
@@ -80,14 +86,39 @@ class Direction
         $this->procedure = $procedure;
     }
 
+    /**
+     * First linked ingredient, for backward compatibility.
+     */
     public function getIngredient(): ?Ingredient
     {
-        return $this->ingredient;
+        $first = $this->directionIngredients->first();
+
+        return $first !== false ? $first->getIngredient() : null;
     }
 
-    public function setIngredient(?Ingredient $ingredient): void
+    /**
+     * All ingredients linked to this direction (step).
+     *
+     * @return Collection<int, DirectionIngredient>
+     */
+    public function getDirectionIngredients(): Collection
     {
-        $this->ingredient = $ingredient;
+        return $this->directionIngredients;
+    }
+
+    /**
+     * All ingredients linked to this direction (step).
+     *
+     * @return Ingredient[]
+     */
+    public function getIngredients(): array
+    {
+        $out = [];
+        foreach ($this->directionIngredients as $di) {
+            $out[] = $di->getIngredient();
+        }
+
+        return $out;
     }
 
     public function getSequence(): int
