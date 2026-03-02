@@ -19,11 +19,22 @@ jobs:
           php-version: '8.4'
           tools: composer:v2
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
       - name: Run PHPCS
-        run: vendor/bin/phpcs --standard=PSR12 app/ tests/ routes/ bootstrap/app.php config/ database/seeders/
+        run: vendor/bin/phpcs
 
   analyse:
     name: Static Analysis (PHPStan)
@@ -38,6 +49,17 @@ jobs:
           extensions: pdo_mysql
           tools: composer:v2
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
@@ -48,7 +70,9 @@ jobs:
     name: Tests (PHPUnit)
     runs-on: ubuntu-latest
     env:
+      DB_CONNECTION: mysql
       DB_HOST: 127.0.0.1
+      DB_PORT: 3306
       DB_DATABASE: rcp_api
       DB_USERNAME: root
       DB_PASSWORD: secret
@@ -76,6 +100,17 @@ jobs:
           extensions: pdo_mysql
           tools: composer:v2
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
@@ -83,6 +118,31 @@ jobs:
         run: |
           cp .env.testing .env
           php artisan key:generate --force
+
+      - name: Wait for MariaDB
+        run: |
+          for i in {1..30}; do
+            if php -r "
+              try {
+                new PDO(
+                  'mysql:host=127.0.0.1;port=3306;dbname=rcp_api',
+                  'root',
+                  'secret',
+                  [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                );
+                exit(0);
+              } catch (Throwable \$e) {
+                exit(1);
+              }
+            "; then
+              echo "MariaDB is ready"
+              exit 0
+            fi
+            echo "Waiting for MariaDB (attempt $i/30)..."
+            sleep 2
+          done
+          echo "MariaDB did not become ready in time"
+          exit 1
 
       - name: Run migrations & seed
         run: |

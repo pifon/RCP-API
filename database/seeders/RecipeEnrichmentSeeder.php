@@ -271,7 +271,7 @@ class RecipeEnrichmentSeeder extends Seeder
 
     private function seedDirections(): void
     {
-        $directions = [
+        $directionsWithIngredient = [
             // Spaghetti aglio e olio (recipe 3)
             ['id' => 50, 'recipe_id' => 3,  'procedure_id' => 50, 'ingredient_id' => 18, 'sequence' => 1],
             ['id' => 51, 'recipe_id' => 3,  'procedure_id' => 51, 'ingredient_id' => 19, 'sequence' => 2],
@@ -303,10 +303,29 @@ class RecipeEnrichmentSeeder extends Seeder
             ['id' => 71, 'recipe_id' => 40, 'procedure_id' => 71, 'ingredient_id' => 40, 'sequence' => 6],
         ];
 
-        foreach ($directions as $d) {
-            $d['created_at'] = now();
-            $d['updated_at'] = now();
+        $now = now();
+        $ingredientServings = DB::table('ingredients')->pluck('serving_id', 'id')->toArray();
+
+        foreach ($directionsWithIngredient as $d) {
+            $ingredientId = $d['ingredient_id'] ?? null;
+            unset($d['ingredient_id']);
+            $d['created_at'] = $now;
+            $d['updated_at'] = $now;
             DB::table('directions')->updateOrInsert(['id' => $d['id']], $d);
+
+            if ($ingredientId !== null && isset($ingredientServings[$ingredientId])) {
+                DB::table('direction_ingredients')->updateOrInsert(
+                    [
+                        'direction_id' => $d['id'],
+                        'ingredient_id' => $ingredientId,
+                    ],
+                    [
+                        'serving_id' => $ingredientServings[$ingredientId],
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]
+                );
+            }
         }
     }
 }
