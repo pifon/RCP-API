@@ -23,12 +23,13 @@ CERT_DIR="/etc/letsencrypt/live/$APP_DOMAIN"
 if [ "$APP_DOMAIN" = "pifon.co.uk" ] && [ -n "$CERTBOT_EMAIL" ]; then
     if [ ! -f "$CERT_DIR/fullchain.pem" ] || [ ! -f "$CERT_DIR/privkey.pem" ]; then
         echo "Obtaining Let's Encrypt certificate for pifon.co.uk..."
-        if certbot certonly --standalone -d pifon.co.uk -d www.pifon.co.uk \
+        # Single domain only; add -d www.pifon.co.uk when www has a DNS A record
+        if certbot certonly --standalone -d pifon.co.uk \
             --email "$CERTBOT_EMAIL" --agree-tos --non-interactive --preferred-challenges http; then
             echo "Certificate obtained successfully."
         else
-            echo "Certbot failed. Ensure (1) pifon.co.uk and www.pifon.co.uk point to this host, (2) port 80 is open from the internet. Falling back to self-signed certificate."
-            echo "To retry once DNS/80 are ready: docker exec api certbot certonly --webroot -w /var/www/html/certbot -d pifon.co.uk -d www.pifon.co.uk --email $CERTBOT_EMAIL --agree-tos --non-interactive && docker exec api nginx -s reload"
+            echo "Certbot failed. Ensure (1) pifon.co.uk points to this host, (2) port 80 is open from the internet. Falling back to self-signed certificate."
+            echo "To retry once DNS/80 are ready: docker exec api certbot certonly --webroot -w /var/www/html/certbot -d pifon.co.uk --email $CERTBOT_EMAIL --agree-tos --non-interactive && docker exec api nginx -s reload"
             mkdir -p "$CERT_DIR"
             openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
                 -keyout "$CERT_DIR/privkey.pem" -out "$CERT_DIR/fullchain.pem" \
@@ -41,7 +42,7 @@ if [ "$APP_DOMAIN" = "pifon.co.uk" ] && [ -n "$CERTBOT_EMAIL" ]; then
             certbot renew --standalone --non-interactive --preferred-challenges http || true
         else
             echo "Existing certificate is self-signed. Obtaining Let's Encrypt certificate for pifon.co.uk..."
-            if certbot certonly --standalone -d pifon.co.uk -d www.pifon.co.uk \
+            if certbot certonly --standalone -d pifon.co.uk \
                 --email "$CERTBOT_EMAIL" --agree-tos --non-interactive --preferred-challenges http --force-renewal; then
                 echo "Certificate obtained successfully."
             else
