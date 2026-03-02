@@ -10,6 +10,12 @@ fi
 APP_DOMAIN=$(echo "$_url" | sed -e 's|https\?://||' -e 's|/.*||' -e 's|:.*||')
 [ -z "$APP_DOMAIN" ] && APP_DOMAIN=pifon
 
+# This is the API (pifon): never use foodbook.uk certificate.
+if [ "$APP_DOMAIN" = "foodbook.uk" ]; then
+    echo "APP_URL must not be foodbook.uk in the API project. Using pifon.co.uk for certificate."
+    APP_DOMAIN=pifon.co.uk
+fi
+
 CERT_DIR="/etc/letsencrypt/live/$APP_DOMAIN"
 
 # Obtain or renew valid Let's Encrypt certificate for pifon.co.uk on every docker compose up

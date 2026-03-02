@@ -17,7 +17,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/var/www/html
-      - letsencrypt:/etc/letsencrypt
+      - letsencrypt_pifon:/etc/letsencrypt
     networks:
       - laravel-network
     depends_on:
@@ -58,4 +58,4 @@ networks:
 
 volumes:
   mariadb_data:
-  letsencrypt:
+  letsencrypt_pifon:
