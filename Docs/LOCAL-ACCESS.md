@@ -6,9 +6,9 @@ The app container listens on **port 80 (HTTP)** and **443 (HTTPS)** and maps the
 
 - Use **HTTP** (not HTTPS) to avoid "connection is not secure" / certificate warnings:
   - **http://localhost/api**
-  - **http://127.0.0.1/api** or **http://127.0.0.2/api** (if your hosts use 127.0.0.2)
-- If you have **pifon** in your hosts file (`127.0.0.2 pifon`):
-  - **http://pifon/api** or **http://127.0.0.2/api**
+  - **http://127.0.0.1/api**
+- If you have **pifon** in your hosts file (`127.0.0.1 pifon`):
+  - **http://pifon/api** or **https://pifon/api** (via reverse-proxy)
 
 Using **https://** locally will show a certificate warning (self-signed cert). Prefer HTTP for local development.
 
@@ -39,7 +39,7 @@ To find the host IP:
 
 3. **Test with curl from the host**
    ```bash
-   curl -v http://127.0.0.2/api/
+   curl -v http://127.0.0.1/api/
    ```
    You should see `HTTP/1.1 200 OK` and JSON. If this works but the browser does not, the problem is on the client (wrong URL, HTTPS instead of HTTP, or different machine).
 

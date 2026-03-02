@@ -16,7 +16,7 @@ if [ ! -f "$CERT_DIR/fullchain.pem" ] || [ ! -f "$CERT_DIR/privkey.pem" ]; then
     mkdir -p "$CERT_DIR"
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         -keyout "$CERT_DIR/privkey.pem" -out "$CERT_DIR/fullchain.pem" \
-        -subj "/CN=$APP_DOMAIN" -addext "subjectAltName=DNS:$APP_DOMAIN,DNS:localhost,DNS:pifon,DNS:127.0.0.1,IP:127.0.0.1,IP:127.0.0.2" 2>/dev/null || true
+        -subj "/CN=$APP_DOMAIN" -addext "subjectAltName=DNS:$APP_DOMAIN,DNS:localhost,DNS:pifon,DNS:127.0.0.1,IP:127.0.0.1" 2>/dev/null || true
 fi
 
 # Generate nginx config from template

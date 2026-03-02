@@ -5,8 +5,7 @@ RCP-API and foodbook.uk are **separate repositories**. Run each **from inside it
 Add to your **hosts** file (`/etc/hosts` on macOS/Linux, `C:\Windows\System32\drivers\etc\hosts` on Windows):
 
 ```
-127.0.0.2 pifon
-127.0.0.3 foodbook
+127.0.0.1 pifon foodbook
 ```
 
 ## Backend (RCP-API) – run from this repo
@@ -25,16 +24,16 @@ docker compose up -d
 
 ## Frontend (foodbook.uk) – run from that repo
 
-- **URL:** https://foodbook:8443 (default; no port conflict with RCP-API). For production **foodbook.uk** set `HTTPS_PORT=443` in `.env`.
-- **.env:** `APP_URL=https://foodbook`, `APP_BASE_URL=https://pifon/api` (leave `HTTPS_PORT` unset or `8443` for local)
-- **Ports:** 8080→80, **8443**→443 (override with `HTTPS_PORT=443` when base domain is foodbook.uk)
+- **URL:** https://foodbook (via reverse-proxy on 443). For production **foodbook.uk** set `HTTPS_PORT=443` in `.env`.
+- **.env:** `APP_URL=https://foodbook`, `API_BASE_URL=https://pifon/api`; for local proxy set `FOODBOOK_BIND=127.0.0.1`, `FOODBOOK_HTTP_PORT=8081`, `FOODBOOK_HTTPS_PORT=8444` (API uses 8080/8443)
+- **Ports:** 8081→80, 8444→443 on host when using proxy (proxy binds 80/443)
 
 ```bash
 cd foodbook.uk
 cp .env.example .env
 # Set APP_URL=https://foodbook, APP_BASE_URL=https://pifon/api (HTTPS_PORT defaults to 8443)
 docker compose up -d
-# Open https://foodbook:8443
+# Open https://foodbook (via reverse-proxy)
 ```
 
 ## Summary
@@ -42,7 +41,7 @@ docker compose up -d
 | Repo      | Start from    | APP_URL           | APP_BASE_URL (foodbook only) | Ports      |
 |-----------|---------------|-------------------|-------------------------------|------------|
 | RCP-API   | `cd RCP-API`  | https://pifon     | –                             | 80, 443    |
-| foodbook.uk | `cd foodbook.uk` | https://foodbook  | https://pifon/api             | 8080, **8443** (or 443 if `HTTPS_PORT=443`) |
+| foodbook.uk | `cd foodbook.uk` | https://foodbook  | https://pifon/api             | 8081, 8444 (proxy uses 80, 443) |
 
 **Production (foodbook.uk):** Set `APP_URL=https://foodbook.uk` and `HTTPS_PORT=443` in foodbook’s `.env` so the app listens on standard HTTPS.
 
