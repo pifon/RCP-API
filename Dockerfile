@@ -22,8 +22,11 @@ COPY docker/nginx/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY docker/nginx/generated.conf /etc/nginx/conf.d/generated.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY docker/supervisord.conf /etc/supervisord.conf
+COPY docker/certbot-renew.sh /usr/local/bin/certbot-renew.sh
+COPY docker/certbot-cron /etc/cron.d/certbot-renew
 
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/certbot-renew.sh \
+    && chmod 0644 /etc/cron.d/certbot-renew
 
 EXPOSE 80 443
 

@@ -1,2 +1,3 @@
-# Renew Let's Encrypt certificates on the 20th of every month at 00:00
-0 0 20 * * root /usr/local/bin/certbot-renew.sh >> /var/log/certbot-renew.log 2>&1
+# Renew Let's Encrypt certificates on the 20th of every month at 03:00
+0 3 20 * * root /usr/local/bin/certbot-renew.sh >> /var/log/certbot-renew.log 2>&1
+

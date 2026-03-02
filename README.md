@@ -374,10 +374,8 @@ tests/
 ```bash
 git clone https://gitlab.pifon.co.uk/pifon/api.git rcp-api
 cd rcp-api
-cp .env.example .env
-
-# Start containers
-docker compose up -d
+# Set APP_KEY in .env.pifon (or run: php artisan key:generate --show and add to .env after first up)
+./up pifon
 
 # Install dependencies (inside container)
 docker exec api composer install
@@ -389,7 +387,7 @@ docker exec api php artisan migrate --seed
 docker exec api php artisan db:seed --class=PlansSeeder
 ```
 
-The API is available at `https://localhost/api`.
+The API is available at `https://pifon/api` (or https://localhost:8443/api when using the local preset).
 
 ### Authentication
 

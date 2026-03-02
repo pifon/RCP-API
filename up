@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+# Usage: ./up pifon        → local (ports 8080/8443, APP_URL=https://pifon)
+#        ./up pifon.co.uk  → production (ports 80/443, Let's Encrypt for pifon.co.uk)
+# Copies the right .env preset to .env and runs docker compose up app --build -d.
+
+set -e
+
+case "$1" in
+  pifon|pifon.co.uk)
+    ;;
+  *)
+    echo "Usage: $0 pifon|pifon.co.uk"
+    echo "  pifon      – local (API_BIND=127.0.0.1, ports 8080/8443)"
+    echo "  pifon.co.uk – production (ports 80/443, Let's Encrypt)"
+    exit 1
+    ;;
+esac
+
+PRESET=".env.$1"
+if [ ! -f "$PRESET" ]; then
+  echo "Missing $PRESET"
+  exit 1
+fi
+
+cp "$PRESET" .env
+echo "Using $PRESET → .env"
+exec docker compose up app --build -d

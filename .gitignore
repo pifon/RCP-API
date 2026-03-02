@@ -10,7 +10,7 @@
 
 # Environment
 .env
-.env.local
+.env.backup
 .env.*.local
 
 # IDE / editors
