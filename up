@@ -36,23 +36,33 @@ if [ -n "$WIPE" ]; then
   echo "Wipe: generating random MariaDB password..."
   DB_PASS=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32)
   cp "$PRESET" .env
-  # Portable sed: write updated lines into .env (no -i to avoid macOS/Linux differences)
-  sed "s|^MARIADB_ROOT_PASSWORD=.*|MARIADB_ROOT_PASSWORD=$DB_PASS|" .env | sed "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" .env > .env.tmp && mv .env.tmp .env
+  # Portable sed: pipe first sed output into second, then write .env (second sed must read stdin, not .env)
+  sed "s|^MARIADB_ROOT_PASSWORD=.*|MARIADB_ROOT_PASSWORD=$DB_PASS|" .env | sed "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" > .env.tmp && mv .env.tmp .env
   echo "Using $PRESET → .env (MARIADB_ROOT_PASSWORD and DB_PASSWORD set to random value)"
-  echo "Starting stack..."
-  docker compose up app --build -d
-  echo "Waiting for database to be ready..."
-  for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
-    if docker exec api php artisan migrate --force 2>/dev/null; then
-      echo "Migrations done."
-      echo "Seeding database..."
-      docker exec api php artisan db:seed --force
-      echo "Wipe complete. App is up; DB password is in .env"
-      exit 0
+  echo "Starting database..."
+  docker compose up -d database
+  echo "Waiting for MariaDB to accept connections..."
+  i=0
+  while [ $i -lt 30 ]; do
+    if docker exec -e MYSQL_PWD="$DB_PASS" mariadb mariadb -uroot -e "SELECT 1" 2>/dev/null; then
+      break
     fi
-    [ "$i" = 20 ] && { echo "Database did not become ready after 20 attempts."; exit 1; }
+    i=$((i + 1))
+    [ $i -eq 30 ] && { echo "MariaDB did not become ready in time."; exit 1; }
     sleep 3
   done
+  echo "Database is ready. Giving healthcheck time to pass..."
+  sleep 15
+  echo "Starting app..."
+  docker compose up app --build -d
+  echo "Waiting for app container to be ready..."
+  sleep 15
+  echo "Running migrations..."
+  docker exec api php artisan migrate --force
+  echo "Seeding database..."
+  docker exec api php artisan db:seed --force
+  echo "Wipe complete. App is up; DB password is in .env"
+  exit 0
 fi
 
 cp "$PRESET" .env
