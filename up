@@ -1,25 +1,58 @@
 #!/usr/bin/env sh
-# Usage: ./up pifon        → local (ports 8080/8443, APP_URL=https://pifon)
-#        ./up pifon.co.uk  → production (ports 80/443, Let's Encrypt for pifon.co.uk)
+# Usage: ./up pifon           → local (ports 8080/8443, APP_URL=https://pifon)
+#        ./up pifon.co.uk     → production (ports 80/443, Let's Encrypt for pifon.co.uk)
+#        ./up pifon --wipe    → wipe volumes, set random DB password, start, migrate & seed
 # Copies the right .env preset to .env and runs docker compose up app --build -d.
 
 set -e
 
+WIPE=
 case "$1" in
   pifon|pifon.co.uk)
+    PRESET_NAME="$1"
     ;;
   *)
-    echo "Usage: $0 pifon|pifon.co.uk"
-    echo "  pifon      – local (API_BIND=127.0.0.1, ports 8080/8443)"
+    echo "Usage: $0 pifon|pifon.co.uk [--wipe]"
+    echo "  pifon       – local (API_BIND=127.0.0.1, ports 8080/8443)"
     echo "  pifon.co.uk – production (ports 80/443, Let's Encrypt)"
+    echo "  --wipe      – remove all volumes, set random MARIADB_ROOT_PASSWORD/DB_PASSWORD, then migrate & seed"
     exit 1
     ;;
 esac
 
-PRESET=".env.$1"
+if [ "$2" = "--wipe" ]; then
+  WIPE=1
+fi
+
+PRESET=".env.$PRESET_NAME"
 if [ ! -f "$PRESET" ]; then
   echo "Missing $PRESET"
   exit 1
+fi
+
+if [ -n "$WIPE" ]; then
+  echo "Wipe: stopping containers and removing volumes..."
+  docker compose down -v
+  echo "Wipe: generating random MariaDB password..."
+  DB_PASS=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32)
+  cp "$PRESET" .env
+  # Portable sed: write updated lines into .env (no -i to avoid macOS/Linux differences)
+  sed "s|^MARIADB_ROOT_PASSWORD=.*|MARIADB_ROOT_PASSWORD=$DB_PASS|" .env | sed "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" .env > .env.tmp && mv .env.tmp .env
+  echo "Using $PRESET → .env (MARIADB_ROOT_PASSWORD and DB_PASSWORD set to random value)"
+  echo "Starting stack..."
+  docker compose up app --build -d
+  echo "Waiting for database to be ready..."
+  for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
+    if docker exec api php artisan migrate --force 2>/dev/null; then
+      echo "Migrations done."
+      echo "Seeding database..."
+      docker exec api php artisan db:seed --force
+      echo "Wipe complete. App is up; DB password is in .env"
+      exit 0
+    fi
+    [ "$i" = 20 ] && { echo "Database did not become ready after 20 attempts."; exit 1; }
+    sleep 3
+  done
 fi
 
 cp "$PRESET" .env
