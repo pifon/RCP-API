@@ -1,0 +1,1236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.12.0@cf420941d061a57050b6c468ef2c778faf40aee2">
+  <file src="app/DBAL/ServiceEntityRepository.php">
+    <TooManyArguments>
+      <code><![CDATA[parent::__construct($em, $classMetadata)]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="app/Entities/Author.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Author]]></code>
+    </ClassMustBeFinal>
+    <InvalidNamedArgument>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[mappedBy]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[options]]></code>
+      <code><![CDATA[referencedColumnName]]></code>
+      <code><![CDATA[repositoryClass]]></code>
+      <code><![CDATA[strategy]]></code>
+      <code><![CDATA[targetEntity]]></code>
+      <code><![CDATA[targetEntity]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+    </InvalidNamedArgument>
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->description]]></code>
+    </NullableReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getDescription]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getRecipes]]></code>
+      <code><![CDATA[getUser]]></code>
+      <code><![CDATA[getUsername]]></code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$username]]></code>
+    </PropertyNotSetInConstructor>
+    <TooManyArguments>
+      <code><![CDATA[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'description', type: 'string', nullable: true)]]></code>
+      <code><![CDATA[ORM\Column(name: 'email', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]]></code>
+      <code><![CDATA[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'username', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Entity(repositoryClass: AuthorRepository::class)]]></code>
+      <code><![CDATA[ORM\GeneratedValue(strategy: 'IDENTITY')]]></code>
+      <code><![CDATA[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]]></code>
+      <code><![CDATA[ORM\ManyToOne(targetEntity: User::class)]]></code>
+      <code><![CDATA[ORM\OneToMany(mappedBy: 'author', targetEntity: Recipe::class)]]></code>
+      <code><![CDATA[ORM\Table(name: 'authors')]]></code>
+    </TooManyArguments>
+    <UnusedProperty>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="app/Entities/Cuisine.php">
+    <InvalidNamedArgument>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[options]]></code>
+      <code><![CDATA[repositoryClass]]></code>
+      <code><![CDATA[strategy]]></code>
+      <code><![CDATA[targetEntity]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+    </InvalidNamedArgument>
+    <MissingReturnType>
+      <code><![CDATA[getName]]></code>
+    </MissingReturnType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getCreatedAt]]></code>
+      <code><![CDATA[getDescription]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getRecipes]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getUpdatedAt]]></code>
+      <code><![CDATA[getVariant]]></code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+      <code><![CDATA[$variant]]></code>
+    </PropertyNotSetInConstructor>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $this->variant]]></code>
+      <code><![CDATA[! $this->variant]]></code>
+    </RiskyTruthyFalsyComparison>
+    <TooManyArguments>
+      <code><![CDATA[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'description', type: 'string', nullable: true)]]></code>
+      <code><![CDATA[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]]></code>
+      <code><![CDATA[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'variant', type: 'string', length: 255, nullable: true)]]></code>
+      <code><![CDATA[ORM\Entity(repositoryClass: CuisineRepository::class)]]></code>
+      <code><![CDATA[ORM\GeneratedValue(strategy: 'IDENTITY')]]></code>
+      <code><![CDATA[ORM\ManyToMany(targetEntity: Recipe::class)]]></code>
+      <code><![CDATA[ORM\Table(name: 'cuisines')]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="app/Entities/DishType.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DishType]]></code>
+    </ClassMustBeFinal>
+    <InvalidNamedArgument>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[options]]></code>
+      <code><![CDATA[repositoryClass]]></code>
+      <code><![CDATA[strategy]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+    </InvalidNamedArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getName]]></code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+    </PropertyNotSetInConstructor>
+    <TooManyArguments>
+      <code><![CDATA[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]]></code>
+      <code><![CDATA[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Entity(repositoryClass: DishTypeRepository::class)]]></code>
+      <code><![CDATA[ORM\GeneratedValue(strategy: 'IDENTITY')]]></code>
+      <code><![CDATA[ORM\Table(name: 'dish_types')]]></code>
+    </TooManyArguments>
+    <UnusedProperty>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="app/Entities/Recipe.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Recipe]]></code>
+    </ClassMustBeFinal>
+    <InvalidNamedArgument>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[options]]></code>
+      <code><![CDATA[referencedColumnName]]></code>
+      <code><![CDATA[referencedColumnName]]></code>
+      <code><![CDATA[referencedColumnName]]></code>
+      <code><![CDATA[referencedColumnName]]></code>
+      <code><![CDATA[repositoryClass]]></code>
+      <code><![CDATA[strategy]]></code>
+      <code><![CDATA[targetEntity]]></code>
+      <code><![CDATA[targetEntity]]></code>
+      <code><![CDATA[targetEntity]]></code>
+      <code><![CDATA[targetEntity]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+    </InvalidNamedArgument>
+    <InvalidNullableReturnType>
+      <code><![CDATA[Recipe]]></code>
+    </InvalidNullableReturnType>
+    <MissingConstructor>
+      <code><![CDATA[$author]]></code>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$cuisine]]></code>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$slug]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+      <code><![CDATA[$variant]]></code>
+    </MissingConstructor>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->variant]]></code>
+    </NullableReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAuthor]]></code>
+      <code><![CDATA[getCreatedAt]]></code>
+      <code><![CDATA[getCuisine]]></code>
+      <code><![CDATA[getDescription]]></code>
+      <code><![CDATA[getDishType]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getTitle]]></code>
+      <code><![CDATA[getUpdatedAt]]></code>
+      <code><![CDATA[getVariant]]></code>
+    </PossiblyUnusedMethod>
+    <TooManyArguments>
+      <code><![CDATA[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'description', type: 'string', nullable: true)]]></code>
+      <code><![CDATA[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]]></code>
+      <code><![CDATA[ORM\Column(name: 'slug', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'title', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Entity(repositoryClass: RecipeRepository::class)]]></code>
+      <code><![CDATA[ORM\GeneratedValue(strategy: 'IDENTITY')]]></code>
+      <code><![CDATA[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false)]]></code>
+      <code><![CDATA[ORM\JoinColumn(name: 'cuisine_id', referencedColumnName: 'id', nullable: false)]]></code>
+      <code><![CDATA[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id', nullable: false)]]></code>
+      <code><![CDATA[ORM\JoinColumn(name: 'variant_id', referencedColumnName: 'id', nullable: true)]]></code>
+      <code><![CDATA[ORM\ManyToOne(targetEntity: Author::class)]]></code>
+      <code><![CDATA[ORM\ManyToOne(targetEntity: Cuisine::class)]]></code>
+      <code><![CDATA[ORM\ManyToOne(targetEntity: DishType::class)]]></code>
+      <code><![CDATA[ORM\ManyToOne(targetEntity: Recipe::class)]]></code>
+      <code><![CDATA[ORM\Table(name: 'recipes')]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="app/Entities/User.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[User]]></code>
+    </ClassMustBeFinal>
+    <InvalidNamedArgument>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[length]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[name]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[options]]></code>
+      <code><![CDATA[repositoryClass]]></code>
+      <code><![CDATA[strategy]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+      <code><![CDATA[type]]></code>
+    </InvalidNamedArgument>
+    <InvalidNullableReturnType>
+      <code><![CDATA[?string]]></code>
+    </InvalidNullableReturnType>
+    <MissingConstructor>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$password]]></code>
+      <code><![CDATA[$passwordChangedAt]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+      <code><![CDATA[$username]]></code>
+    </MissingConstructor>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getAuthIdentifier(): int]]></code>
+      <code><![CDATA[public function getAuthIdentifierName(): string]]></code>
+      <code><![CDATA[public function getAuthPassword(): ?string]]></code>
+      <code><![CDATA[public function getAuthPasswordName(): string]]></code>
+      <code><![CDATA[public function getRememberToken(): string]]></code>
+      <code><![CDATA[public function getRememberTokenName()]]></code>
+      <code><![CDATA[public function setRememberToken($value): void]]></code>
+    </MissingOverrideAttribute>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->password]]></code>
+    </NullableReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getPasswordChangedAt]]></code>
+    </PossiblyUnusedMethod>
+    <TooManyArguments>
+      <code><![CDATA[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'description', type: 'string', nullable: true)]]></code>
+      <code><![CDATA[ORM\Column(name: 'email', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'id', type: 'integer', nullable: false, options: ['unsigned' => true])]]></code>
+      <code><![CDATA[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'password', type: 'string', nullable: true)]]></code>
+      <code><![CDATA[ORM\Column(name: 'password_changed_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]]></code>
+      <code><![CDATA[ORM\Column(name: 'username', type: 'string', length: 255, nullable: false)]]></code>
+      <code><![CDATA[ORM\Entity(repositoryClass: UserRepository::class)]]></code>
+      <code><![CDATA[ORM\GeneratedValue(strategy: 'IDENTITY')]]></code>
+      <code><![CDATA[ORM\Table(name: 'users')]]></code>
+    </TooManyArguments>
+    <UnusedProperty>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+      <code><![CDATA[$username]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="app/Exceptions/ApiException.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[json_encode($this->toArray())]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidFalsableReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getHeaders(): array]]></code>
+      <code><![CDATA[public function getStatusCode(): int]]></code>
+    </MissingOverrideAttribute>
+    <MixedArgument>
+      <code><![CDATA[$additionalData['previous'] ?? null]]></code>
+    </MixedArgument>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$instance]]></code>
+      <code><![CDATA[$type]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <UnusedClass>
+      <code><![CDATA[ApiException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Exceptions/BadRequestException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BadRequestException]]></code>
+    </ClassMustBeFinal>
+    <MissingReturnType>
+      <code><![CDATA[render]]></code>
+    </MissingReturnType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[render]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="app/Exceptions/NotFoundException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NotFoundException]]></code>
+    </ClassMustBeFinal>
+    <MissingReturnType>
+      <code><![CDATA[render]]></code>
+    </MissingReturnType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[render]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="app/Exceptions/UnauthorizedException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UnauthorizedException]]></code>
+    </ClassMustBeFinal>
+    <MissingReturnType>
+      <code><![CDATA[render]]></code>
+    </MissingReturnType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[render]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="app/Exceptions/ValidationErrorException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ValidationErrorException]]></code>
+    </ClassMustBeFinal>
+    <MissingReturnType>
+      <code><![CDATA[render]]></code>
+    </MissingReturnType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[render]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="app/Http/Controllers/AuthController.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthController]]></code>
+    </ClassMustBeFinal>
+    <MixedOperand>
+      <code><![CDATA[$request->get('email')]]></code>
+    </MixedOperand>
+    <UnusedClass>
+      <code><![CDATA[AuthController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Author/Details.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Details]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$author]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getAuthor]]></code>
+      <code><![CDATA[transformDetailed]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transformDetailed($author)]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[trans('author.details.not_found.message')]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[trans('author.details.not_found.message')]]></code>
+    </PossiblyInvalidCast>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Details]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Author/Show.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Show]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$author]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getAuthor]]></code>
+      <code><![CDATA[transform]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transform($author)]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Show]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Cuisine/Authors.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Authors]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$authors]]></code>
+      <code><![CDATA[$cuisine]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getCuisine]]></code>
+      <code><![CDATA[getCuisineAuthors]]></code>
+      <code><![CDATA[transformSet]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->authorTransformer->transformSet($authors)]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[trans('cuisine.not_found.message')]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[trans('cuisine.not_found.message')]]></code>
+    </PossiblyInvalidCast>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->authorRepository]]></code>
+      <code><![CDATA[$this->authorTransformer]]></code>
+      <code><![CDATA[$this->repository]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Authors]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Cuisine/Catalog.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Catalog]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[function (mixed $value, string $key): mixed {
+            if ($key === 'filter' && is_string($value)) {
+                return ucfirst(strtolower($value));
+            }
+            if ($key === 'limit' && is_numeric($value)) {
+                return intval($value);
+            }
+
+            return $value;
+        }]]></code>
+      <code><![CDATA[transform]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$cuisines]]></code>
+      <code><![CDATA[$filter]]></code>
+      <code><![CDATA[$limit]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getCuisines]]></code>
+      <code><![CDATA[transformSet]]></code>
+    </MixedMethodCall>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[trans('cuisine.unexpected_fields.message')]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[trans('cuisine.unexpected_fields.message')]]></code>
+    </PossiblyInvalidCast>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Catalog]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Cuisine/Details.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Details]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$cuisine]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getCuisine]]></code>
+      <code><![CDATA[transformDetailed]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transformDetailed($cuisine)]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[trans('cuisine.details.not_found.message')]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[trans('cuisine.details.not_found.message')]]></code>
+    </PossiblyInvalidCast>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Details]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Cuisine/Ingredients.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Ingredients]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$cuisine]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getCuisineIngredients]]></code>
+      <code><![CDATA[transformSet]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transformSet($cuisine)]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Ingredients]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Cuisine/Recipes.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Recipes]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$cuisine]]></code>
+      <code><![CDATA[$recipes]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getCuisine]]></code>
+      <code><![CDATA[getCuisineRecipes]]></code>
+      <code><![CDATA[transformSet]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->recipeTransformer->transformSet($recipes)]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[trans('cuisine.not_found.message')]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[trans('cuisine.not_found.message')]]></code>
+    </PossiblyInvalidCast>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->recipeRepository]]></code>
+      <code><![CDATA[$this->recipeTransformer]]></code>
+      <code><![CDATA[$this->repository]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Recipes]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Cuisine/Related.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Related]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$cuisine]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getCuisineRelates]]></code>
+      <code><![CDATA[transformSet]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transformSet($cuisine)]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Related]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Cuisine/Show.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Show]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$cuisine]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getCuisine]]></code>
+      <code><![CDATA[transform]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transform($cuisine)]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Show]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Recipe/Details.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Details]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$recipe]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getRecipe]]></code>
+      <code><![CDATA[transformDetailed]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transformDetailed($recipe)]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[trans('recipe.details.not_found.message')]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[trans('recipe.details.not_found.message')]]></code>
+    </PossiblyInvalidCast>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Details]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Controllers/Recipe/Show.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Show]]></code>
+    </ClassMustBeFinal>
+    <InvalidDocblock>
+      <code><![CDATA[private readonly]]></code>
+    </InvalidDocblock>
+    <MixedAssignment>
+      <code><![CDATA[$recipe]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getRecipe]]></code>
+      <code><![CDATA[transform]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->transformer->transform($recipe)]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->repository]]></code>
+      <code><![CDATA[$this->transformer]]></code>
+    </UndefinedThisPropertyFetch>
+    <UnusedClass>
+      <code><![CDATA[Show]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Http/Middleware/Authenticate.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Authenticate]]></code>
+    </ClassMustBeFinal>
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[never]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function redirectTo(Request $request): ?string]]></code>
+      <code><![CDATA[protected function unauthenticated($request, array $guards): never]]></code>
+    </MissingOverrideAttribute>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$guards]]></code>
+    </MoreSpecificImplementedParamType>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[$request instanceof Request]]></code>
+    </RedundantConditionGivenDocblockType>
+    <UndefinedClass>
+      <code><![CDATA[never]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="app/Http/Requests/ApiLoginRequest.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ApiLoginRequest]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[authorize]]></code>
+      <code><![CDATA[rules]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="app/Providers/AppServiceProvider.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AppServiceProvider]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function register(): void]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="app/Providers/AuthServiceProvider.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthServiceProvider]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function register(): void]]></code>
+    </MissingOverrideAttribute>
+    <MixedArgument>
+      <code><![CDATA[$app['some_dependency']]]></code>
+      <code><![CDATA[$entity]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$em]]></code>
+      <code><![CDATA[$entity]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getManagerForClass]]></code>
+    </MixedMethodCall>
+  </file>
+  <file src="app/Providers/DoctrineServiceProvider.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DoctrineServiceProvider]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function register()]]></code>
+    </MissingOverrideAttribute>
+    <MixedArgument>
+      <code><![CDATA[$connectionParams]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$connectionParams]]></code>
+    </MixedAssignment>
+    <UnusedClass>
+      <code><![CDATA[DoctrineServiceProvider]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Repositories/AuthorRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthorRepository]]></code>
+    </ClassMustBeFinal>
+    <MixedAssignment>
+      <code><![CDATA[$found]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$found]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getAuthor]]></code>
+      <code><![CDATA[getAuthors]]></code>
+      <code><![CDATA[getCuisineAuthors]]></code>
+    </PossiblyUnusedMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$username]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="app/Repositories/CuisineRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CuisineRepository]]></code>
+    </ClassMustBeFinal>
+    <MixedAssignment>
+      <code><![CDATA[$found]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$found]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getCuisine]]></code>
+      <code><![CDATA[getCuisineAuthors]]></code>
+      <code><![CDATA[getCuisineIngredients]]></code>
+      <code><![CDATA[getCuisineRecipes]]></code>
+      <code><![CDATA[getCuisineRelates]]></code>
+      <code><![CDATA[getCuisines]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$limit]]></code>
+      <code><![CDATA[$limit]]></code>
+    </PossiblyUnusedParam>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$variant]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="app/Repositories/DishTypeRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DishTypeRepository]]></code>
+    </ClassMustBeFinal>
+    <MissingParamType>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MixedAssignment>
+      <code><![CDATA[$found]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$found]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getDishType]]></code>
+      <code><![CDATA[getDishTypes]]></code>
+    </PossiblyUnusedMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$type]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="app/Repositories/RecipeRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RecipeRepository]]></code>
+    </ClassMustBeFinal>
+    <MissingParamType>
+      <code><![CDATA[$slug]]></code>
+    </MissingParamType>
+    <MixedAssignment>
+      <code><![CDATA[$found]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$found]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+      <code><![CDATA[$qb->getQuery()->getResult()]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getCuisineRecipes]]></code>
+      <code><![CDATA[getRecipe]]></code>
+      <code><![CDATA[getRecipes]]></code>
+    </PossiblyUnusedMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$slug]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="app/Repositories/UserRepository.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UserRepository]]></code>
+    </ClassMustBeFinal>
+    <MixedAssignment>
+      <code><![CDATA[$found]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$found]]></code>
+      <code><![CDATA[$qb->getQuery()->getOneOrNullResult()]]></code>
+      <code><![CDATA[$qb->getQuery()->getOneOrNullResult()]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getUser]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="app/Rules/LowercaseAlphaRule.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[LowercaseAlphaRule]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function validate(string $attribute, mixed $value, Closure $fail): void]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="app/Services/Auth/AppUserProvider.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$entity]]></code>
+    </ArgumentTypeCoercion>
+    <ClassMustBeFinal>
+      <code><![CDATA[AppUserProvider]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function retrieveByCredentials(array $credentials): ?Authenticatable]]></code>
+      <code><![CDATA[public function retrieveByToken(mixed $identifier, mixed $token): ?Authenticatable]]></code>
+      <code><![CDATA[public function updateRememberToken(Authenticatable $user, mixed $token): void]]></code>
+      <code><![CDATA[public function validateCredentials(Authenticatable $user, array $credentials): bool]]></code>
+    </MissingOverrideAttribute>
+    <MixedArgument>
+      <code><![CDATA[$credentials['password']]]></code>
+      <code><![CDATA[$identifier]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Transformers/AuthorTransformer.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthorTransformer]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function transform(mixed $item): array]]></code>
+    </MissingOverrideAttribute>
+    <MissingTemplateParam>
+      <code><![CDATA[AuthorTransformer]]></code>
+    </MissingTemplateParam>
+    <MixedMethodCall>
+      <code><![CDATA[format]]></code>
+      <code><![CDATA[format]]></code>
+      <code><![CDATA[getCreatedAt]]></code>
+      <code><![CDATA[getDescription]]></code>
+      <code><![CDATA[getFullName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getUpdatedAt]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[getUsername]]></code>
+    </MixedMethodCall>
+    <UnusedClass>
+      <code><![CDATA[AuthorTransformer]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Transformers/CuisineTransformer.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CuisineTransformer]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function transform(mixed $item): array]]></code>
+    </MissingOverrideAttribute>
+    <MixedMethodCall>
+      <code><![CDATA[format]]></code>
+      <code><![CDATA[format]]></code>
+      <code><![CDATA[getCreatedAt]]></code>
+      <code><![CDATA[getDescription]]></code>
+      <code><![CDATA[getFullName]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getUpdatedAt]]></code>
+    </MixedMethodCall>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[transformDetailed]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="app/Transformers/RecipeTransformer.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RecipeTransformer]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function transform(mixed $item): array]]></code>
+    </MissingOverrideAttribute>
+    <MissingTemplateParam>
+      <code><![CDATA[RecipeTransformer]]></code>
+    </MissingTemplateParam>
+    <MixedMethodCall>
+      <code><![CDATA[format]]></code>
+      <code><![CDATA[format]]></code>
+      <code><![CDATA[getAuthor]]></code>
+      <code><![CDATA[getCreatedAt]]></code>
+      <code><![CDATA[getDescription]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getSlug]]></code>
+      <code><![CDATA[getTitle]]></code>
+      <code><![CDATA[getTitle]]></code>
+      <code><![CDATA[getUpdatedAt]]></code>
+    </MixedMethodCall>
+    <UnusedClass>
+      <code><![CDATA[RecipeTransformer]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/Transformers/TransformerAbstract.php">
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[array<string, mixed>]]></code>
+      <code><![CDATA[array_map([$this, 'transformItem'], $set)]]></code>
+    </MixedReturnTypeCoercion>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[transformSet]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="tests/Feature/Http/Controllers/Cuisine/CatalogTest.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CatalogTest]]></code>
+    </ClassMustBeFinal>
+    <InvalidAttribute>
+      <code><![CDATA[DataProvider]]></code>
+      <code><![CDATA[DataProvider]]></code>
+      <code><![CDATA[DataProvider]]></code>
+      <code><![CDATA[DataProvider]]></code>
+    </InvalidAttribute>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function setUp(): void]]></code>
+    </MissingOverrideAttribute>
+    <MixedArgument>
+      <code><![CDATA[$json]]></code>
+      <code><![CDATA[$response->json()]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$json]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[willThrowException]]></code>
+      <code><![CDATA[willThrowException]]></code>
+      <code><![CDATA[with]]></code>
+      <code><![CDATA[with]]></code>
+      <code><![CDATA[with]]></code>
+      <code><![CDATA[with]]></code>
+    </MixedMethodCall>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[disallowedHttpMethodsProvider]]></code>
+      <code><![CDATA[filterCapitalizationProvider]]></code>
+      <code><![CDATA[invalidFilterProvider]]></code>
+      <code><![CDATA[invalidLimitProvider]]></code>
+      <code><![CDATA[test_disallowed_http_methods_return_405]]></code>
+      <code><![CDATA[test_empty_repository_results_return_empty_data_array]]></code>
+      <code><![CDATA[test_filter_is_capitalized_before_passing_to_repository]]></code>
+      <code><![CDATA[test_index_applies_limit_parameter_correctly]]></code>
+      <code><![CDATA[test_index_limit_at_maximum_boundary]]></code>
+      <code><![CDATA[test_index_limit_at_minimum_boundary]]></code>
+      <code><![CDATA[test_index_no_params_returns_default_limit]]></code>
+      <code><![CDATA[test_index_response_contract_with_mocked_transformer]]></code>
+      <code><![CDATA[test_index_with_empty_filter_and_limit]]></code>
+      <code><![CDATA[test_index_with_filter_and_limit_returns_status_ok]]></code>
+      <code><![CDATA[test_index_with_filter_as_array_rejects_with_validation_error]]></code>
+      <code><![CDATA[test_index_with_filter_as_object_rejects_with_validation_error]]></code>
+      <code><![CDATA[test_index_with_unexpected_field_throws_bad_request]]></code>
+      <code><![CDATA[test_index_with_valid_filter_returns_status_ok]]></code>
+      <code><![CDATA[test_index_without_parameters_returns_success]]></code>
+      <code><![CDATA[test_invalid_filters_return_validation_error]]></code>
+      <code><![CDATA[test_invalid_limits_return_validation_error]]></code>
+      <code><![CDATA[test_repository_exception_returns_500_with_error_message]]></code>
+      <code><![CDATA[test_response_has_only_expected_keys_and_data_structure]]></code>
+      <code><![CDATA[test_transformer_exception_returns_500_with_error_message]]></code>
+      <code><![CDATA[test_url_encoded_query_parameters]]></code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$repository]]></code>
+      <code><![CDATA[$transformer]]></code>
+      <code><![CDATA[CatalogTest]]></code>
+      <code><![CDATA[CatalogTest]]></code>
+      <code><![CDATA[CatalogTest]]></code>
+    </PropertyNotSetInConstructor>
+    <UndefinedMagicMethod>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+    </UndefinedMagicMethod>
+    <UndefinedMethod>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="tests/Unit/ExampleTest.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ExampleTest]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[ExampleTest]]></code>
+    </UnusedClass>
+  </file>
+</files>
