@@ -7,6 +7,7 @@
 set -e
 
 WIPE=
+PROXY=
 case "$1" in
   pifon|pifon.co.uk)
     PRESET_NAME="$1"
@@ -20,9 +21,14 @@ case "$1" in
     ;;
 esac
 
-if [ "$2" = "--wipe" ]; then
-  WIPE=1
-fi
+shift
+for arg in "$@"; do
+  case "$arg" in
+    --wipe) WIPE=1 ;;
+    --proxy) PROXY=1 ;;
+    *) ;;
+  esac
+done
 
 PRESET=".env.$PRESET_NAME"
 if [ ! -f "$PRESET" ]; then
@@ -38,7 +44,23 @@ if [ -n "$WIPE" ]; then
   cp "$PRESET" .env
   # Portable sed: pipe first sed output into second, then write .env (second sed must read stdin, not .env)
   sed "s|^MARIADB_ROOT_PASSWORD=.*|MARIADB_ROOT_PASSWORD=$DB_PASS|" .env | sed "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" > .env.tmp && mv .env.tmp .env
-  echo "Using $PRESET → .env (MARIADB_ROOT_PASSWORD and DB_PASSWORD set to random value)"
+
+  if [ -n "$PROXY" ]; then
+    # Behind reverse proxy: don't bind host 80/443 and don't run certbot standalone.
+    sed -i \
+      -e 's|^CERTBOT_EMAIL=.*|CERTBOT_EMAIL=|' \
+      -e 's|^API_BIND=.*|API_BIND=127.0.0.1|' \
+      -e 's|^API_HTTP_PORT=.*|API_HTTP_PORT=8080|' \
+      -e 's|^API_HTTPS_PORT=.*|API_HTTPS_PORT=8443|' \
+      .env 2>/dev/null || true
+    grep -q '^API_BIND=' .env || printf '\nAPI_BIND=127.0.0.1\n' >> .env
+    grep -q '^API_HTTP_PORT=' .env || printf 'API_HTTP_PORT=8080\n' >> .env
+    grep -q '^API_HTTPS_PORT=' .env || printf 'API_HTTPS_PORT=8443\n' >> .env
+    grep -q '^CERTBOT_EMAIL=' .env || printf 'CERTBOT_EMAIL=\n' >> .env
+    echo "Using $PRESET → .env (wipe + proxy mode: host ports 8080/8443; certbot disabled; DB password randomized)"
+  else
+    echo "Using $PRESET → .env (MARIADB_ROOT_PASSWORD and DB_PASSWORD set to random value)"
+  fi
   echo "Starting database..."
   docker compose up -d database
   echo "Waiting for MariaDB to accept connections..."
@@ -61,10 +83,72 @@ if [ -n "$WIPE" ]; then
   docker exec api php artisan migrate --force
   echo "Seeding database..."
   docker exec api php artisan db:seed --force
+  # Ensure APP_KEY and JWT_SECRET exist so login does not 500
+  if grep -qE '^APP_KEY=\s*$' .env 2>/dev/null; then
+    echo "Generating APP_KEY..."
+    docker exec api php artisan key:generate --force
+  fi
+  if ! grep -qE '^JWT_SECRET=.+' .env 2>/dev/null; then
+    echo "Generating JWT_SECRET (required for /api/login)..."
+    docker exec api php artisan jwt:secret --force
+  fi
+  docker restart api 2>/dev/null || true
   echo "Wipe complete. App is up; DB password is in .env"
   exit 0
 fi
 
+# Preserve existing APP_KEY and JWT_SECRET so login keeps working (presets have them empty)
+SAVED_APP_KEY= SAVED_JWT=
+if [ -f .env ]; then
+  grep -E '^APP_KEY=base64:' .env 2>/dev/null | head -1 | while read -r line; do SAVED_APP_KEY="$line"; done
+  grep -E '^JWT_SECRET=' .env 2>/dev/null | head -1 | while read -r line; do SAVED_JWT="$line"; done
+fi
+# Subshell loses vars; use temp files
+grep -E '^APP_KEY=base64:' .env 2>/dev/null | head -1 > .env.saved_key 2>/dev/null || true
+grep -E '^JWT_SECRET=.' .env 2>/dev/null | head -1 > .env.saved_jwt 2>/dev/null || true
+
 cp "$PRESET" .env
-echo "Using $PRESET → .env"
-exec docker compose up app --build -d
+
+if [ -n "$PROXY" ]; then
+  # Behind reverse proxy: don't bind host 80/443 and don't run certbot standalone.
+  # Keep APP_URL/prod settings from the preset, only adjust host port mappings + disable certbot.
+  sed -i \
+    -e 's|^CERTBOT_EMAIL=.*|CERTBOT_EMAIL=|' \
+    -e 's|^API_BIND=.*|API_BIND=127.0.0.1|' \
+    -e 's|^API_HTTP_PORT=.*|API_HTTP_PORT=8080|' \
+    -e 's|^API_HTTPS_PORT=.*|API_HTTPS_PORT=8443|' \
+    .env 2>/dev/null || true
+  # Ensure keys exist even if missing in preset
+  grep -q '^API_BIND=' .env || printf '\nAPI_BIND=127.0.0.1\n' >> .env
+  grep -q '^API_HTTP_PORT=' .env || printf 'API_HTTP_PORT=8080\n' >> .env
+  grep -q '^API_HTTPS_PORT=' .env || printf 'API_HTTPS_PORT=8443\n' >> .env
+  grep -q '^CERTBOT_EMAIL=' .env || printf 'CERTBOT_EMAIL=\n' >> .env
+  echo "Using $PRESET → .env (proxy mode: host ports 8080/8443; certbot disabled)"
+else
+  echo "Using $PRESET → .env"
+fi
+
+# Restore saved APP_KEY and JWT_SECRET if preset had them empty or missing
+if [ -s .env.saved_key ] && ! grep -qE '^APP_KEY=base64:' .env 2>/dev/null; then
+  saved=$(cat .env.saved_key); grep -v '^APP_KEY=' .env > .env.tmp && echo "$saved" >> .env.tmp && mv .env.tmp .env
+fi
+if [ -s .env.saved_jwt ] && ! grep -qE '^JWT_SECRET=.+' .env 2>/dev/null; then
+  saved=$(cat .env.saved_jwt); grep -v '^JWT_SECRET=' .env > .env.tmp && echo "$saved" >> .env.tmp && mv .env.tmp .env
+fi
+rm -f .env.saved_key .env.saved_jwt
+
+docker compose up app --build -d
+
+# Generate APP_KEY/JWT_SECRET if still empty so login does not 500
+need_restart=0
+if grep -qE '^APP_KEY=\s*$' .env 2>/dev/null; then
+  echo "APP_KEY was empty; generating..."
+  docker exec api php artisan key:generate --force
+  need_restart=1
+fi
+if ! grep -qE '^JWT_SECRET=.+' .env 2>/dev/null; then
+  echo "JWT_SECRET missing or empty; generating (required for login)..."
+  docker exec api php artisan jwt:secret --force
+  need_restart=1
+fi
+[ "$need_restart" = 1 ] && docker restart api 2>/dev/null || true

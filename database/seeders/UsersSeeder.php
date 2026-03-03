@@ -72,7 +72,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Pifon',
                 'email' => 'pifon@example.com',
                 'email_verified_at' => null,
-                'password' => Hash::make('password'),
+                'password' => Hash::make('agatka333'),
                 'password_changed_at' => now()->format('Y-m-d H:i:s'),
                 'token' => null,
                 'created_at' => now()->format('Y-m-d H:i:s'),
