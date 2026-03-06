@@ -6,6 +6,27 @@
 
 set -e
 
+# If production (pifon.co.uk) will bind 80/443, check they are free. Exit with clear instructions if not.
+check_ports_available() {
+  for port in 80 443; do
+    if command -v ss >/dev/null 2>&1; then
+      if ss -tlnp 2>/dev/null | grep -qE ":$port\s"; then
+        echo "Error: port $port is already in use. Free it before starting the app."
+        echo "  Find process: sudo ss -tlnp | grep ':$port '   or   sudo lsof -i :$port"
+        echo "  Stop system nginx: sudo systemctl stop nginx"
+        echo "  Stop other containers: docker ps -q | xargs -r docker stop"
+        exit 1
+      fi
+    elif command -v netstat >/dev/null 2>&1; then
+      if netstat -tlnp 2>/dev/null | grep -qE "[:.]$port\s"; then
+        echo "Error: port $port is already in use. Free it before starting the app."
+        echo "  Find process: sudo netstat -tlnp | grep $port   or   sudo lsof -i :$port"
+        exit 1
+      fi
+    fi
+  done
+}
+
 WIPE=
 PROXY=
 case "$1" in
@@ -76,6 +97,7 @@ if [ -n "$WIPE" ]; then
   echo "Database is ready. Giving healthcheck time to pass..."
   sleep 15
   echo "Starting app..."
+  [ "$PRESET_NAME" = "pifon.co.uk" ] && check_ports_available
   docker compose up app --build -d
   echo "Waiting for app container to be ready..."
   sleep 15
@@ -137,6 +159,8 @@ if [ -s .env.saved_jwt ] && ! grep -qE '^JWT_SECRET=.+' .env 2>/dev/null; then
 fi
 rm -f .env.saved_key .env.saved_jwt
 
+# Production binds 80/443; ensure they are free before starting
+[ "$PRESET_NAME" = "pifon.co.uk" ] && check_ports_available
 docker compose up app --build -d
 
 # Generate APP_KEY/JWT_SECRET if still empty so login does not 500
