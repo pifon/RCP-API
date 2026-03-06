@@ -19,7 +19,7 @@ class StepByStepTest extends TestCase
 
     private User $user;
 
-    private string $token;
+    private ?string $token = null;
 
     protected function setUp(): void
     {
@@ -30,7 +30,7 @@ class StepByStepTest extends TestCase
 
     protected function getAuthToken(): string
     {
-        return $this->token;
+        return $this->token ?? '';
     }
 
     private function createEmptyRecipe(): string
@@ -147,6 +147,19 @@ class StepByStepTest extends TestCase
     }
 
     // ── Directions ───────────────────────────────────────────────
+
+    public function testAddDirectionFromTextReturns404WhenProductMissing(): void
+    {
+        $slug = $this->createEmptyRecipe();
+        $response = $this->apiPost("/api/v1/recipes/{$slug}/directions/from-text", [
+            'text' => 'In a bowl add the biscuit crumbs and melted butter and mix well to combine.',
+        ]);
+        // Parsed ingredients "biscuit-crumbs" / "butter" may not exist in test DB → 404 product not found (not 500)
+        $response->assertStatus(404);
+        $response->assertJsonPath('errors.0.title', 'Product Not Found');
+        $response->assertJsonPath('errors.0.links.products-search.href', '/api/v1/products/search');
+        $response->assertJsonPath('errors.0.links.create-product.href', '/api/v1/products');
+    }
 
     public function testAddDirectionToRecipe(): void
     {

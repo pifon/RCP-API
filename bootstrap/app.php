@@ -133,6 +133,18 @@ return Application::configure(basePath: dirname(__DIR__))
             if (! $isApi($request)) {
                 return null;
             }
+            // Fallback: ensure our API exceptions always render as 4xx (in case the typed handler was skipped)
+            if (
+                method_exists($e, 'render')
+                && $e instanceof \Exception
+                && (
+                    $e instanceof ValidationErrorException
+                    || $e instanceof NotFoundException
+                    || $e instanceof ProductNotFoundException
+                )
+            ) {
+                return $e->render();
+            }
             $debug = config('app.debug');
             $error = new ErrorObject(
                 status: '500',
