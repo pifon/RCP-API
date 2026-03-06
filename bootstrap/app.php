@@ -1,5 +1,8 @@
 <?php
 
+use App\Exceptions\v1\NotFoundException;
+use App\Exceptions\v1\ProductNotFoundException;
+use App\Exceptions\v1\ValidationErrorException;
 use App\JsonApi\Document;
 use App\JsonApi\ErrorObject;
 use Illuminate\Auth\AuthenticationException;
@@ -99,6 +102,19 @@ return Application::configure(basePath: dirname(__DIR__))
                 ['Content-Type' => 'application/vnd.api+json'],
             );
         });
+
+        $exceptions->render(
+            function (
+                ValidationErrorException|NotFoundException|ProductNotFoundException $e,
+                Request $request
+            ) use ($isApi) {
+                if (! $isApi($request)) {
+                    return null;
+                }
+
+                return $e->render();
+            }
+        );
 
         $exceptions->render(function (HttpExceptionInterface $e, Request $request) use ($isApi) {
             if (! $isApi($request)) {

@@ -6,6 +6,11 @@ namespace App\Services;
 
 // phpcs:disable Generic.Files.LineLength -- parser patterns and regexes are long by nature
 
+/**
+ * Parses a direction sentence for preview (ingredients, tools, duration).
+ * Keep this file in sync with ../foodbook/app/Services/DirectionParser.php (the Foodbook app);
+ * the API uses it for POST /v1/recipes/{slug}/directions/from-text. There is no automatic sync.
+ */
 class DirectionParser
 {
     private const ACTIONS = [
@@ -63,7 +68,7 @@ class DirectionParser
         'tablespoons?', 'tbsp', 'teaspoons?', 'tsp',
     ];
 
-    /** Unit regex alternation with word boundary so e.g. "l" does not match inside "lime". */
+    /** Unit regex alternation with word boundary so e.g., "l" does not match inside "lime". */
     private function unitsPattern(): string
     {
         return implode('\b|', self::UNITS) . '\b';
@@ -109,7 +114,8 @@ class DirectionParser
             }
         }
 
-        // "cover with X" (implicit target): inject previous step's main ingredient as first so step is "cover {chicken} with {spice mix}"
+        // "cover with X" (implicit target): inject previous step's main ingredient as first
+        // so step is "cover {chicken} with {spice mix}"
         for ($i = 1, $n = count($steps); $i < $n; $i++) {
             if (! empty($steps[$i]['target_from_previous_step']) && ! empty($steps[$i - 1]['ingredients'])) {
                 $prevFirst = $steps[$i - 1]['ingredients'][0];
@@ -175,7 +181,8 @@ class DirectionParser
         if (count($parts) <= 1) {
             return $parts;
         }
-        // After ", then " or "along with", also split each part on " and " + action (e.g. "cover and refrigerate for 2 hours" → "cover" + "refrigerate for 2 hours")
+        // After ", then " or "along with", also split each part on " and " + action
+        // (e.g., "cover and refrigerate for 2 hours" → "cover" + "refrigerate for 2 hours")
         $expanded = [];
         foreach ($parts as $p) {
             $sub = $this->splitCompoundOnce(trim($p));
@@ -214,10 +221,12 @@ class DirectionParser
             }
         }
 
-        // "X and [modifier] Y" or "X and action Y" → split so "and generously cover" / "and refrigerate" becomes a new step
+        // "X and [modifier] Y" or "X and action Y" → split so "and generously cover" /
+        // "and refrigerate" becomes a new step
         $modAlt = implode('|', array_map(fn ($m) => preg_quote($m, '/'), self::MODIFIERS));
         $actionAlt = implode('|', array_map(fn ($a) => preg_quote($a, '/'), self::ACTIONS));
-        $parts = preg_split('/\band\s+(?=(?:' . $modAlt . '\s+' . $actionAlt . '\b|' . $actionAlt . '\b))/i', $sentence);
+        $pattern = '/\band\s+(?=' . $modAlt . '\s+' . $actionAlt . '\b|' . $actionAlt . '\b)/i';
+        $parts = preg_split($pattern, $sentence);
         if (count($parts) > 1) {
             return array_values(array_filter(array_map('trim', $parts), fn ($p) => $p !== ''));
         }
@@ -246,20 +255,29 @@ class DirectionParser
         if (preg_match('/^of\s+(?:boiling\s+)?(?:cold\s+)?(?:hot\s+)?water\s*,?\s*/i', $work, $waterMatch)) {
             $result['_water_ingredient'] = [$this->ingredientFromName('water')];
             $work = trim($this->remove($work, $waterMatch[0]));
-        } elseif (preg_match('/^(?:\s*(?:boiling\s+)?pot\s+of\s+water\s*,?\s*)/i', $work, $potWaterMatch)) {
-            // Case B: we only matched "large pot", remainder is " boiling of water, cook..." — add water, strip phrase
+        // Case B: only matched "large pot"; strip "pot of water" and add water as ingredient
+        } elseif (
+            preg_match(
+                '/^\s*(?:boiling\s+)?pot\s+of\s+water\s*,?\s*/i',
+                $work,
+                $potWaterMatch
+            )
+        ) {
             $result['_water_ingredient'] = [$this->ingredientFromName('water')];
             $work = trim($this->remove($work, $potWaterMatch[0]));
         }
 
-        [$action, $actionWord, $work] = $this->extractAction($work);
+        [$action, , $work] = $this->extractAction($work);
         if ($action) {
             $result['type'] = $action;
         }
 
-        // "Transfer the entire contents of the X bowl to a large baking pan so that ..." → tools [source, destination], condition; no ingredients
+        // "Transfer the entire contents of the X bowl to a large baking pan so that ..."
+        // → tools [source, destination], condition; no ingredients
         if (isset($result['type']) && $result['type'] === 'transfer') {
-            [$fromTool, $toTool, $transferCondition, $work] = $this->parseTransferClause($work);
+            [$fromTool, $toTool, $transferCondition, $work] = $this->parseTransferClause(
+                $work
+            );
             $tools = array_values(array_filter([$fromTool, $toTool]));
             if ($tools !== []) {
                 $result['tools'] = $tools;
@@ -280,18 +298,14 @@ class DirectionParser
         }
 
         // Preheat: temperature as condition (not "heat") and oven as tool
-        if (isset($result['type']) && $result['type'] === 'preheat' && ! empty($result['heat']['temperature'])) {
+        if (isset($result['type'], $result['heat']['temperature']) && $result['type'] === 'preheat') {
             $result['condition'] = [
                 'type' => 'temperature',
                 'value' => $result['heat']['temperature']['value'],
                 'unit' => $result['heat']['temperature']['unit'],
             ];
             unset($result['heat']['temperature']);
-            if ($result['heat'] === []) {
-                unset($result['heat']);
-            } else {
-                $result['heat'] = $result['heat'];
-            }
+            unset($result['heat']);
         }
 
         [$condition, $work] = $this->extractCondition($work);
@@ -309,9 +323,12 @@ class DirectionParser
             $result['modifiers'] = $modifiers;
         }
 
-        // "add X to Y" → parse X as ingredients, then add Y as second ingredient (so "add chicken to marinade" = ingredients [chicken, marinade])
-        // "add X to Y, along with A, B, and C" → to-target = Y only; parse X and A,B,C as separate ingredients
-        if (isset($result['type']) && $result['type'] === 'add' && preg_match('/^(.+?)\s+to\s+(.+)$/i', $work, $toMatch)) {
+        // "add X to Y" → parse X as ingredients, then add Y as second ingredient
+        // "add X to Y, along with A, B, and C" → to-target = Y only; parse X and A,B,C separately
+        if (
+            isset($result['type']) && $result['type'] === 'add'
+            && preg_match('/^(.+?)\s+to\s+(.+)$/i', $work, $toMatch)
+        ) {
             $afterTo = trim($toMatch[2]);
             if ($afterTo !== '' && ! preg_match('/^(taste|boil|simmer|cool|rest)\b/i', $afterTo)) {
                 $work = trim($toMatch[1]);
@@ -322,7 +339,7 @@ class DirectionParser
                     $alongWith = trim($aw[2]);
                 }
                 $toIngredient = strtolower(preg_replace('/^\s*(the|a|an)\s+/i', '', $toTarget));
-                $toIngredient = preg_replace('/[.,;]+$/', '', $toIngredient);
+                $toIngredient = rtrim($toIngredient, '.,;');
                 if ($toIngredient !== '' && strlen($toIngredient) >= 2) {
                     $result['_add_to_ingredient'] = $this->ingredientFromName($toIngredient);
                 }
@@ -332,7 +349,7 @@ class DirectionParser
             }
         }
 
-        // ", if you like" / ", if desired" → step is optional; strip so it doesn't become an ingredient
+        // ", if you like" / ", if desired" → the step is optional
         if (preg_match('/\s*,\s*if you (?:like|want)\s*\.?\s*$/i', $work, $optMatch)) {
             $result['optional'] = true;
             $work = trim($this->remove($work, $optMatch[0]));
@@ -342,11 +359,17 @@ class DirectionParser
             $work = trim($this->remove($work, $optMatch[0]));
         }
 
-        // "according to package instructions" / "per package directions" → procedural note; strip so it doesn't become part of ingredient name
+        // "according to package instructions" / "per package directions" → procedural note
         if (preg_match('/\s*,?\s*according to package instructions?\s*\.?\s*$/i', $work, $pkgMatch)) {
             $work = trim($this->remove($work, $pkgMatch[0]));
         }
-        if (preg_match('/\s*,?\s*(?:per|according to) package directions?\s*\.?\s*$/i', $work, $pkgMatch)) {
+        if (
+            preg_match(
+                '/\s*,?\s*(?:per|according to) package directions?\s*\.?\s*$/i',
+                $work,
+                $pkgMatch
+            )
+        ) {
             $work = trim($this->remove($work, $pkgMatch[0]));
         }
 
@@ -359,7 +382,7 @@ class DirectionParser
             $ingredients = array_merge($ingredients, [$result['_add_to_ingredient']]);
             unset($result['_add_to_ingredient']);
         }
-        // "X into Y" / "half of X into Y" = transfer between intermediates (spice mix, marinade); no new recipe ingredients
+        // "X into Y" / "half of X into Y" = transfer between intermediates; no new recipe ingredients
         $intoTransfer = $this->getIntoTransfer($work);
         if ($intoTransfer !== null) {
             $result['into_transfer'] = $intoTransfer;
@@ -367,21 +390,19 @@ class DirectionParser
         }
         if ($ingredients) {
             $result['ingredients'] = $ingredients;
-            // Move step-level amount_fraction onto the first ingredient when we have two (e.g. "half of X into Y") so it's clear the fraction applies to the source
+            // Move step-level amount_fraction onto first ingredient when we have two
+            // (e.g., "half of X into Y") so the fraction applies to the source
             if (isset($result['modifiers']['amount_fraction']) && count($result['ingredients']) >= 2) {
                 $first = &$result['ingredients'][0];
-                $frac = $result['modifiers']['amount_fraction'];
                 if (! isset($first['quantity'])) {
-                    $first['quantity'] = ['amount' => $frac];
+                    $first['quantity'] = ['amount' => $result['modifiers']['amount_fraction']];
                 }
                 unset($result['modifiers']['amount_fraction']);
-                if ($result['modifiers'] === []) {
-                    unset($result['modifiers']);
-                }
+                unset($result['modifiers']);
             }
         }
 
-        // "cover with X" but no explicit object → the thing being covered is from the previous step (e.g. chicken)
+        // "cover with X" but no explicit object → the thing being covered is from the previous step (e.g., chicken)
         if (isset($result['type']) && $result['type'] === 'cover' && ! empty($result['ingredients'])) {
             if ($this->coverTargetIsImplicit($sentence)) {
                 $result['target_from_previous_step'] = true;
@@ -393,8 +414,10 @@ class DirectionParser
             $result['tool'] = ['name' => 'refrigerator'];
         }
 
-        // Transfer: if we still have a single "to X" ingredient (parseTransferClause missed it), add as second tool and drop ingredient
-        if (isset($result['type']) && $result['type'] === 'transfer' && ! empty($result['ingredients']) && count($result['ingredients']) === 1) {
+        // Transfer: single "to X" ingredient (parseTransferClause missed it) → add as tool, drop ingredient
+        $singleIng = isset($result['type']) && $result['type'] === 'transfer'
+            && ! empty($result['ingredients']) && count($result['ingredients']) === 1;
+        if ($singleIng) {
             $name = trim($result['ingredients'][0]['name'] ?? '');
             if (preg_match('/^to\s+(?:a|the)?\s*(.+)$/i', $name, $m)) {
                 $targetPhrase = trim($m[1]);
@@ -413,7 +436,7 @@ class DirectionParser
                 $name = strtolower(trim($ing['name'] ?? ''));
                 $id = strtolower(trim($ing['ingredient_id'] ?? ''));
                 if ($name === 'oven' || $id === 'oven' || preg_match('/^(the|your)\s+oven$/i', $name)) {
-                    if (empty($result['tool'])) {
+                    if (! isset($result['tool'])) {
                         $result['tool'] = ['name' => 'oven'];
                     }
                     continue;
@@ -426,11 +449,11 @@ class DirectionParser
             }
         }
 
-        // Fallback: if no tool was found but sentence starts with "in a/the ...", parse leading phrase as tool
-        if (empty($result['tool']) && preg_match('/^\s*in\s+(?:a|the)\s+/i', $sentence)) {
+        // Fallback: if no tool was found but sentence starts with "in [a/the] ...", parse leading phrase as tool
+        if (! isset($result['tool']) && preg_match('/^\s*in\s+(?:a|the)?\s+/i', $sentence)) {
             $parts = preg_split('/\s*,\s*/', $sentence, 2);
             $leading = trim($parts[0] ?? '');
-            if ($leading !== '' && preg_match('/^\s*in\s+(?:a|the)\s+(.+)$/i', $leading, $m)) {
+            if ($leading !== '' && preg_match('/^\s*in\s+(?:a|the)?\s+(.+)$/i', $leading, $m)) {
                 $afterArticle = trim($m[1]);
                 $toolFromPhrase = $this->parseToolPhrase($afterArticle);
                 if ($toolFromPhrase !== null) {
@@ -443,7 +466,8 @@ class DirectionParser
     }
 
     /**
-     * True when "cover with X" has no explicit object — the thing being covered is from context (e.g. previous step).
+     * True when "cover with X" has no explicit object — the thing being covered
+     * is from context (e.g., the previous step).
      */
     private function coverTargetIsImplicit(string $sentence): bool
     {
@@ -454,7 +478,7 @@ class DirectionParser
         }
         $beforeWith = preg_replace('/\bcover\b/i', '', $beforeWith);
         $modAlt = implode('|', array_map(fn ($m) => preg_quote($m, '/'), self::MODIFIERS));
-        $beforeWith = preg_replace('/\b(?:' . $modAlt . ')\b/i', '', $beforeWith);
+        $beforeWith = preg_replace('/\b' . $modAlt . '\b/i', '', $beforeWith);
         $beforeWith = preg_replace('/\b(the|a|an)\b/i', '', $beforeWith);
         $beforeWith = $this->normalizeSpaces($beforeWith);
 
@@ -462,7 +486,7 @@ class DirectionParser
     }
 
     /**
-     * Parse "separate small bowl" or "large bowl" into tool array, or null.
+     * Parse "separate small bowl" or "large bowl" into a tool array, or null.
      */
     private function parseToolPhrase(string $phrase): ?array
     {
@@ -508,7 +532,7 @@ class DirectionParser
     // Action extraction
     // ------------------------------------------------------------------
 
-    /** Phrasal actions: phrase => normalized type (meaning "add juice of" etc.) */
+    /** Phrasal actions: phrase => normalized type (meaning "add juice of", etc.). */
     private const PHRASAL_ACTIONS = [
         'juice in' => 'juice_in',  // "juice in 1 lime" = add juice of 1 lime
     ];
@@ -668,7 +692,7 @@ class DirectionParser
     // Tool: "in a large bowl", "with a whisk", "in a separate small bowl"
     // ------------------------------------------------------------------
 
-    /** Physical size/type adjectives to store on tool; "separate", "clean" etc. are dropped. */
+    /** Physical size/type adjectives to store on tool; "separate", "clean", etc. are dropped. */
     private const TOOL_SIZE_ADJECTIVES = [
         'large', 'small', 'medium', 'big', 'deep', 'shallow', 'heavy', 'wide',
         'narrow', 'new', 'hot', 'cold', 'warm', 'dry', 'oiled', 'greased', 'non-stick',
@@ -683,15 +707,21 @@ class DirectionParser
 
     private function extractTool(string $text): array
     {
-        $toolAlt = implode('|', array_map(fn ($t) => preg_quote($t, '/'), self::TOOLS));
-        $adjAlt = implode('|', array_map(fn ($a) => preg_quote($a, '/'), self::TOOL_ADJECTIVES));
+        // Longest tool names first so "mixing bowl" matches before "bowl"
+        $toolsSorted = self::TOOLS;
+        usort($toolsSorted, fn ($a, $b) => strlen($b) - strlen($a));
+        $toolAlt = implode('|', array_map(fn ($t) => preg_quote($t, '/'), $toolsSorted));
+        $adjAltWithSpace = implode('|', array_map(
+            fn ($a) => preg_quote($a, '/') . '\s+',
+            self::TOOL_ADJECTIVES
+        ));
 
-        // Two-step: find preposition+article, then adjectives+tool in the rest (avoids complex backtracking)
-        if (preg_match('/\b(in|on|into|onto|with|using)\s+(?:a\s+|the\s+)/i', $text, $pref, PREG_OFFSET_CAPTURE)) {
+        // Preposition + optional article (so "In mixing bowl" and "In a large bowl" both match)
+        if (preg_match('/\b(in|on|into|onto|with|using)\s+(?:a\s+|the\s+)?/i', $text, $pref, PREG_OFFSET_CAPTURE)) {
             $prefix = $pref[0][0];
-            $start = $pref[0][1];
+            $start = (int) $pref[0][1];
             $rest = substr($text, $start + strlen($prefix));
-            $subPattern = '/^(\s*(?:(?:' . $adjAlt . ')\s+)*)(' . $toolAlt . ')\b/i';
+            $subPattern = '/^(\s*(?:' . $adjAltWithSpace . ')*)(' . $toolAlt . ')\b/i';
             if (preg_match($subPattern, $rest, $m)) {
                 $fullMatch = substr($text, $start, strlen($prefix) + strlen($m[0]));
                 $tool = ['name' => strtolower(trim($m[2]))];
@@ -708,7 +738,7 @@ class DirectionParser
         return [null, $text];
     }
 
-    /** Return the tool size to store: only physical-size adjective, drop "separate", "clean", etc. */
+    /** Return the tool size to store: only physical-size adjective; drop "separate", "clean", etc. */
     private function toolSizeFromAdjectives(string $adjectives): string
     {
         if ($adjectives === '') {
@@ -765,7 +795,7 @@ class DirectionParser
             $work = trim($this->remove($work, $m[0]));
         }
 
-        // 2. " to (a|the) (phrase)" → destination tool; parse phrase as "[adj]* tool" (e.g. "large baking pan")
+        // 2. " to (a|the) (phrase)" → destination tool; parse phrase as "[adj]* tool" (e.g., "large baking pan")
         if (preg_match('/\s+to\s+(?:a|the)\s+(.+?)(?=\s+so that|\s*$)/is', $work, $toMatch)) {
             $targetPhrase = trim($toMatch[1]);
             $fullMatch = $toMatch[0];
@@ -779,8 +809,9 @@ class DirectionParser
             }
         }
 
-        // 3. "(the entire )?contents of (the )?(desc )?(tool)" → source tool (non-greedy desc so we get "bowl" not "pan")
-        if (preg_match('/^(?:the entire\s+)?contents of (?:the\s+)?(.+?)\s+(' . $toolAlt . ')\b/i', $work, $m)) {
+        // 3. "(the entire )?contents of (the )?(desc )?(tool)" → source tool
+        $contentsPattern = '/^(?:the entire\s+)?contents of (?:the\s+)?(.+?)\s+(' . $toolAlt . ')\b/i';
+        if (preg_match($contentsPattern, $work, $m)) {
             $fromTool = ['name' => strtolower(trim($m[2]))];
             $work = trim($this->remove($work, $m[0]));
         }
@@ -898,7 +929,7 @@ class DirectionParser
         $out = [];
         foreach ($parts as $p) {
             $p = trim(preg_replace('/^\s*and\s+/i', '', trim($p)));
-            $p = preg_replace('/[.,;]+$/', '', $p);
+            $p = rtrim($p, '.,;');
             if ($p !== '' && strlen($p) >= 2) {
                 $out[] = $p;
             }
@@ -912,29 +943,51 @@ class DirectionParser
      *
      * @return array{source: string, target: string, fraction: ?float}|null
      */
-    public function getIntoTransfer(string $text): ?array
+    /** @return array{source: string, target: string, fractionWord: ?string}|null */
+    private function parseIntoMatch(string $text): ?array
     {
         $text = $this->normalizeSpaces(trim($text));
         if ($text === '') {
             return null;
         }
-        if (! preg_match('/^(?:about\s+)?(half|quarter|third)?(?:\s+of\s+(?:the\s+)?)?(.+?)\s+into\s+(?:the\s+)?(.+?)\.?\s*$/is', $text, $m)) {
+        $intoPattern = '/^(?:about\s+)?(half|quarter|third)?(?:\s+of\s+(?:the\s+)?)?(.+?)'
+            . '\s+into\s+(?:the\s+)?(.+?)\.?\s*$/is';
+        if (! preg_match($intoPattern, $text, $m)) {
             return null;
         }
         $fractionWord = $m[1] !== '' ? strtolower($m[1]) : null;
         $source = $this->normalizeSpaces(preg_replace('/^\s*(the|a|an)\s+/i', '', trim($m[2])));
-        $target = $this->normalizeSpaces(preg_replace('/^\s*(the|a|an)\s+/i', '', trim(preg_replace('/\.$/', '', trim($m[3])))));
+        $target = $this->normalizeSpaces(preg_replace('/^\s*(the|a|an)\s+/i', '', rtrim(trim($m[3]), '.')));
         if ($source === '' || $target === '' || strlen($source) < 2 || strlen($target) < 2) {
             return null;
         }
-        $fraction = $fractionWord !== null ? match ($fractionWord) {
-            'half' => 0.5,
+        return ['source' => $source, 'target' => $target, 'fractionWord' => $fractionWord];
+    }
+
+    public function getIntoTransfer(string $text): ?array
+    {
+        $parsed = $this->parseIntoMatch($text);
+        if ($parsed === null) {
+            return null;
+        }
+        return [
+            'source' => $parsed['source'],
+            'target' => $parsed['target'],
+            'fraction' => $this->fractionFromWord($parsed['fractionWord']),
+        ];
+    }
+
+    /** Map fraction word to numeric value; returns null if word is null. */
+    private function fractionFromWord(?string $word): ?float
+    {
+        if ($word === null) {
+            return null;
+        }
+        return match ($word) {
             'quarter' => 0.25,
             'third' => 0.333,
             default => 0.5,
-        } : null;
-
-        return ['source' => $source, 'target' => $target, 'fraction' => $fraction];
+        };
     }
 
     /**
@@ -945,34 +998,18 @@ class DirectionParser
      */
     private function extractIntoPattern(string $text): ?array
     {
-        $text = $this->normalizeSpaces(trim($text));
-        if ($text === '') {
+        $parsed = $this->parseIntoMatch($text);
+        if ($parsed === null) {
             return null;
         }
-        // (?:about\s+)?(half|quarter|third)?(?:\s+of\s+(?:the\s+)?)?  source  \s+into\s+(?:the\s+)?  target  [.]
-        if (! preg_match('/^(?:about\s+)?(half|quarter|third)?(?:\s+of\s+(?:the\s+)?)?(.+?)\s+into\s+(?:the\s+)?(.+?)\.?\s*$/is', $text, $m)) {
-            return null;
+        $sourceIngredient = $this->ingredientFromName($parsed['source']);
+        $frac = $this->fractionFromWord($parsed['fractionWord']);
+        if ($frac !== null) {
+            $sourceIngredient['quantity'] = ['amount' => $frac];
         }
-        $fractionWord = $m[1] !== '' ? strtolower($m[1]) : null;
-        $source = $this->normalizeSpaces(preg_replace('/^\s*(the|a|an)\s+/i', '', trim($m[2])));
-        $target = $this->normalizeSpaces(preg_replace('/^\s*(the|a|an)\s+/i', '', trim(preg_replace('/\.$/', '', trim($m[3])))));
-        if ($source === '' || $target === '' || strlen($source) < 2 || strlen($target) < 2) {
-            return null;
-        }
-
-        $sourceIngredient = $this->ingredientFromName($source);
-        if ($fractionWord !== null) {
-            $sourceIngredient['quantity'] = ['amount' => match ($fractionWord) {
-                'half' => 0.5,
-                'quarter' => 0.25,
-                'third' => 0.333,
-                default => 0.5,
-            }];
-        }
-
         return [
             $sourceIngredient,
-            $this->ingredientFromName($target),
+            $this->ingredientFromName($parsed['target']),
         ];
     }
 
@@ -986,13 +1023,14 @@ class DirectionParser
     }
 
     /**
-     * Extract ingredients from a single clause (e.g. the with-clause) without "with" split.
+     * Extract ingredients from a single clause (e.g., the with-clause) without "with" split.
      *
      * @return list<array>
      */
     private function extractIngredientsFromText(string $text): array
     {
-        $text = $this->normalizeSpaces(preg_replace('/\b(from|off|on|in|into|out|up|down|back|away|together|aside)\b/i', '', $text));
+        $strip = '/\b(from|off|on|in|into|out|up|down|back|away|together|aside)\b/i';
+        $text = $this->normalizeSpaces(preg_replace($strip, '', $text));
         $text = $this->normalizeSpaces($text);
         if ($text === '') {
             return [];
@@ -1007,7 +1045,10 @@ class DirectionParser
                 continue;
             }
             $ingredient = $this->parseIngredientPhrase($phrase);
-            if ($ingredient !== null && ! $this->isActionVerb($ingredient['name']) && ! $this->isToolPhrase($ingredient['name']) && ! $this->isNoiseWord($ingredient['name']) && ! $this->isIntermediateReference($ingredient)) {
+            $ok = $ingredient !== null && ! $this->isActionVerb($ingredient['name'])
+                && ! $this->isToolPhrase($ingredient['name']) && ! $this->isNoiseWord($ingredient['name'])
+                && ! $this->isIntermediateReference($ingredient);
+            if ($ok) {
                 $out[] = $ingredient;
             }
         }
@@ -1015,7 +1056,7 @@ class DirectionParser
     }
 
     /**
-     * True if the phrase is a procedural note (e.g. "lifting the skin", "applying some underneath")
+     * True if the phrase is a procedural note (e.g., "lifting the skin", "applying some underneath")
      * rather than an ingredient — skip adding as ingredient.
      */
     private function isProceduralPhrase(string $phrase): bool
@@ -1029,7 +1070,11 @@ class DirectionParser
         if ($first === '') {
             return false;
         }
-        $gerunds = ['lifting', 'applying', 'stirring', 'folding', 'spreading', 'rubbing', 'pressing', 'sprinkling', 'drizzling', 'adding', 'removing', 'transferring', 'placing', 'setting', 'leaving', 'continuing', 'repeating', 'returning', 'covering', 'uncovering'];
+        $gerunds = [
+            'lifting', 'applying', 'stirring', 'folding', 'spreading', 'rubbing', 'pressing',
+            'sprinkling', 'drizzling', 'adding', 'removing', 'transferring', 'placing', 'setting',
+            'leaving', 'continuing', 'repeating', 'returning', 'covering', 'uncovering',
+        ];
         return in_array(strtolower($first), $gerunds, true);
     }
 
@@ -1084,7 +1129,10 @@ class DirectionParser
                 continue;
             }
             $ingredient = $this->parseIngredientPhrase($phrase);
-            if ($ingredient !== null && ! $this->isActionVerb($ingredient['name']) && ! $this->isToolPhrase($ingredient['name']) && ! $this->isNoiseWord($ingredient['name']) && ! $this->isIntermediateReference($ingredient)) {
+            $ok = $ingredient !== null && ! $this->isActionVerb($ingredient['name'])
+                && ! $this->isToolPhrase($ingredient['name']) && ! $this->isNoiseWord($ingredient['name'])
+                && ! $this->isIntermediateReference($ingredient);
+            if ($ok) {
                 $ingredients[] = $ingredient;
             }
         }
@@ -1101,7 +1149,10 @@ class DirectionParser
                 continue;
             }
             $ingredient = $this->parseIngredientPhrase($phrase);
-            if ($ingredient !== null && ! $this->isActionVerb($ingredient['name']) && ! $this->isToolPhrase($ingredient['name']) && ! $this->isNoiseWord($ingredient['name']) && ! $this->isIntermediateReference($ingredient)) {
+            $ok = $ingredient !== null && ! $this->isActionVerb($ingredient['name'])
+                && ! $this->isToolPhrase($ingredient['name']) && ! $this->isNoiseWord($ingredient['name'])
+                && ! $this->isIntermediateReference($ingredient);
+            if ($ok) {
                 $ingredients[] = $ingredient;
             }
         }
@@ -1109,14 +1160,14 @@ class DirectionParser
         return $ingredients;
     }
 
-    /** Words that are never ingredient names (e.g. "along" from "along with"). */
+    /** Words that are never ingredient names (e.g., "along" from "along with"). */
     private function isNoiseWord(string $name): bool
     {
-        return in_array(strtolower(trim($name)), ['along'], true);
+        return strtolower(trim($name)) === 'along';
     }
 
     /**
-     * True if this "ingredient" is a reference to an intermediate (e.g. marinade, spice mix).
+     * True if this "ingredient" is a reference to an intermediate (e.g., marinade, spice mix).
      * Do not add as a recipe ingredient — it's from a previous step.
      */
     private function isIntermediateReference(array $ingredient): bool
@@ -1124,7 +1175,7 @@ class DirectionParser
         return $this->isIntermediateName($ingredient['name'] ?? '');
     }
 
-    /** True if name refers to a mixture/intermediate (spice mix, marinade, etc.), not a pantry product. */
+    /** True if the name refers to a mixture/intermediate (spice mix, marinade, etc.), not a pantry product. */
     private function isIntermediateName(string $name): bool
     {
         $name = strtolower(trim($name));
@@ -1157,7 +1208,6 @@ class DirectionParser
 
     private function parseIngredientPhrase(string $phrase): ?array
     {
-        /** @var array<string, mixed> $target */
         $target = [];
         $phrase = preg_replace('/^\s*(the|a|an|some)\s+/i', '', trim($phrase));
         $phrase = preg_replace('/\s+to\s+taste\b/i', '', $phrase);
@@ -1169,8 +1219,8 @@ class DirectionParser
 
         // "more X" → quantifier (more), ingredient name = X
         if (preg_match('/^more\s+(.+)$/is', $phrase, $m)) {
-            $target['quantity'] = (isset($target['quantity']) && is_array($target['quantity']) ? $target['quantity'] : [])
-                + ['more' => true];
+            // @phpstan-ignore nullCoalesce.offset (quantity may not exist yet on $target)
+            $target['quantity'] = ($target['quantity'] ?? []) + ['more' => true];
             $phrase = trim($m[1]);
         }
 
@@ -1183,8 +1233,7 @@ class DirectionParser
 
         // "remainder of (the)? X" / "rest of (the)? X" → ingredient X with quantity.remainder/rest = true
         if (preg_match('/^(?:remainder|rest)\s+of\s+(?:the\s+)?(.+)$/is', $phrase, $rm)) {
-            $rest = trim($rm[1]);
-            $rest = preg_replace('/[.,;]+$/', '', $rest);
+            $rest = rtrim(trim($rm[1]), '.,;');
             if ($rest !== '' && strlen($rest) >= 2) {
                 $key = preg_match('/\brest\s+of\b/i', $phrase) ? 'rest' : 'remainder';
                 $target['quantity'] = [$key => true];
@@ -1225,7 +1274,7 @@ class DirectionParser
 
         $phrase = $this->normalizeSpaces($phrase);
 
-        // Size adjective (large, small, etc.) → ingredient size, not part of name
+        // Size adjective (large, small, etc.) → ingredient size, not part of the name
         if (preg_match('/^(large|small|medium|big)\s+/i', $phrase, $sm)) {
             $target['size'] = strtolower($sm[1]);
             $phrase = trim(substr($phrase, strlen($sm[0])));
@@ -1245,7 +1294,7 @@ class DirectionParser
         return $target;
     }
 
-    /** "oranges" → "orange", "limes" → "lime"; leave "fennel", "onion" etc. unchanged. */
+    /** "oranges" → "orange", "limes" → "lime"; leave "fennel", "onion", etc. unchanged. */
     private function singularizeIngredientName(string $name): string
     {
         $name = trim($name);
@@ -1265,7 +1314,7 @@ class DirectionParser
 
     /**
      * True if the given string is a single word that is (or stems to) an action verb.
-     * Used to avoid adding leftover verbs (e.g. "mix") as ingredients.
+     * Used to avoid adding leftover verbs (e.g., "mix") as ingredients.
      */
     private function isActionVerb(string $name): bool
     {
@@ -1278,7 +1327,7 @@ class DirectionParser
     }
 
     /**
-     * True if the name looks like a tool phrase (e.g. "separate small bowl", "large bowl")
+     * True if the name looks like a tool phrase (e.g., "separate small bowl", "large bowl")
      * so we don't add it as an ingredient when tool extraction missed it.
      */
     private function isToolPhrase(string $name): bool
@@ -1288,7 +1337,7 @@ class DirectionParser
             return false;
         }
         $words = preg_split('/\s+/', $name, -1, PREG_SPLIT_NO_EMPTY);
-        if ($words === []) {
+        if ($words === false) {
             return false;
         }
         $toolSet = array_flip(array_map('strtolower', self::TOOLS));
@@ -1323,8 +1372,8 @@ class DirectionParser
                 return $base . 'e';
             }
             if (
-                strlen($base) > 2 && $base[-1] === $base[-2]
-                && isset($this->actionSet[substr($base, 0, -1)])
+                strlen($base) > 2 && $base[-1] === $base[-2] &&
+                isset($this->actionSet[substr($base, 0, -1)])
             ) {
                 return substr($base, 0, -1);
             }
@@ -1410,7 +1459,7 @@ class DirectionParser
         return match ($u) {
             'tablespoon' => 'tbsp',
             'teaspoon' => 'tsp',
-            'pound' => 'lb',
+            'pound', 'lb', 'lbs' => 'lb',
             'ounce' => 'oz',
             'litre', 'liter' => 'l',
             'piece' => 'pcs',
@@ -1431,7 +1480,6 @@ class DirectionParser
             'quarter' => 'quarter',
             'half' => 'half',
             'branch' => 'branch',
-            'lb', 'lbs' => 'lb',
             default => strtolower($unit),
         };
     }

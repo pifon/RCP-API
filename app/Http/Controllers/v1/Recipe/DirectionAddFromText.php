@@ -37,6 +37,10 @@ class DirectionAddFromText extends Controller
 
         $data = $request->input('data', []);
         $attrs = $data['attributes'] ?? [];
+        // Allow top-level "text" as alias for data.attributes["direction-text"]
+        if (! isset($attrs['direction-text']) && $request->has('text')) {
+            $attrs['direction-text'] = $request->input('text');
+        }
 
         $validator = Validator::make($attrs, [
             'direction-text' => ['required', 'string'],
@@ -48,7 +52,7 @@ class DirectionAddFromText extends Controller
             throw ValidationErrorException::fromValidationBag($validator->errors());
         }
 
-        $directionText = trim($attrs['direction-text']);
+        $directionText = trim((string) ($attrs['direction-text'] ?? ''));
         if ($directionText === '') {
             throw new ValidationErrorException('Direction text cannot be empty.', [
                 'direction-text' => ['Provide a non-empty direction sentence.'],
